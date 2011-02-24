@@ -1,0 +1,36 @@
+/******************************************************************************/
+/*                           HELPDESK                                    */
+/******************************************************************************/
+
+@import url( "../../../js/jscalendar/calendar-blue.css" );
+
+ul#questionAnswer
+{
+	margin-left:20px;
+	list-style:none;
+}
+
+ul#subject
+{
+	margin-left:20px;
+	list-style:none;
+}
+
+a.top {
+	float: right;
+}
+
+#button-search 
+{
+	background-repeat: no-repeat;
+	background-position: left;
+}
+
+.button-search{
+	padding-left: 2em;
+}
+
+form.default-form fieldset
+{
+	line-height: 1.8em;
+}

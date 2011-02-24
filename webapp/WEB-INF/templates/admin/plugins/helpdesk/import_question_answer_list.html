@@ -1,0 +1,16 @@
+<div class="content-box">
+	<a name="import" ></a>
+    <h2>#i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}</h2>
+	<form method="post" enctype="multipart/form-data" action="jsp/admin/plugins/helpdesk/DoImportQuestionAnswerList.jsp">
+		<p>
+			<label for="csv_file">#i18n{helpdesk.import_question_answer_list.importLabel} * :</label>
+		    <input type="file" name="csv_file" id="csv_file" />
+		    <br />
+			<label for="delete_list">#i18n{helpdesk.import_question_answer_list.deleteListLabel} :</label>
+			<input type="checkbox" name="delete_list" id="delete_list" checked="checked" />
+			<br />
+			<input type="hidden" value="${faq.id}" name="faq_id" />
+		    <input type="submit" id="button" value="#i18n{helpdesk.import_question_answer_list.buttonLabelImport}" tabindex="10" class="button" />
+	    </p>
+	</form>
+</div>

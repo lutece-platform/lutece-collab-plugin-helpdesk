@@ -1,0 +1,24 @@
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="${portal_url}/css/page_template_styles.css" title="lutece" />
+	</head>
+	<body>
+		<h2>#i18n{helpdesk.send_visitor_question.boxTitle}</h2>
+		<p>
+			<strong>#i18n{helpdesk.send_visitor_question.Name}</strong>&nbsp;${visitor_question.lastname}
+			<br/>
+			<strong>#i18n{helpdesk.send_visitor_question.FirstName}</strong>&nbsp;${visitor_question.firstname}
+			<br/>
+			<strong>#i18n{helpdesk.send_visitor_question.Email}</strong>&nbsp;<a href="mailto:${visitor_question.email}">${visitor_question.email}</a>
+			<br/>
+			<strong>#i18n{helpdesk.send_visitor_question.Date}</strong>&nbsp;${date}
+			<br/>
+			<br/>
+			<strong>#i18n{helpdesk.send_visitor_question.Question}</strong>
+			<br/>
+			<blockquote>${visitor_question.question}</blockquote>
+			<br/>
+			<a href="${portal_url}/jsp/admin/AdminLogin.jsp">#i18n{helpdesk.send_visitor_question.Answer}</a>
+		</p>		
+	</body>
+</html>

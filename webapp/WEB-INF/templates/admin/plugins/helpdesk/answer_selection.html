@@ -1,0 +1,45 @@
+<div class="insert-service">
+
+	<h3><img src="../../../../images/local/skin/arrows.gif"  border="0">&nbsp;#i18n{helpdesk.answer_selection.boxTitle}</h3>
+
+	
+	
+	<form method="post" action="jsp/admin/plugins/helpdesk/DoInsertAnswer.jsp">
+		<input
+		type="hidden" name="input" value="${input}" />
+						
+                          <#list helpdesk_subject_list as subject_list >
+								
+                               <p><strong>${subject_list.subject}</strong></p>
+                               <input type="hidden" name="subject_id" value="${subject_list.idSubject}">
+                               	<table>
+                               <#list helpdesk_question_list as question_list >
+                                <#if subject_list.idSubject=question_list.idSubject>                                                
+								
+                                <tr><td>
+								<label for="helpdesk_${question_list.idQuestionAnswer}">${question_list.question}</label>
+								 <input class="radio" type="radio" name="helpdesk_answer" id="helpdesk_${question_list.idQuestionAnswer}"
+									value="${question_list.idQuestionAnswer}" />
+								</td></tr>
+								<tr><td>
+								${question_list.answer}
+								</td></tr>        
+                                		 </#if>
+                                      </#list>                      
+
+                          </#list>
+						</table>
+
+
+		<p>
+			<input type="submit" class="button"
+				value="#i18n{portal.util.labelValidate}" /> &nbsp;
+			<input
+				type="button" class="button" onclick="javascript:history.go(-1);"
+				value="#i18n{portal.util.labelBack}" />
+		</p>
+	</form>
+</div>
+
+    
+

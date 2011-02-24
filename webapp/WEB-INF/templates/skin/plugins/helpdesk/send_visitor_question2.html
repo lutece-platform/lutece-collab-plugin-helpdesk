@@ -1,0 +1,77 @@
+<!-- saved from url=(0022)http://internet.e-mail -->
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="@portal_url@/css/portal_admin.css" title="lutece_admin">
+</head>
+<body>
+<br/>
+
+<center>
+<table width="600" cellspacing="1" cellpadding="0" >
+<tr>
+    <td>
+    <table cellspacing="0" cellpadding="0" border="0" width="600">
+        <tr>
+            <th class="admin-title" width="600" height="30">&nbsp;#i18n{helpdesk.send_visitor_question2.pageTitle}</th>
+        </tr>
+        <tr>
+        <td align="center">
+            <table class="admin-cell"  height="50" cellspacing="0" cellpadding="0" border="0" width="500">
+                <tr>
+                    <th valign="top">
+                        <table cellspacing="0" cellpadding="0" width="400">
+                            <tr>
+                                <th width="290" align="left" height="20"><br/>&nbsp;&nbsp;#i18n{helpdesk.send_visitor_question2.LabelName} @last_name@</th>
+                            </tr>
+                            <tr>
+                                <th width="290" align="left" height="20">&nbsp;&nbsp;#i18n{helpdesk.send_visitor_question2.LabelFirstName} @first_name@</th>
+                            </tr>
+                            <tr>
+                                <th width="290" align="left" height="20">&nbsp;&nbsp;#i18n{helpdesk.send_visitor_question2.LabelEmail} @email@</th>
+                            </tr>
+                            <tr>
+                                <th width="290" align="left" height="20">&nbsp;&nbsp;#i18n{helpdesk.send_visitor_question2.LabelDate} @vq_date@</th>
+                                <input type="hidden" name="vq_date" value="@vq_date@">
+                            </tr>
+                            <tr>
+                                <th width="400" align="left" height="20"><br/>&nbsp;&nbsp;#i18n{helpdesk.send_visitor_question2.LabelQuestion}</th>
+                            </tr>
+                            <tr>
+                                <th width="400" align="left" valign="middle" height="30">&nbsp;
+                                    @question@
+                                </th>
+                            </tr>
+                            <tr>
+                                <th width="400" align="left" height="20"><br/>&nbsp;&nbsp;<a href="@portal_url@/jsp/admin/AdminLogin.jsp?url=helpdesk.vqcardindex&plugin_name=@plugin_name@&question_id=@question_id@">#i18n{helpdesk.send_visitor_question2.LabelClick}</a></th>
+                            </tr>
+                        </table>
+                    </th>
+                    <th >
+                        <br/>
+                    </th>
+                </tr>
+                <tr>
+                    <th align="center" colspan="2">
+                    <br/>
+                </tr>
+            </table>
+            <br/><br/>
+            </th>
+        </tr>
+    </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br/><br/>
+<table>
+    <tr>
+        <td colspan="4" align="center" ></td>
+    </tr>
+    </form>
+</table>
+</center>
+</body>
+</html>

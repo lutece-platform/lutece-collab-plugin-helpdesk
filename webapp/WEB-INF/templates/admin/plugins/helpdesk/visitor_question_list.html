@@ -1,0 +1,91 @@
+<#macro subjectsList items typeList depth>
+	<#if items?has_content >
+		<ul <#if depth==0>id="${typeList}" class="treeview"</#if>>
+			<#list items as item >
+				<li>
+					<#assign themeId = 0 />
+					<#if theme?has_content><#assign themeId = theme.id /></#if>
+					<#if themeId==item.id>
+						<strong>${item.text}</strong>
+					<#else>
+						<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&theme_id=${item.id}">${item.text}</a>
+					</#if>
+					<#assign child_themes_list = item.getChilds(plugin) />
+			        <#if child_themes_list?has_content>
+	       				<@subjectsList items=child_themes_list typeList=typeList depth=depth+1 />
+			        </#if>
+		        </li>
+			</#list>
+		</ul>
+	</#if>
+</#macro>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#VisitorQuestion").treeview({
+			animated: "fast",
+			collapsed: true,
+			unique: true,
+			persist: "cookie"
+		});
+		
+	});
+</script>
+
+<div id="left" >
+	<div class="content-box">
+   		<h2>#i18n{helpdesk.visitor_question_list.adminTitleLeft}</h2>
+	    <p>
+			<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
+		</p>
+	</div>
+</div>
+<div id="right" >
+	<div class="content-box">
+		<h2>#i18n{helpdesk.visitor_question_list.adminTitleRight}</h2>
+		<#if theme?has_content >	
+		<#if theme.questions?has_content >
+		
+		<table>
+			<tr>
+				<th>#i18n{helpdesk.visitor_question_list.titleQuestion}</th>
+	 			<th>#i18n{helpdesk.visitor_question_list.titleVisitor}</th>
+	 			<th>#i18n{helpdesk.visitor_question_list.titleDate}</th>
+				<th>#i18n{helpdesk.visitor_question_list.titleActions}</th>
+   			</tr>
+			<#list theme.questions as visitor_question>
+			<tr>
+	 		    <td>
+					<#assign truncated_value = 125 />
+					<a href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}&theme_id=${theme.id}" ><#if visitor_question.question?length &gt; truncated_value>${visitor_question.question?substring(0,truncated_value-3)}...<#else>${visitor_question.question}</#if></a>
+				</td>
+				<td>
+					${visitor_question.firstname}&nbsp;${visitor_question.lastname} 
+				</td>
+				
+				<td>
+					${visitor_question.date}
+				</td>
+				<td>
+					<a href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}&theme_id=${theme.id}" >
+	                	<img src="images/admin/skin/plugins/helpdesk/answer.png" alt="#i18n{helpdesk.visitor_question_list.buttonLabelAnswer}" title="#i18n{helpdesk.visitor_question_list.buttonLabelAnswer}" />
+					</a>				
+				</td>
+			</tr>
+			</#list>
+		</table>
+		<#else>
+			<p>
+				<em>#i18n{helpdesk.visitor_question_list.noQuestion}</em>
+			</p>
+		</#if>
+		</#if>
+		<form method="post" action="jsp/admin/plugins/helpdesk/ArchivedQuestionList.jsp">
+    	<p>
+    		<#if theme?has_content ><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
+    		<input type="hidden" name="faq_id" value="${faq.id}" />
+			<input class="button" type="submit" name="archivedQuestions" value="#i18n{helpdesk.visitor_question_list.questionsArchived}" />
+		</p>
+	</form>
+	</div>
+</div>

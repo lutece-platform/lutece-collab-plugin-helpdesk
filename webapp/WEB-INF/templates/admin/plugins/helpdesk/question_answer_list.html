@@ -1,0 +1,215 @@
+<#macro subjectsList items typeList depth>
+	<#if items?has_content >
+		<ul <#if depth==0>id="${typeList}" class="treeview"</#if>>
+			<#list items as item >
+				<li>
+					<#assign subjectId = 0 />
+					<#if subject?has_content><#assign subjectId = subject.id /></#if>
+					<#if subjectId==item.id>
+						<strong>${item.text}</strong>
+					<#else>
+						<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&subject_id=${item.id}">${item.text}</a>
+					</#if>
+					<#assign child_subjects_list = item.getChilds(plugin) />
+			        <#if child_subjects_list?has_content>
+	       				<@subjectsList items=child_subjects_list typeList=typeList depth=depth+1 />
+			        </#if>
+		        </li>
+			</#list>
+		</ul>
+	</#if>
+</#macro>
+
+<#macro subjectsListSelect items default_value exclude_value depth>
+	<#if items?has_content >
+	<#list items as subject >
+		<#if exclude_value="${subject.id}">
+		<#else>
+			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
+	        <#assign child_subjects_list = subject.getChilds(plugin) />
+	        <#if child_subjects_list?has_content>
+				<@subjectsListSelect items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+	        </#if>
+        </#if>
+	</#list>
+	
+	</#if>
+</#macro>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#QuestionAnswer").treeview({
+			animated: "fast",
+			collapsed: true,
+			unique: true,
+			persist: "cookie"
+		});
+		
+	});
+</script>
+
+<script type="text/javascript"> 
+	function toggle_checkboxes() {
+	    if (!document.getElementById){ return; }
+	    if (!document.getElementsByTagName){ return; }
+	    var inputs = document.getElementById("question_form").getElementsByTagName("input");
+	    for(var x=0; x < inputs.length; x++) {
+	        if ( (inputs[x].type == 'checkbox') && (inputs[x].name != "select_all" ) ) {
+	            inputs[x].checked = !inputs[x].checked;
+	        }
+	    }
+	} 
+</script>
+
+<div id="left" >
+	<div class="content-box">
+   		<h2>#i18n{helpdesk.question_answer_list.adminTitleLeft}</h2>
+	    <p>
+			<@subjectsList items=helpdesk_subject_list typeList="QuestionAnswer" depth=0 />
+		</p>
+	</div>
+	<div class="content-box">  
+		<h2>#i18n{helpdesk.search_results.labelSearch}</h2>
+        <form method="post" name="fullTextSearch" action="jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp">
+                	<input type="hidden" value="${faq.id}" name="faq_id" />                     
+                <p>
+                    <input type="hidden" name="page" value="search" />
+                    <label for="query">#i18n{helpdesk.search_results.labelSearch}</label>
+                    <input type="text" name="query" size="30" value="<#if query??>${query}</#if>" />
+                </p>
+                <p>
+					<span class="datepicker_wrap">	
+						<label for="date_start">#i18n{helpdesk.search_results.date_start}:</label>
+						<input type="text" name="date_start" id="date_start" size="10"  value="<#if date_start_query??>${date_start_query}</#if>"/>	
+					</span>
+				</p>
+				<p>
+					<span class="datepicker_wrap">	
+						<label for="date_end">#i18n{helpdesk.search_results.date_end}:</label>
+						<input type="text" name="date_end" id="date_end" size="10"  value="<#if date_end_query??>${date_end_query}</#if>"/>	
+					</span>
+				</p>
+				<p><label for="form_search_subject_id">#i18n{helpdesk.subjects.title.questions}:</label>
+					<select id="form_search_subject_id" name="form_search_subject_id"  >
+						<option value=""></option>
+						<@subjectsListSelect items=helpdesk_subject_list default_value="${subjectId}" exclude_value="" depth=0 />
+					</select>					
+                </p>
+                <p>
+                	<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true"/>#i18n{helpdesk.subject_list.labelSearchSubSubjects}
+                </p>
+                <p>
+                    <#-- Number of documents per page selector -->
+                    #i18n{helpdesk.search_results.labelNbDocsPerPage} : 
+                    <@NbItemsPerPageSelectorCombo nb_items_per_page />
+                </p>    
+                
+                <p>
+                    <div align="right"><input type="submit" class="button" value="#i18n{helpdesk.search_results.buttonSearch}"  /></div>
+                </p>
+       </form>
+    </div>
+</div>
+<div id="right" >
+	<div class="content-box">
+	 	
+		<h2>#i18n{helpdesk.question_answer_list.adminTitleRight}</h2>
+		<#if subject?has_content >	
+		<#if subject.questions?has_content >
+		
+		<form id="question_form" name="question_form" action="jsp/admin/plugins/helpdesk/DoActionSelectionQuestionAnswer.jsp">
+			<input type="hidden" value="${faq.id}" name="faq_id" />
+			<#if subject?has_content ><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
+			<p>Appliquer à la sélection :
+				<select id="selection" name="selection">
+					<option value="publish">#i18n{helpdesk.question_answer_list.publish}</option>
+					<option value="unpublish">#i18n{helpdesk.question_answer_list.unpublish}</option>
+					<option value="remove">#i18n{helpdesk.question_answer_list.remove}</option>
+				</select>					
+	    		<input type="submit" tabindex="10" class="button" />
+			</p>
+			<table>
+				<tr>
+					<th width="5%"><input id="select_all" name="select_all" type="checkbox" onclick="toggle_checkboxes();" /></th>
+					<th>#i18n{helpdesk.question_answer_list.titleSubject}</th>
+		 			<th>#i18n{helpdesk.question_answer_list.titleState}</th>
+					<th width="20%">#i18n{helpdesk.question_answer_list.titleActions}</th>
+	   			</tr>
+				<#list subject.questions as question_answer>
+				<tr>
+					<td>						
+						<input id="question_selection" name="question_selection" type="checkbox" value="${question_answer.idQuestionAnswer}" />
+					</td>
+		 		    <td>
+						<#assign truncated_value = 125 />
+						<a href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}" ><#if question_answer.question?length &gt; truncated_value>${question_answer.question?substring(0,truncated_value-3)}...<#else>${question_answer.question}</#if></a>
+					</td>
+					<td>
+						<#if question_answer.enabled>
+						<img src="images/admin/skin/plugins/helpdesk/published.png" alt="#i18n{helpdesk.question_answer_list.published}" title="#i18n{helpdesk.question_answer_list.published}" />
+						<#else>
+						<img src="images/admin/skin/plugins/helpdesk/unpublished.png" alt="#i18n{helpdesk.question_answer_list.unpublished}" title="#i18n{helpdesk.question_answer_list.unpublished}" />
+						</#if>
+					</td>
+					<td>
+						<#if question_answer.idOrder &gt; 0>
+		            		<a href="jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}" >
+		                		<img src="images/admin/skin/actions/up.png" alt="#i18n{helpdesk.commonList.buttonLabelGoUp}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}" />
+			                </a>
+	                	<#else>
+							<img src="images/admin/skin/plugins/helpdesk/up_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoUp}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}" />                
+	            		</#if>  
+	            		<#if subject.questions?seq_index_of(question_answer) != subject.questions?size-1>
+		            		<a href="jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}" >
+		                	<img src="images/admin/skin/actions/down.png" alt="#i18n{helpdesk.commonList.buttonLabelGoDown}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" />
+			                </a>	            		
+		                <#else>
+			                <img src="images/admin/skin/plugins/helpdesk/down_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoDown}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" />
+		               	</#if>   
+						<#if question_answer.enabled>
+							<a href="jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}" >
+								<img src="images/admin/skin/plugins/helpdesk/unpublished.png" alt="#i18n{helpdesk.question_answer_list.unpublish}" title="#i18n{helpdesk.question_answer_list.unpublish}" />
+							</a>
+						<#else>
+							<a href="jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}" >
+								<img src="images/admin/skin/plugins/helpdesk/published.png" alt="#i18n{helpdesk.question_answer_list.publish}" title="#i18n{helpdesk.question_answer_list.publish}" />
+							</a>
+						</#if>
+						<a href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}" >
+		                	<img src="images/admin/skin/plugins/helpdesk/delete.png" alt="#i18n{helpdesk.commonList.buttonLabelDelete}" title="#i18n{helpdesk.commonList.buttonLabelDelete}" />
+						</a>					       		
+					</td>
+				</tr>
+				</#list>
+			</table>			
+		</form>
+		<#else>
+			<p>
+				<em>#i18n{helpdesk.question_answer_list.noQuestion}</em>
+			</p>
+		</#if>
+		</#if>		
+		
+		<form action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
+			<input type="hidden" value="${faq.id}" name="faq_id" />
+			<#if subject?has_content ><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
+    		<input type="submit" value="#i18n{helpdesk.question_answer_list.buttonLabelCreate}" tabindex="10" class="button" />
+		</form>
+	</div>
+</div>
+<#-- Number of items per page selector - Combo Box implementation -->
+<#macro NbItemsPerPageSelectorCombo nb_items_per_page>
+<select name="items_per_page">
+    <#list [ "10" , "20" , "50" , "100" ] as nb>
+    <#if nb_items_per_page = nb >
+    <option selected="selected" value="${nb}">${nb}</option>
+    <#else>
+    <option value="${nb}">${nb}</option>
+    </#if>
+    </#list>
+</select>
+</#macro>
+
+<@getDatePicker idField="date_start"  language=locale />
+<@getDatePicker idField="date_end"  language=locale />

@@ -1,0 +1,90 @@
+<#macro subjectsList items default_value exclude_value depth>
+	<#if items?has_content >
+	<#list items as subject >
+		<#if exclude_value="${subject.id}">
+		<#else>
+			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
+	        <#assign child_subjects_list = subject.getChilds(plugin) />
+	        <#if child_subjects_list?has_content>
+				<@subjectsList items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+	        </#if>
+        </#if>
+	</#list>
+	
+	</#if>
+</#macro>
+
+<#macro themesList items default_value exclude_value depth>
+	<#if items?has_content >
+	<#list items as theme >
+		<#if exclude_value="${theme.id}">
+		<#else>
+			<option <#if default_value="${theme.id}">selected="selected"</#if> value="${theme.id}" >
+			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${theme.text}</option>
+	        <#assign child_themes_list = theme.getChilds(plugin) />
+	        <#if child_themes_list?has_content>
+				<@themesList items=child_themes_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+	        </#if>
+        </#if>
+	</#list>
+	
+	</#if>
+</#macro>
+
+<#macro commonListTable items depth jspRef paramId >
+	<#if items?has_content >
+	<#list items as subject >
+		<tr>
+            <td>
+          		<@indentation depth=depth />
+                <a href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" class="bullet-link"> ${subject.text} (#i18n{helpdesk.commonList.labelId} : ${subject.id})</a>
+                &nbsp;-&nbsp;${subject.questions?size}&nbsp;#i18n{helpdesk.commonList.labelQuestion}
+            </td>
+            <td>
+            	<#if subject.idOrder &gt; 0>
+            		<a href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+                	<img src="images/admin/skin/actions/up.png" alt="#i18n{helpdesk.commonList.buttonLabelGoUp}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}" />
+	                </a>
+                <#else>
+					<img src="images/admin/skin/plugins/helpdesk/up_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoUp}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}" />                
+            	</#if>
+            	<#if items?seq_index_of(subject) != items?size-1>
+            		<a href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+                	<img src="images/admin/skin/actions/down.png" alt="#i18n{helpdesk.commonList.buttonLabelGoDown}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" />
+	                </a>
+            		<a href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+                	<img src="images/admin/skin/plugins/helpdesk/in.png" alt="#i18n{helpdesk.commonList.buttonLabelGoIn}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" />
+	                </a>
+                <#else>
+	                <img src="images/admin/skin/plugins/helpdesk/down_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoDown}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" />
+                	<img src="images/admin/skin/plugins/helpdesk/in_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoIn}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" />
+            	</#if>
+            	<#if subject.idOrder == 0 && subject.idParent &gt; 0>
+            		<a href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+                	<img src="images/admin/skin/plugins/helpdesk/out.png" alt="#i18n{helpdesk.commonList.buttonLabelGoOut}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}" />
+	                </a>
+            	<#else>
+                	<img src="images/admin/skin/plugins/helpdesk/out_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoOut}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}" />            		
+            	</#if>
+                <a href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+                <img src="images/admin/skin/plugins/helpdesk/delete.png" alt="#i18n{helpdesk.commonList.buttonLabelDelete}" title="#i18n{helpdesk.commonList.buttonLabelDelete}" />
+                </a>
+            </td>            
+        </tr>
+        <#assign child_subjects_list = subject.getChilds(plugin) />
+        <#if child_subjects_list?has_content>
+			<@commonListTable items=child_subjects_list depth=depth+1 jspRef=jspRef paramId=paramId />
+        </#if>
+	</#list>
+	
+	</#if>
+</#macro>
+
+<#macro indentation depth >
+	<#if depth &gt; 0>
+		<#list 1..depth as i>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		</#list>
+	</#if>
+</#macro>

@@ -1,0 +1,61 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="@portal_url@/css/portal_admin.css" title="lutece_admin">
+<link rel="stylesheet" type="text/css" href="@portal_url@/css/newsletter.css" title="newsletter">
+</head>
+<body>
+<table align="center" width="100%" cellpadding="0" cellspacing="0">
+<tr>
+<td>
+    <table height="80">
+    <tr><td>&nbsp;</td></tr>
+    </table>
+</td>
+</tr>
+<tr>
+<td>
+    <center>
+    <table cellspacing="1" cellpadding="0" class="admin-news">
+
+     <tr>
+    <td align="center"><img src="@portal_url@/images/local/skin/banner_newsletter.gif" align="top" border="0" hspace="0"></td>
+    </tr>
+    <tr>
+    <th class="admin-news" width="500" align="center" height="40">#i18n{helpdesk.send_newsletter.question} @first_name@ @last_name@ (@vq_date@)</th>
+    </tr>
+    <tr>
+        <td class="admin-news">
+             <table align="center" width="500" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="admin-news" align="center" height="30"><i><b>@newsletter_name@</b></i></th>
+                </tr>
+                <tr>
+                     <td width="100" class="admin-news" align="left" >#i18n{helpdesk.send_newsletter.editorial} </td>
+                </tr>
+                <tr>
+                     <td width="500" class="admin-news" height="100"><i>@newsletter_edito@</i></td>
+                </tr>
+              </table>
+        </td>
+    </tr>
+    @newsletter_content@
+
+    <tr>
+        <td class="admin-news" align="left" height="20">#i18n{helpdesk.send_newsletter.stop} <a href="@portal_url@/jsp/site/plugins/newsletter/DoUnsubscribeNewsLetter.jsp?subscriber_email=@subscriber_email@&newsletter_id=@newsletter_id@" class="newsletter">#i18n{helpdesk.send_newsletter.click}</a></td>
+    </tr>
+</table>
+
+</center>
+</td>
+</tr>
+<tr>
+<td>
+    <table height="80">
+    <tr><td>&nbsp;</td></tr>
+    </table>
+</td>
+<tr>
+</table>
+</body>
+</html>
+

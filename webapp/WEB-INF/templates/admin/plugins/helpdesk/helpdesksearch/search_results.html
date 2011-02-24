@@ -1,0 +1,149 @@
+
+<#macro getParentSubject subject breadcrumb >
+	<#if subject?has_content>
+		<#if breadcrumb == "">
+			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}" >' + subject.text + '</a>' + " &nbsp; " />
+		<#else>
+			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}" >' + subject.text + '</a>' + " &gt; " + breadcrumb />
+		</#if>
+		<#if subject.getParent(plugin)?has_content && subject.idParent != 0 >
+			<@getParentSubject subject=subject.getParent(plugin) breadcrumb=breadcrumbCopy />
+		<#else>			
+			${breadcrumbCopy}
+		</#if>
+	</#if>
+</#macro>
+
+<#macro subjectsListSelect items default_value exclude_value depth>
+	<#if items?has_content >
+	<#list items as subject >
+		<#if exclude_value="${subject.id}">
+		<#else>
+			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
+	        <#assign child_subjects_list = subject.getChilds(plugin) />
+	        <#if child_subjects_list?has_content>
+				<@subjectsListSelect items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+	        </#if>
+        </#if>
+	</#list>
+	
+	</#if>
+</#macro>
+
+<div id="left">
+    
+    <div class="content-box" >
+        <h2 class="page-title" >#i18n{helpdesk.search_results.labelSearch} </h2>
+        
+        <div class="highlight-box">
+            <form name="search" method="post" action="jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp">
+                <input type="hidden" value="${faq_id}" name="faq_id" />
+                <p>
+                    <input type="hidden" name="page" value="search" />
+                    <label for="query">#i18n{helpdesk.search_results.labelSearch}</label>
+                    <input type="text" name="query" size="30" value="<#if query??>${query}</#if>" />
+                </p>
+                <p>
+					<span class="datepicker_wrap">	
+						<label for="date_start">#i18n{helpdesk.search_results.date_start}:</label>
+						<input type="text" name="date_start" id="date_start" size="10"  value="<#if date_start_query??>${date_start_query}</#if>"/>	
+					</span>
+				</p>
+				<p>
+					<span class="datepicker_wrap">	
+						<label for="date_end">#i18n{helpdesk.search_results.date_end}:</label>
+						<input type="text" name="date_end" id="date_end" size="10"  value="<#if date_end_query??>${date_end_query}</#if>"/>	
+					</span>
+				</p>
+				<p>
+					<label for="form_search_subject_id">#i18n{helpdesk.subjects.title.questions}:</label>
+					<select id="form_search_subject_id" name="form_search_subject_id"  >
+						<option value=""></option>
+						<@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
+					</select>					
+                </p>
+                <p>
+                	<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true" <#if filter_search_sub_subject>checked="checked"</#if> />#i18n{helpdesk.subject_list.labelSearchSubSubjects}
+                </p>
+                <p>
+                    <#-- Number of documents per page selector -->
+                    #i18n{helpdesk.search_results.labelNbDocsPerPage} : 
+                    <@NbItemsPerPageSelectorCombo nb_items_per_page />
+                </p>    
+                
+                <p>
+                    <div align="right"><input type="submit" class="button" value="#i18n{helpdesk.search_results.buttonSearch}"  /></div>
+                </p>
+            </form>
+        </div>
+    </div>  
+</div>
+<#if error??>
+	<div id="right">
+	    <div class="content-box" id="message-box" >		  	
+	  		<img class="icon" alt="error" src="images/admin/skin/messages/warning.png" />
+	  		<h2>#i18n{helpdesk.search_results.error}</h2>
+	  		<p>${error}</p>		  
+	 	</div>
+	</div>            
+<#else>	
+	<div id="right">
+	    <div class="content-box" >
+	        
+	            <h2>#i18n{helpdesk.question_answer_list.LabelQuestion}</h2>
+	            
+	           
+	            
+	            
+	            #i18n{helpdesk.search_results.labelResultsCount} : <strong>${paginator.itemsCount}</strong> <br />
+	            #i18n{helpdesk.search_results.labelResultsRange} : <strong>${paginator.rangeMin} - ${paginator.rangeMax}</strong> <br />
+	            <@pagination paginator=paginator />
+	            
+	            <table>
+	                <tr>
+	                    <th>Sujet</th>                    
+	                    <th>Question</th>                    
+	                </tr>
+	                <#list results_list as result>
+	                <tr>
+	                 	<td><@getParentSubject subject=result.getSubject(plugin) breadcrumb="" /></td>                   
+	                    <td><a href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}" >${result.question}</a></td>
+	                </tr>            
+	                </#list>
+	            </table>
+	            <#if (paginator.itemsCount > 0)>
+		            <form name="export" method="post" action="jsp/admin/plugins/helpdesk/DoExportCSV.jsp">
+		            	<input type="submit" class="button" value="#i18n{helpdesk.search_results.exportCSV}" />
+		            </form>
+	            </#if>
+	    </div>
+	</div>
+</#if> 
+<#-- Freemarker macros -->
+
+<#-- Number of items per page selector - Combo Box implementation -->
+<#macro NbItemsPerPageSelectorCombo nb_items_per_page>
+<select name="items_per_page">
+    <#list [ "10" , "20" , "50" , "100" ] as nb>
+    <#if nb_items_per_page = nb >
+    <option selected="selected" value="${nb}">${nb}</option>
+    <#else>
+    <option value="${nb}">${nb}</option>
+    </#if>
+    </#list>
+</select>
+</#macro>
+
+<#-- Number of items per page selector - Radio List implementation -->
+<#macro NbItemsPerPageSelectorRadioList nb_items_per_page>
+<#list [ "5" , "10" , "20" , "50" ] as nb>
+<#if nb = nb_items_per_page > 
+<input value="${nb}" id="items_per_page${nb}" name="items_per_page" type="radio" class="radio" checked /><label for="items_per_page${nb}">${nb}</label>
+<#else>
+<input value="${nb}" id="items_per_page${nb}" name="items_per_page" type="radio" class="radio" /><label for="items_per_page${nb}">${nb}</label>
+</#if>
+</#list>
+</#macro>
+<@getDatePicker idField="date_start"  language=locale />
+<@getDatePicker idField="date_end"  language=locale />

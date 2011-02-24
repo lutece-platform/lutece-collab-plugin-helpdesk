@@ -1,0 +1,31 @@
+<#include "macro_helpdesk.html" />
+
+<div class="content-box" >
+<h2>#i18n{helpdesk.create_theme.boxTitle}</h2>
+<form method="post" name="do_create_theme" action="jsp/admin/plugins/helpdesk/DoCreateTheme.jsp">
+    <p>
+      <label>#i18n{helpdesk.create_theme.LabelTheme}</label> * :
+      <input type="text" name="theme" id="theme" tabindex="1" size="50" maxlength="50" />
+    </p>
+    <p>
+   		<label>#i18n{helpdesk.create_theme.LabelMailingList}</label> * : 
+    	<#if mailing_list?has_content>
+        	<@combo name="mailinglists" default_value="" items=mailing_list />
+        <#else>
+        	<em>#i18n{helpdesk.create_theme.messageNotificationListNotExist}</em>
+		</#if>
+    </p>
+	<p>
+		<label for="parent_id">#i18n{helpdesk.create_theme.LabelParent}</label> * : 
+		<select id="parent_id" name="parent_id" >
+			<option value="0" >#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
+			<@themesList items=helpdesk_theme_list default_value="${default_value}" exclude_value="" depth=0 />
+		</select>
+	</p>
+	
+	<input type="hidden" value="${faq_id}" name="faq_id" />
+    <input type="submit" value="#i18n{helpdesk.create_theme.buttonLabelCreate}" tabindex="10" class="button" />
+
+</form>
+</div>
+

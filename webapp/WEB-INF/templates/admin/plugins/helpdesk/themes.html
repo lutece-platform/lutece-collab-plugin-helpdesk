@@ -1,0 +1,44 @@
+<#include "macro_helpdesk.html" />
+
+<div class="content-box" >
+
+	<h2>#i18n{helpdesk.themes.adminTitle}</h2>
+	
+	<form action="jsp/admin/plugins/helpdesk/CreateTheme.jsp">
+		<input type="hidden" value="${faq.id}" name="faq_id" />
+	    <input type="submit" tabindex="10" value="#i18n{helpdesk.themes.themeAdd}" class="button" />
+	</form>
+	
+	<div class="highlight-box">
+		<form method="post" action="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp">
+		   <@pagination paginator=paginator />
+		
+		   <!-- Number of documents per page selector -->
+		    #i18n{helpdesk.themes.labelItemsPerPage} :
+		    <select name="items_per_page">
+		        <#list [ "10" , "20" , "50" , "100" ] as nb>
+		        <#if nb_items_per_page = nb >
+		        <option selected="selected" value="${nb}">${nb}</option>
+		        <#else>
+		        <option value="${nb}">${nb}</option>
+		        </#if>
+		        </#list>
+		    </select>
+		    <input type="hidden" value="${faq.id}" name="faq_id" />
+		    <input type="submit" class="button" value="#i18n{helpdesk.themes.buttonItemsPerPage}" />
+		</form>
+	</div>
+    
+    <table>
+		<tr>
+			<th>#i18n{helpdesk.themes.title}</th>
+    		<th>#i18n{helpdesk.themes.title.actions}</th>
+		</tr>
+        <@commonListTable items=helpdesk_theme_list depth=0 jspRef="Theme" paramId="theme_id" />
+    </table>
+
+	<form action="jsp/admin/plugins/helpdesk/CreateTheme.jsp">
+		<input type="hidden" value="${faq.id}" name="faq_id" />
+	    <input type="submit" tabindex="10" value="#i18n{helpdesk.themes.themeAdd}" class="button" />
+	</form>
+</div>
