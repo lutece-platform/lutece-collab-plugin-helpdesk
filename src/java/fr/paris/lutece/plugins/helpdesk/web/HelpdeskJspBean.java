@@ -35,7 +35,6 @@ package fr.paris.lutece.plugins.helpdesk.web;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import fr.paris.lutece.plugins.helpdesk.business.Faq;
 import fr.paris.lutece.plugins.helpdesk.business.FaqHome;
 import fr.paris.lutece.plugins.helpdesk.business.QuestionAnswer;
@@ -84,6 +83,7 @@ import java.io.Reader;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
