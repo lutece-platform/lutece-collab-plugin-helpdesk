@@ -112,10 +112,13 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             Collection<BooleanClause.Occur> flags = new ArrayList<BooleanClause.Occur>(  );
 
             //Faq Id
-            Query queryFaqId = new TermQuery( new Term( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ) ) );
-            queries.add( queryFaqId.toString(  ) );
-            fields.add( HelpdeskSearchItem.FIELD_FAQ_ID );
-            flags.add( BooleanClause.Occur.MUST );
+            if( nIdFaq != -1 )
+            {
+	            Query queryFaqId = new TermQuery( new Term( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ) ) );
+	            queries.add( queryFaqId.toString(  ) );
+	            fields.add( HelpdeskSearchItem.FIELD_FAQ_ID );
+	            flags.add( BooleanClause.Occur.MUST );
+            }
 
             //Type (=helpdesk)
             PhraseQuery queryType = new PhraseQuery(  );

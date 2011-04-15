@@ -115,4 +115,22 @@ public class HelpdeskSearchService
 
         return listQuestionAnswer;
     }
+    
+    /**
+     * Return search results
+     *
+     * @param strQuery The search query
+     * @param dateBegin The date begin
+     * @param dateEnd The date end
+     * @param subject The {@link Subject}
+     * @param bSearchSubSubjects true if research must be done in sub-subjects
+     * @param request The {@link HttpServletRequest}
+     * @param plugin The plugin
+     * @return Results as a collection of {@link QuestionAnswer}
+     */
+    public Collection<QuestionAnswer> getSearchResults( String strQuery, Date dateBegin, Date dateEnd,
+    		HttpServletRequest request, Plugin plugin )
+    {
+    	return getSearchResults( -1, strQuery, dateBegin, dateEnd, null, false, request, plugin );
+    }
 }

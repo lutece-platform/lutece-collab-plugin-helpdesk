@@ -328,6 +328,8 @@ public final class FaqDAO implements IFaqDAO
             faq.setRoleKey( daoUtil.getString( 2 ) );
         }
 
+        daoUtil.free(  );
+        
         return faq;
     }
 

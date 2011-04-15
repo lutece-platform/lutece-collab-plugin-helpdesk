@@ -71,6 +71,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * This class implements the HelpDesk XPage.
@@ -479,6 +481,38 @@ public class HelpdeskApp implements XPageApplication
     public String getFaqList( HttpServletRequest request, Plugin plugin )
         throws SiteMessageException
     {
+    	String strKeywords = request.getParameter( PARAMETER_KEYWORDS );
+        String strDateBegin = request.getParameter( PARAMETER_DATE_BEGIN );
+        String strDateEnd = request.getParameter( PARAMETER_DATE_END );
+        boolean bSearchPage = true;
+        Collection<QuestionAnswer> listQuestionAnswer = null;
+        
+        if( StringUtils.isBlank( strKeywords ) && StringUtils.isBlank( strDateBegin ) 
+        		&& StringUtils.isBlank( strDateEnd ) )
+        {
+        	bSearchPage = false;
+        }
+        else
+        {
+            if ( StringUtils.isBlank( strDateBegin ) ^ StringUtils.isBlank( strDateEnd ) )
+            {
+                SiteMessageService.setMessage( request, MESSAGE_SEARCH_DATE_MANDATORY, SiteMessage.TYPE_STOP );
+            }
+
+            Date dateBegin = DateUtil.formatDate( strDateBegin, request.getLocale(  ) );
+            Date dateEnd = DateUtil.formatDate( strDateEnd, request.getLocale(  ) );
+
+            if ( ( dateBegin == null ) ^ ( dateEnd == null ) )
+            {
+                SiteMessageService.setMessage( request, MESSAGE_SEARCH_DATE_VALIDITY, SiteMessage.TYPE_STOP );
+            }
+
+            listQuestionAnswer = HelpdeskSearchService.getInstance(  )
+                                                      .getSearchResults( strKeywords, dateBegin,
+                    dateEnd, request, plugin );
+        }
+
+    	
         HashMap<String, Object> model = new HashMap<String, Object>(  );
         Collection<Faq> faqList = null;
 
@@ -500,6 +534,16 @@ public class HelpdeskApp implements XPageApplication
             faqList = FaqHome.findAll( plugin );
         }
 
+        model.put( MARK_SEARCH_PAGE, bSearchPage );
+        model.put( MARK_QUESTIONANSWER_LIST, listQuestionAnswer );
+        model.put( MARK_PLUGIN, plugin );
+        model.put( MARK_FILTER_SEARCHED_KEYWORDS, strKeywords );
+        model.put( MARK_FILTER_DATE_BEGIN, strDateBegin );
+        model.put( MARK_FILTER_DATE_END, strDateEnd );
+        model.put( MARK_PATH_LABEL, HelpdeskPlugin.PLUGIN_NAME );
+        model.put( MARK_LOCALE, request.getLocale(  ) );
+        model.put( MARK_ANCHOR_SUBJECT, ANCHOR_SUBJECT );
+        model.put( MARK_ANCHOR_QUESTION_ANSWER, ANCHOR_QUESTION_ANSWER );
         model.put( MARK_FAQ_LIST, faqList );
         //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
         model.put( FULL_URL, request.getRequestURL(  ) );

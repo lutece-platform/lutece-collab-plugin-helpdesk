@@ -90,4 +90,24 @@ public class Subject extends AbstractSubject
     {
         return (Collection<Subject>) SubjectHome.getInstance(  ).findByIdParent( getId(  ), plugin );
     }
+    
+    /**
+     * Gets the owning Faq
+     * @param plugin The plugin
+     * @return The owning Faq
+     */
+    public Faq getFaq( Plugin plugin )
+    {
+    	if( getIdParent(  ) == 0 )
+    	{
+    		return FaqHome.load( FaqHome.findBySubjectId( getId(  ), plugin ).getId(  ), plugin );
+    	}
+    	else
+    	{
+    		Subject parent = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( getIdParent(  ), plugin );
+    		return parent.getFaq( plugin );
+    	}
+    	
+    }
+    
 }

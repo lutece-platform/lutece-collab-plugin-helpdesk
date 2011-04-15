@@ -81,6 +81,7 @@ public class HelpdeskIndexer implements SearchIndexer
     private static final String PROPERTY_INDEXER_VERSION = "helpdesk.indexer.version";
     private static final String PROPERTY_INDEXER_ENABLE = "helpdesk.indexer.enable";
     private static final String CONSTANT_SPACE =  " " ;
+    private static final String JSP_PAGE_SEARCH = "jsp/site/Portal.jsp?page=helpdesk";
 
     /**
      * Returns the indexer service description
@@ -338,7 +339,7 @@ public class HelpdeskIndexer implements SearchIndexer
         // separately.
         doc.add( new Field( SearchItem.FIELD_TITLE, subject.getText(  ), Field.Store.YES, Field.Index.UN_TOKENIZED ) );
 
-        doc.add( new Field( SearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, Field.Store.YES, Field.Index.ANALYZED ) );
+        doc.add( new Field( SearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         doc.add( new Field( SearchItem.FIELD_ROLE, strRoleKey, Field.Store.YES, Field.Index.UN_TOKENIZED ) );
 
@@ -399,4 +400,22 @@ public class HelpdeskIndexer implements SearchIndexer
 
         return bReturn;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+	public List<String> getListType(  )
+	{
+		List<String> listType = new ArrayList<String>(  );
+		listType.add( HelpdeskPlugin.PLUGIN_NAME );
+		return listType;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getSpecificSearchAppUrl(  )
+	{
+		return JSP_PAGE_SEARCH;
+	}
 }
