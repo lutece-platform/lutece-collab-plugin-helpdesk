@@ -33,14 +33,15 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
+import java.util.Collection;
+import java.util.List;
+
 import fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer;
+import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.search.IndexationService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
-
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -78,6 +79,7 @@ public abstract class AbstractSubjectHome implements AbstractSubjectHomeInterfac
         //index the subject
         IndexationService.addIndexerAction( Integer.toString( abstractSubject.getId(  ) ),
             AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_CREATE );
+        HelpdeskIndexerUtils.addIndexerAction( Integer.toString( abstractSubject.getId(  ) ), IndexerAction.TASK_CREATE, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
 
         return abstractSubject;
     }
@@ -133,7 +135,8 @@ public abstract class AbstractSubjectHome implements AbstractSubjectHomeInterfac
         //reindex the subject
         IndexationService.addIndexerAction( Integer.toString( abstractSubject.getId(  ) ),
             AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
-
+        HelpdeskIndexerUtils.addIndexerAction( Integer.toString( abstractSubject.getId(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
+        
         return abstractSubject;
     }
 
@@ -162,9 +165,11 @@ public abstract class AbstractSubjectHome implements AbstractSubjectHomeInterfac
 
         getDAO(  ).delete( nIdAbstractSubject, plugin );
         //unindex the subject
-        IndexationService.addIndexerAction( Integer.toString( nIdAbstractSubject ) + "_" +
+        String strIdAbstractSubject = Integer.toString( nIdAbstractSubject );
+        IndexationService.addIndexerAction( strIdAbstractSubject + "_" +
             HelpdeskIndexer.SHORT_NAME_SUBJECT,
             AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_DELETE );
+        HelpdeskIndexerUtils.addIndexerAction( strIdAbstractSubject, IndexerAction.TASK_DELETE, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
     }
 
     ///////////////////////////////////////////////////////////////////////////

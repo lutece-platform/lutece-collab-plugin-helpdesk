@@ -33,15 +33,16 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
+import java.util.Collection;
+import java.util.List;
+
 import fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer;
+import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.search.IndexationService;
 import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
-
-import java.util.Collection;
-import java.util.List;
 
 
 /**
@@ -90,6 +91,8 @@ public final class QuestionAnswerHome
         {
             IndexationService.addIndexerAction( Integer.toString( questionanswer.getIdSubject(  ) ),
                 AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
+            
+            HelpdeskIndexerUtils.addIndexerAction( Integer.toString( questionanswer.getIdSubject(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_QUESTION_ANSWER_TYPE_RESOURCE );
         }
 
         return questionanswer;
@@ -143,6 +146,8 @@ public final class QuestionAnswerHome
         {
             IndexationService.addIndexerAction( Integer.toString( questionanswer.getIdSubject(  ) ),
                 AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
+            
+            HelpdeskIndexerUtils.addIndexerAction( Integer.toString( questionanswer.getIdSubject(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_QUESTION_ANSWER_TYPE_RESOURCE );
         }
 
         return questionanswer;
@@ -172,9 +177,12 @@ public final class QuestionAnswerHome
 
         if ( questionOld.isEnabled(  ) )
         {
-            IndexationService.addIndexerAction( Integer.toString( questionOld.getIdQuestionAnswer(  ) ) + "_" +
+        	String strIdQuestionAnswer = Integer.toString( questionOld.getIdQuestionAnswer(  ) );
+            IndexationService.addIndexerAction( strIdQuestionAnswer + "_" +
                 HelpdeskIndexer.SHORT_NAME_QUESTION_ANSWER,
                 AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_DELETE );
+            
+            HelpdeskIndexerUtils.addIndexerAction( strIdQuestionAnswer, IndexerAction.TASK_DELETE, HelpdeskIndexerUtils.CONSTANT_QUESTION_ANSWER_TYPE_RESOURCE );
         }
 
         _dao.delete( nIdQuestionAnswer, plugin );
@@ -204,9 +212,12 @@ public final class QuestionAnswerHome
         {
             if ( questionAnswer.isEnabled(  ) )
             {
-                IndexationService.addIndexerAction( Integer.toString( questionAnswer.getIdQuestionAnswer(  ) ) + "_" +
+            	String strIdQuestionAnswer = Integer.toString( questionAnswer.getIdQuestionAnswer(  ) );
+                IndexationService.addIndexerAction( strIdQuestionAnswer + "_" +
                     HelpdeskIndexer.SHORT_NAME_QUESTION_ANSWER,
                     AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_DELETE );
+                
+                HelpdeskIndexerUtils.addIndexerAction( strIdQuestionAnswer, IndexerAction.TASK_DELETE, HelpdeskIndexerUtils.CONSTANT_QUESTION_ANSWER_TYPE_RESOURCE );
             }
         }
 

@@ -33,8 +33,22 @@
  */
 package fr.paris.lutece.plugins.helpdesk.web;
 
-import au.com.bytecode.opencsv.CSVReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.fileupload.FileItem;
+
+import au.com.bytecode.opencsv.CSVReader;
 import fr.paris.lutece.plugins.helpdesk.business.Faq;
 import fr.paris.lutece.plugins.helpdesk.business.FaqHome;
 import fr.paris.lutece.plugins.helpdesk.business.QuestionAnswer;
@@ -47,6 +61,7 @@ import fr.paris.lutece.plugins.helpdesk.business.VisitorQuestion;
 import fr.paris.lutece.plugins.helpdesk.business.VisitorQuestionHome;
 import fr.paris.lutece.plugins.helpdesk.service.FaqResourceIdService;
 import fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer;
+import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
 import fr.paris.lutece.portal.business.mailinglist.Recipient;
 import fr.paris.lutece.portal.business.rbac.RBAC;
@@ -74,22 +89,6 @@ import fr.paris.lutece.util.filesystem.UploadUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.html.Paginator;
 import fr.paris.lutece.util.url.UrlItem;
-
-import org.apache.commons.fileupload.FileItem;
-
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -1125,6 +1124,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         IndexationService.addIndexerAction( Integer.toString( questionAnswer.getIdSubject(  ) ),
             AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
 
+        HelpdeskIndexerUtils.addIndexerAction( Integer.toString( questionAnswer.getIdSubject(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
+        
         return url.getUrl(  );
     }
 
@@ -1158,10 +1159,13 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_SUBJECT_ID, questionAnswer.getIdSubject(  ) );
 
         //reindex the subject
-        IndexationService.addIndexerAction( Integer.toString( questionAnswer.getIdQuestionAnswer(  ) ) + "_" +
+        String strIdQuestionAnswer = Integer.toString( questionAnswer.getIdQuestionAnswer(  ) );
+        IndexationService.addIndexerAction( strIdQuestionAnswer + "_" +
             HelpdeskIndexer.SHORT_NAME_QUESTION_ANSWER,
             AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_DELETE );
 
+        HelpdeskIndexerUtils.addIndexerAction( strIdQuestionAnswer, IndexerAction.TASK_DELETE, HelpdeskIndexerUtils.CONSTANT_QUESTION_ANSWER_TYPE_RESOURCE );
+        
         return url.getUrl(  );
     }
 

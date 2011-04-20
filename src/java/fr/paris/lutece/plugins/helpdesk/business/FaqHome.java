@@ -33,7 +33,10 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
+import java.util.Collection;
+
 import fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer;
+import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.search.IndexationService;
@@ -41,8 +44,6 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
 import fr.paris.lutece.util.ReferenceList;
-
-import java.util.Collection;
 
 
 /**
@@ -96,7 +97,9 @@ public final class FaqHome
     {
         IndexationService.addIndexerAction( Integer.toString( subject.getId(  ) ),
             AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
-
+        
+        HelpdeskIndexerUtils.addIndexerAction( Integer.toString( subject.getId(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
+        
         for ( Subject subjectChild : subject.getChilds( plugin ) )
         {
             reindexSubject( subjectChild, plugin );
@@ -121,7 +124,9 @@ public final class FaqHome
                     IndexationService.addIndexerAction( Integer.toString( subject.getId(  ) ),
                         AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ),
                         IndexerAction.TASK_MODIFY );
-
+                    
+                    HelpdeskIndexerUtils.addIndexerAction( Integer.toString( subject.getId(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
+                    
                     for ( Subject subjectChild : subject.getChilds( plugin ) )
                     {
                         reindexSubject( subjectChild, plugin );
