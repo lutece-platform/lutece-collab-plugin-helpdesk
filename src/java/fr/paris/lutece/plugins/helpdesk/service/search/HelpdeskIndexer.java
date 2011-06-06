@@ -132,9 +132,20 @@ public class HelpdeskIndexer implements SearchIndexer
         urlSubject.addParameter( HelpdeskApp.PARAMETER_FAQ_ID, faq.getId(  ) );
         urlSubject.setAnchor( HelpdeskApp.ANCHOR_SUBJECT + subject.getId(  ) );
 
-        org.apache.lucene.document.Document docSubject = getDocument( subject, faq.getRoleKey(  ),
-                urlSubject.getUrl(  ), plugin );
-        IndexationService.write( docSubject );
+        org.apache.lucene.document.Document docSubject = null;
+        try
+        {
+        	docSubject = getDocument( subject, faq.getRoleKey(  ), urlSubject.getUrl(  ), plugin );
+        }
+        catch ( Exception e )
+        {
+        	String strMessage = "FAQ ID : " + faq.getId(  ) + " - Subject ID : " + subject.getId(  );
+        	IndexationService.error( this, e, strMessage );
+        }
+        if ( docSubject != null )
+        {
+        	IndexationService.write( docSubject );
+        }
 
         for ( QuestionAnswer questionAnswer : (List<QuestionAnswer>) subject.getQuestions(  ) )
         {
@@ -147,9 +158,22 @@ public class HelpdeskIndexer implements SearchIndexer
                 urlQuestionAnswer.setAnchor( HelpdeskApp.ANCHOR_QUESTION_ANSWER +
                     questionAnswer.getIdQuestionAnswer(  ) );
 
-                org.apache.lucene.document.Document docQuestionAnswer = getDocument( faq.getId(  ), questionAnswer,
-                        urlQuestionAnswer.getUrl(  ), faq.getRoleKey(  ), plugin );
-                IndexationService.write( docQuestionAnswer );
+                org.apache.lucene.document.Document docQuestionAnswer = null;
+                try
+                {
+                	docQuestionAnswer = getDocument( faq.getId(  ), questionAnswer,urlQuestionAnswer.getUrl(  ), 
+                    		faq.getRoleKey(  ), plugin );
+                }
+                catch ( Exception e )
+                {
+                	String strMessage = "FAQ ID : " + faq.getId(  ) + " - Subject ID : " + subject.getId(  ) + " - QuestionAnswer ID :" +
+                			questionAnswer.getIdQuestionAnswer(  );
+                	IndexationService.error( this, e, strMessage );
+                }
+                if ( docQuestionAnswer != null )
+                {
+                	IndexationService.write( docQuestionAnswer );
+                }
             }
         }
 
