@@ -272,29 +272,29 @@ public class HelpdeskIndexer implements SearchIndexer
         org.apache.lucene.document.Document doc = new org.apache.lucene.document.Document(  );
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ), Field.Store.YES,
-                Field.Index.UN_TOKENIZED ) );
+                Field.Index.NOT_ANALYZED ) );
 
-        doc.add( new Field( HelpdeskSearchItem.FIELD_ROLE, strRoleKey, Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+        doc.add( new Field( HelpdeskSearchItem.FIELD_ROLE, strRoleKey, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         // Add the url as a field named "url".  Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
-        doc.add( new Field( HelpdeskSearchItem.FIELD_URL, strUrl, Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+        doc.add( new Field( HelpdeskSearchItem.FIELD_URL, strUrl, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_SUBJECT, String.valueOf( questionAnswer.getIdSubject(  ) ),
-                Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+                Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         // Add the uid as a field, so that index can be incrementally maintained.
         // This field is not stored with question/answer, it is indexed, but it is not
         // tokenized prior to indexing.
         String strIdQuestionAnswer = String.valueOf( questionAnswer.getIdQuestionAnswer(  ) );
         doc.add( new Field( HelpdeskSearchItem.FIELD_UID, strIdQuestionAnswer + "_" + SHORT_NAME_QUESTION_ANSWER,
-                Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+                Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         // Add the last modified date of the file a field named "modified".
         // Use a field that is indexed (i.e. searchable), but don't tokenize
         // the field into words.
         String strDate = DateTools.dateToString( questionAnswer.getCreationDate(  ), DateTools.Resolution.DAY );
-        doc.add( new Field( HelpdeskSearchItem.FIELD_DATE, strDate, Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+        doc.add( new Field( HelpdeskSearchItem.FIELD_DATE, strDate, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         String strContentToIndex = getContentToIndex( questionAnswer, plugin );
         StringReader readerPage = new StringReader( strContentToIndex );
@@ -315,15 +315,15 @@ public class HelpdeskIndexer implements SearchIndexer
 
         // Add the tag-stripped contents as a Reader-valued Text field so it will
         // get tokenized and indexed.
-        doc.add( new Field( HelpdeskSearchItem.FIELD_CONTENTS, sb.toString(  ), Field.Store.NO, Field.Index.TOKENIZED ) );
+        doc.add( new Field( HelpdeskSearchItem.FIELD_CONTENTS, sb.toString(  ), Field.Store.NO, Field.Index.ANALYZED ) );
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.
         doc.add( new Field( HelpdeskSearchItem.FIELD_TITLE, questionAnswer.getQuestion(  ), Field.Store.YES,
-                Field.Index.TOKENIZED ) );
+                Field.Index.ANALYZED ) );
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, Field.Store.YES,
-                Field.Index.UN_TOKENIZED ) );
+                Field.Index.NOT_ANALYZED ) );
 
         // return the document
         return doc;
@@ -348,24 +348,24 @@ public class HelpdeskIndexer implements SearchIndexer
 
         // Add the url as a field named "url".  Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
-        doc.add( new Field( SearchItem.FIELD_URL, strUrl, Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+        doc.add( new Field( SearchItem.FIELD_URL, strUrl, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         // Add the uid as a field, so that index can be incrementally maintained.
         // This field is not stored with question/answer, it is indexed, but it is not
         // tokenized prior to indexing.
         String strIdSubject = String.valueOf( subject.getId(  ) );
         doc.add( new Field( SearchItem.FIELD_UID, strIdSubject + "_" + SHORT_NAME_SUBJECT, Field.Store.NO,
-                Field.Index.UN_TOKENIZED ) );
+                Field.Index.NOT_ANALYZED ) );
 
-        doc.add( new Field( SearchItem.FIELD_CONTENTS, subject.getText(  ), Field.Store.NO, Field.Index.TOKENIZED ) );
+        doc.add( new Field( SearchItem.FIELD_CONTENTS, subject.getText(  ), Field.Store.NO, Field.Index.ANALYZED ) );
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.
-        doc.add( new Field( SearchItem.FIELD_TITLE, subject.getText(  ), Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+        doc.add( new Field( SearchItem.FIELD_TITLE, subject.getText(  ), Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         doc.add( new Field( SearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
-        doc.add( new Field( SearchItem.FIELD_ROLE, strRoleKey, Field.Store.YES, Field.Index.UN_TOKENIZED ) );
+        doc.add( new Field( SearchItem.FIELD_ROLE, strRoleKey, Field.Store.YES, Field.Index.NOT_ANALYZED ) );
 
         // return the document
         return doc;
