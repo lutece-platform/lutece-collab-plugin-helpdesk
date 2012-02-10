@@ -281,7 +281,7 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
     	List<String> listField = null;
     	if ( _listResults != null && _listResults.size( ) > 0)
     	{    	
-			//on créé les titres des colonnes du CSV
+			//on crÃ©e les titres des colonnes du CSV
 			List<String[]> listToCSVWriter = new ArrayList<String[]>(  );
 			
 			for ( QuestionAnswer questionAnswer : _listResults )
