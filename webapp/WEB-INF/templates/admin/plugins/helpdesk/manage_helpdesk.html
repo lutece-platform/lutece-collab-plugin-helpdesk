@@ -1,93 +1,85 @@
-<div class="content-box" >
-    <h2>#i18n{helpdesk.faq.adminTitle}</h2>
+<div class="row">
+	<div class="span12">
+	<fieldset>
+    <legend>#i18n{helpdesk.faq.adminTitle}
     
-    <#if CREATE?has_content >
-		<form action="jsp/admin/plugins/helpdesk/CreateFaq.jsp">
-	    		<input type="submit" value="#i18n{helpdesk.faq.buttonLabelCreate}" tabindex="10" class="button">
-		</form>
-	</#if>
-	<div class="highlight-box">
-
-	     <form method="post" action="jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp">
-	        <@pagination paginator=paginator />
+	<!-- form class="form-inline spaced pull-right" method="post" action="jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp">
+	<small>#i18n{helpdesk.faq.labelItemsPerPage} :</small>
+	<select name="items_per_page" class="input-mini">
+	<#list [ "10" , "20" , "50" , "100" ] as nb>
+		<#if nb_items_per_page = nb >
+			<option selected="selected" value="${nb}">${nb}</option>
+	    <#else>
+			<option value="${nb}">${nb}</option>
+	    </#if>
+	</#list>
+	</select>                            
+	<button class="btn btn-primary" type="submit" title="#i18n{helpdesk.faq.buttonItemsPerPage}"><i class="icon-ok icon-white"></i></button>
+	</form -->
+	<#if CREATE?has_content >
+	<form class="form-inline pull-right" action="jsp/admin/plugins/helpdesk/CreateFaq.jsp">
+		<button class="btn btn-primary" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{helpdesk.faq.buttonLabelCreate}</button>
+	</form>
+	</#if>  
+	</legend>
 	
-	        <!-- Number of documents per page selector -->
-	        #i18n{helpdesk.faq.labelItemsPerPage} :
-	        <select name="items_per_page">
-	            <#list [ "10" , "20" , "50" , "100" ] as nb>
-	            <#if nb_items_per_page = nb >
-	            <option selected="selected" value="${nb}">${nb}</option>
-	            <#else>
-	            <option value="${nb}">${nb}</option>
-	            </#if>
-	            </#list>
-	        </select>                            
-	        <input type="submit" class="button" value="#i18n{helpdesk.faq.buttonItemsPerPage}" />
-	    </form>    
-    </div>
-	    
-    <table>
+    <table class="table table-striped table-condensed">
+	<thead>
     	<tr>
     		<th>#i18n{helpdesk.faq.title.name}</th>
     		<th>#i18n{helpdesk.faq.title.workgroup}</th>
     		<th>#i18n{helpdesk.faq.title.roleKey}</th>
     		<th>#i18n{helpdesk.faq.title.actions}</th>
     	</tr>
-    	<#if helpdesk_faq_list?has_content >
-			<#list helpdesk_faq_list as faqModel >
-				<#assign faq = faqModel.faq />
-				<tr>
-            		<td>
-          				<#if faqModel.MODIFY?has_content >
-          					<a href="jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}" class="bullet-link">${faq.name}</a>
-      					<#else>
-      						${faq.name}
-       					</#if>
-            		</td>
-            		<td>
-          				${faq.workgroup}
-            		</td>
-            		<td>
-          				${faq.roleKey}
-            		</td>
-            		<td>
-            			<#if faqModel.MANAGE_SUBJECTS?has_content >
-            				<a href="jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}" >
-	                			<img src="images/admin/skin/plugins/helpdesk/subject.png" alt="#i18n{helpdesk.helpdesk_manage.LabelSubject}" title="#i18n{helpdesk.helpdesk_manage.LabelSubject}" />
-    	            		</a>
-   	            		</#if>
-   	            		<#if faqModel.MANAGE_QUESTIONS_ANSWERS?has_content >
-	            		<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}" >
-                			<img src="images/admin/skin/plugins/helpdesk/questions.png" alt="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}" title="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}" />
-                		</a>
-                		</#if>
-   	            		<#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content >
-						<a href="jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}" >
-                			<img src="images/admin/skin/plugins/helpdesk/import.png" alt="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}" title="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}" />
-                		</a>
-                		</#if>
-   	            		<#if faqModel.MANAGE_THEMES?has_content >
-						<a href="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}" >
-                			<img src="images/admin/skin/plugins/helpdesk/theme.png" alt="#i18n{helpdesk.helpdesk_manage.LabelTheme}" title="#i18n{helpdesk.helpdesk_manage.LabelTheme}" />
-               			</a>
-               			</#if>
-   	            		<#if faqModel.MANAGE_VISITOR_QUESTIONS?has_content >
-               			<a href="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}" >
-                			<img src="images/admin/skin/plugins/helpdesk/questions.png" alt="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}" title="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}" />
-                		</a>
-                		</#if>
-   	            		<#if faqModel.DELETE?has_content >
-               			<a href="jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}" >
-                			<img src="images/admin/skin/plugins/helpdesk/delete.png" alt="#i18n{helpdesk.commonList.buttonLabelDelete}" title="#i18n{helpdesk.commonList.buttonLabelDelete}" />
-                		</a>
-                		</#if>
-               		</td>
-			</#list>
+	</thead>
+    <#if helpdesk_faq_list?has_content >
+		<#list helpdesk_faq_list as faqModel >
+		<#assign faq = faqModel.faq />
+		<tr>
+       		<td class="span6">${faq.name}</td>
+			<td>${faq.workgroup}</td>
+			<td>${faq.roleKey}</td>
+			<td>
+			<#if faqModel.MODIFY?has_content >
+    			<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}"  title="${faq.name}" >
+					<i class="fam-report-go"></i>
+				</a>
+			</#if>
+			<#if faqModel.MANAGE_SUBJECTS?has_content >
+            	<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelSubject}" >
+					<i class="fam-note-error"></i>
+				</a>
+			</#if>
+			<#if faqModel.MANAGE_THEMES?has_content >
+				<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelTheme}" >
+					<i class="fam-tag-green"></i>
+				</a>
+			</#if>
+			<#if faqModel.MANAGE_VISITOR_QUESTIONS?has_content >
+				<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}" >
+					<i class="fam-report-word"></i>
+				</a>
+			</#if>
+   	        <#if faqModel.MANAGE_QUESTIONS_ANSWERS?has_content >
+				<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}" >
+					<i class="fam-comments-add"></i>
+				</a>
+			</#if>
+   	        <#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content >
+				<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}" >
+					<i class="fam-database-table"></i>
+				</a>
+			</#if>
+   	        
+   	        <#if faqModel.DELETE?has_content >
+				<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}" >
+					<i class="icon-trash icon-white"></i>
+				</a>
+			</#if>
+            </td>
+		</#list>
 		</#if>
-    </table>
-	<#if CREATE?has_content >
-		<form action="jsp/admin/plugins/helpdesk/CreateFaq.jsp">
-		    <input type="submit" value="#i18n{helpdesk.faq.buttonLabelCreate}" tabindex="10" class="button">
-		</form>
-	</#if>
+    </tbody>
+	</table>
+	</div>
 </div>

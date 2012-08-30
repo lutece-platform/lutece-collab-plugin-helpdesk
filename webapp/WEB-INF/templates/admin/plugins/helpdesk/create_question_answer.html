@@ -1,35 +1,38 @@
 <#include "/admin/util/editor/editor.html" />
 <#include "macro_helpdesk.html" />
-
-<div class="content-box" >
-<h2>#i18n{helpdesk.create_question_answer.adminTitle}</h2>
-	<form method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateQuestionAnswer.jsp">
-		<p>
-        	<label for="subject_id">#i18n{helpdesk.create_question_answer.LabelSubject}</label> * :
-			<select id="subject_id" name="subject_id" >
-				<@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
-			</select>
-		<p>
-        	<label for="question">#i18n{helpdesk.create_question_answer.LabelQuestion}</label> * :
-        	<input type="text" name="question" id="question" size="40" maxlength="" value="${question}"/>
-		</p>
-		<p>
-			<label for="html_content">#i18n{helpdesk.create_question_answer.LabelAnswer}</label> * : 
-            <div id="richtext" class="editor">
-            	<textarea id="html_content" class="richtext" name="html_content" style="width:100%;" rows="20" cols="90">
-                	${html_content}
-				</textarea>
+<div class="row" >
+	<div class="span12">
+	<fieldset>
+	<legend>#i18n{helpdesk.create_question_answer.adminTitle}</legend>
+		<form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateQuestionAnswer.jsp">
+		<#if theme_id??><input type="hidden" value="${theme_id}" name="theme_id" /></#if>
+		<input type="hidden" value="${faq_id}" name="faq_id" />
+		<div class="control-group">
+			<label class="control-label" for="">&nbsp;</label>
+			<div class="controls">
+			<label for="subject_id">#i18n{helpdesk.create_question_answer.LabelSubject} *</label>
+				<select id="subject_id" name="subject_id" >
+					<@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
+				</select>
 			</div>
-		</p>
-		<p>
-        	<label for="status">#i18n{helpdesk.create_question_answer.LabelStatus}</label> * :
-            <input type="checkbox" class="checkbox" name="status" id="status" checked="checked" value="1" />
-		</p>
-		<p>
-			<#if theme_id??><input type="hidden" value="${theme_id}" name="theme_id" /></#if>
-			<input type="hidden" value="${faq_id}" name="faq_id" />
-			<input type="submit" value="#i18n{helpdesk.create_subject.buttonLabelCreate}" tabindex="10" class="button" />
-		</p>
-	</form>
+			<div class="controls">
+			<label for="question">#i18n{helpdesk.create_question_answer.LabelQuestion} *</label>
+				<input type="text" name="question" id="question" size="40" maxlength="" value="${question}"/>
+			</div>
+			<div class="controls">
+			<label for="html_content">#i18n{helpdesk.create_question_answer.LabelAnswer} * </label> 
+            <textarea id="html_content" class="richtext" name="html_content" style="width:100%;" rows="20">${html_content}</textarea>
+			</div>
+			<div class="controls">
+			<label class="checkbox" for="status">#i18n{helpdesk.create_question_answer.LabelStatus} *
+            	<input type="checkbox" class="checkbox" name="status" id="status" checked="checked" value="1" /></label>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" ><i class="icon-ok icon-white"></i>&nbsp;#i18n{helpdesk.create_subject.buttonLabelCreate}</button>
+		</div>
+		</form>
+	</fieldset>
+	</div>	
 </div>
 <@initEditor />

@@ -34,50 +34,60 @@
 
 <#macro commonListTable items depth jspRef paramId >
 	<#if items?has_content >
-	<#list items as subject >
+		<#list items as subject >
 		<tr>
             <td>
           		<@indentation depth=depth />
-                <a href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" class="bullet-link"> ${subject.text} (#i18n{helpdesk.commonList.labelId} : ${subject.id})</a>
+                ${subject.text} (#i18n{helpdesk.commonList.labelId} : ${subject.id})
                 &nbsp;-&nbsp;${subject.questions?size}&nbsp;#i18n{helpdesk.commonList.labelQuestion}
             </td>
             <td>
-            	<#if subject.idOrder &gt; 0>
-            		<a href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
-                	<img src="images/admin/skin/actions/up.png" alt="#i18n{helpdesk.commonList.buttonLabelGoUp}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}" />
+				<a class="btn btn-mini btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+					<i class="icon-edit icon-white"></i>
+				</a>
+				<#if subject.idOrder &gt; 0>
+            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
+						<i class="icon-chevron-up"></i>
 	                </a>
                 <#else>
-					<img src="images/admin/skin/plugins/helpdesk/up_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoUp}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}" />                
+					<a class="btn btn-mini disabled" href="javascript:void">
+						<i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>               
+					</a>
             	</#if>
             	<#if items?seq_index_of(subject) != items?size-1>
-            		<a href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
-                	<img src="images/admin/skin/actions/down.png" alt="#i18n{helpdesk.commonList.buttonLabelGoDown}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" />
+            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
+						<i class="icon-chevron-down"></i>
 	                </a>
-            		<a href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
-                	<img src="images/admin/skin/plugins/helpdesk/in.png" alt="#i18n{helpdesk.commonList.buttonLabelGoIn}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" />
+            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
+						<i class="icon-chevron-right"></i>
 	                </a>
                 <#else>
-	                <img src="images/admin/skin/plugins/helpdesk/down_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoDown}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" />
-                	<img src="images/admin/skin/plugins/helpdesk/in_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoIn}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" />
+					<a class="btn btn-mini disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
+						<i class="icon-chevron-down"></i>
+					</a>
+                	<a class="btn btn-mini disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
+						<i class="icon-chevron-right"></i>
+					</a>
             	</#if>
             	<#if subject.idOrder == 0 && subject.idParent &gt; 0>
-            		<a href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
-                	<img src="images/admin/skin/plugins/helpdesk/out.png" alt="#i18n{helpdesk.commonList.buttonLabelGoOut}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}" />
+            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+						<i class="icon-chevron-left"></i>
 	                </a>
             	<#else>
-                	<img src="images/admin/skin/plugins/helpdesk/out_bw.png" alt="#i18n{helpdesk.commonList.buttonLabelGoOut}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}" />            		
+                	<a class="btn btn-mini disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+						<i class="icon-chevron-left"></i>
+					</a>					
             	</#if>
-                <a href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
-                <img src="images/admin/skin/plugins/helpdesk/delete.png" alt="#i18n{helpdesk.commonList.buttonLabelDelete}" title="#i18n{helpdesk.commonList.buttonLabelDelete}" />
-                </a>
+				   	<a class="btn btn-mini btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+					<i class="icon-trash icon-white"></i>
+				</a>
             </td>            
         </tr>
         <#assign child_subjects_list = subject.getChilds(plugin) />
         <#if child_subjects_list?has_content>
 			<@commonListTable items=child_subjects_list depth=depth+1 jspRef=jspRef paramId=paramId />
         </#if>
-	</#list>
-	
+		</#list>
 	</#if>
 </#macro>
 

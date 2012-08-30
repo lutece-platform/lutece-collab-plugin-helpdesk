@@ -1,27 +1,31 @@
 <#include "macro_helpdesk.html" />
-
-<div class="content-box">
-
-<h2>#i18n{helpdesk.modify_subject.adminTitle}</h2>
-    <form name="modify_subject" action="jsp/admin/plugins/helpdesk/DoModifySubject.jsp" method="post">        
-        <p>
-            <label><strong>#i18n{helpdesk.modify_subject.LabelSubject}</strong></label> * :
-            <input type="text" name="subject" id="subject" value="${subject.text}" size="50" maxlength="50"/>
-        </p> 
-		<p>
-            <label for="parent_id">#i18n{helpdesk.modify_subject.LabelParent}</label> * :
-            <select id="parent_id" name="parent_id" >
-            	<option <#if subject.idParent==0>selected="selected"</#if> value="0" >#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
-				<@subjectsList items=helpdesk_subject_list default_value="${subject.idParent}" exclude_value="${subject.id}" depth=0 />
+<div class="row">
+	<div class="span12">
+	<fieldset>        
+	<legend>#i18n{helpdesk.modify_subject.adminTitle}</legend>
+		<form class="form-horizontal" name="modify_subject" action="jsp/admin/plugins/helpdesk/DoModifySubject.jsp" method="post">
+		<input type="hidden" value="${faq_id}" name="faq_id" />
+		<input type="hidden" name="subject_id" value="${subject.id}" />
+		<div class="control-group">
+		<label class="control-groups" for="">&nbsp;</label>
+			<div class="controls">
+			<label>#i18n{helpdesk.modify_subject.LabelSubject} *</label>
+				<input type="text" name="subject" id="subject" value="${subject.text}" maxlength="50"/>
+			</div>
+			<div class="controls">
+			<label for="parent_id">#i18n{helpdesk.modify_subject.LabelParent} *</label>
+			<select id="parent_id" name="parent_id" >
+			<option <#if subject.idParent==0>selected="selected"</#if> value="0">
+				#i18n{helpdesk.commonList.rootAbstractSubjectName}
+			</option>
+			<@subjectsList items=helpdesk_subject_list default_value="${subject.idParent}" exclude_value="${subject.id}" depth=0 />
 			</select>
-		</p>
-		<p>
-			<input type="hidden" value="${faq_id}" name="faq_id" />
-			<input type="hidden" name="subject_id" value="${subject.id}" />
-        	<input type="submit" tabindex="1" value="#i18n{helpdesk.modify_subject.buttonLabelModify}" class="button" />
-        </p>
-    </form> 
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" ><i class=""></i>#i18n{helpdesk.modify_subject.buttonLabelModify}</button>
+		</div>
+		</form> 
+    </fieldset>
+	</div>
 </div>
-
-
-

@@ -1,24 +1,30 @@
 <#include "macro_helpdesk.html" />
-
-<div class="content-box" >
-<h2>#i18n{helpdesk.create_subject.adminTitle}</h2>
-<form method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateSubject.jsp">
-        <p>
-       		<label for="subject">#i18n{helpdesk.create_subject.LabelSubject}</label> * :
-            <input type="text" name="subject" id="subject" tabindex="1" size="50" maxlength="50"/>
-        </p>
-		<p>
-            <label for="parent_id">#i18n{helpdesk.create_subject.LabelParent}</label> * :
+<div class="row" >
+	<div class="span12">
+	<fieldset>
+	<legend>#i18n{helpdesk.create_subject.adminTitle}</legend>
+	<form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateSubject.jsp">
+	<input type="hidden" value="${faq_id}" name="faq_id" />
+    <div class="control-group">
+		<label class="control-label" for="">&nbsp;</label>
+		<div class="controls">
+			<label for="subject">#i18n{helpdesk.create_subject.LabelSubject} *</label>
+			<input type="text" name="subject" id="subject" tabindex="1" size="50" maxlength="50"/>
+		</div>
+        <div class="controls">
+			<label for="parent_id">#i18n{helpdesk.create_subject.LabelParent} *</label>
             <select id="parent_id" name="parent_id" >
             	<option value="0" >#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
 				<@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
 			</select>
-		</p>
-		<p>
-			<input type="hidden" value="${faq_id}" name="faq_id" />
-			<input type="submit" value="#i18n{helpdesk.create_subject.buttonLabelCreate}" tabindex="10" class="button" />
-		</p>
-</form>
+		</div>
+	</div>
+	<div class="form-actions">
+		<button class="btn btn-primary" type="submit" >
+			<i class="icon-ok icon-white"></i>&nbsp;#i18n{helpdesk.create_subject.buttonLabelCreate}
+		</button>
+	</div>
+	</form>
+	</fieldset>
+	</div>
 </div>
-
-

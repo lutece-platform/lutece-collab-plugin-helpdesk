@@ -1,32 +1,39 @@
 <#include "macro_helpdesk.html" />
-
-<div class="content-box">
-
-<h2>#i18n{helpdesk.modify_theme.adminTitle}</h2>
-    <form name="modify_theme" action="jsp/admin/plugins/helpdesk/DoModifyTheme.jsp" method="post">        
-        <p>
-            <label>#i18n{helpdesk.modify_theme.LabelTheme}</label> * : 
-            <input type="text" name="theme" id="theme" value="${theme.text!}" size="50" maxlength="50" />
-        </p>
-        <p>
-   			<label>#i18n{helpdesk.modify_theme.LabelMailingList}</label> * : 
-	    	<#if mailing_list?has_content>
-	        	<@combo name="mailinglists" default_value="${theme.idMailingList}" items=mailing_list />
-	        <#else>
-    	    	<em>#i18n{helpdesk.create_theme.messageNotificationListNotExist}</em>
+<div class="row">
+	<div class="span12">
+	<fieldset>        
+	<legend>#i18n{helpdesk.modify_theme.adminTitle}</legend>
+		<form class="form-horizontal" name="modify_theme" action="jsp/admin/plugins/helpdesk/DoModifyTheme.jsp" method="post">
+		<input type="hidden" value="${faq_id}" name="faq_id" />
+		<input type="hidden" name="theme_id" value="${theme.id}" />
+		<div class="control-group">
+		<label class="control-label" for="">&nbsp;</label>
+			<div class="controls">
+				<label for="theme"> #i18n{helpdesk.modify_theme.LabelTheme} *</label>
+				<input type="text" name="theme" id="theme" value="${theme.text!}" class="input-large" maxlength="50" />
+			</div>
+			<#if mailing_list?has_content>
+			<div class="controls">
+				<label for="mailinglists">#i18n{helpdesk.modify_theme.LabelMailingList} *</label>
+				<@combo name="mailinglists" default_value="${theme.idMailingList}" items=mailing_list />
+				</div>
+			<#else>
+				<div class="label label-warning">#i18n{helpdesk.create_theme.messageNotificationListNotExist}</div>
 			</#if>
-	    </p>
-		<p>
-            <label for="parent_id">#i18n{helpdesk.modify_theme.LabelParent}</label> * : 
-            <select id="parent_id" name="parent_id" >
-            	<option <#if theme.idParent==0>selected="selected"</#if> value="0" >#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
-				<@themesList items=helpdesk_theme_list default_value="${theme.idParent}" exclude_value="${theme.id}" depth=0 />
-			</select>
-		</p>
-		<p>
-			<input type="hidden" value="${faq_id}" name="faq_id" />
-			<input type="hidden" name="theme_id" value="${theme.id}" />
-            <input type="submit" tabindex="1" value="#i18n{helpdesk.modify_theme.buttonLabelModify}" class="button" />                
-		</p>
-    </form> 
+				<div class="controls">
+				<label for="parent_id">#i18n{helpdesk.modify_theme.LabelParent} *</label> 
+				<select id="parent_id" name="parent_id" >
+					<option <#if theme.idParent==0>selected="selected"</#if> value="0" >
+						#i18n{helpdesk.commonList.rootAbstractSubjectName}
+					</option>
+					<@themesList items=helpdesk_theme_list default_value="${theme.idParent}" exclude_value="${theme.id}" depth=0 />
+				</select>
+				</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" >#i18n{helpdesk.modify_theme.buttonLabelModify}</button>
+		</div>
+		</form> 
+	</fieldset>
+	</div>
 </div>

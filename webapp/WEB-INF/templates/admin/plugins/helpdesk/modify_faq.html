@@ -1,29 +1,36 @@
 <#include "macro_helpdesk.html" />
-
-<div class="content-box" >
-<h2>#i18n{helpdesk.modify_faq.adminTitle}</h2>
-<form method="post" name="modify_faq" action="jsp/admin/plugins/helpdesk/DoModifyFaq.jsp">
-        <p>
-       		<label for="name">#i18n{helpdesk.modify_faq.LabelName}</label> * :
-            <input type="text" name="name" id="name" value="${faq.name}" tabindex="1" size="50" maxlength="50"/>
-        </p>
-        <p>
-       		<label for="description">#i18n{helpdesk.modify_faq.LabelDescription}</label> * :
-            <input type="text" name="description" id="description" value="${faq.description}" tabindex="1" size="50" maxlength="50"/>
-        </p>
-		<p>
-            <label for="role_key">#i18n{helpdesk.modify_faq.LabelRoleKey}</label> * :
-			<@combo name="role_key" default_value="${faq.roleKey}" items=role_key_list />
-		</p>
-		<p>
-            <label for="workgroup_key">#i18n{helpdesk.modify_faq.LabelWorkgroupKey}</label> * :
-			<@combo name="workgroup_key" default_value="${faq.workgroup}" items=workgroup_key_list />
-		</p>
-		<p>
-			<input type="hidden" value="${faq.id}" name="faq_id" />
-			<input type="submit" value="#i18n{helpdesk.modify_faq.buttonLabelModify}" tabindex="10" class="button" />
-		</p>
-</form>
+<div class="row" >
+	<div class="span12" >
+	<fieldset>
+	<legend>#i18n{helpdesk.modify_faq.adminTitle}</legend>
+	<form class="form-horizontal" method="post" name="modify_faq" action="jsp/admin/plugins/helpdesk/DoModifyFaq.jsp">
+	<input type="hidden" value="${faq.id}" name="faq_id" />
+    <div class="control-group">
+    <label class="control-label" for="">&nbsp;</label>
+		<div class="controls">
+				<label for="name">#i18n{helpdesk.modify_faq.LabelName} *</label>
+				<input type="text" name="name" id="name" tabindex="1" value="${faq.name}" maxlength="50"/>
+		</div>
+       <div class="controls">
+			<label  for="description">#i18n{helpdesk.modify_faq.LabelDescription} *</label>
+				<input type="text" name="description" id="description"  value="${faq.description}" tabindex="2" maxlength="50"/>
+		</div>
+		<div class="controls">
+			<label  for="role_key">#i18n{helpdesk.modify_faq.LabelRoleKey}</label>
+				<@comboWithParams name="role_key" default_value="${faq.roleKey}"  items=role_key_list additionalParameters="tabindex=\"3\"" />
+			</div>
+		<div class="controls">
+			<label for="workgroup_key">#i18n{helpdesk.modify_faq.LabelWorkgroupKey}</label>
+			<@comboWithParams name="workgroup_key" default_value="${faq.workgroup}"  items=workgroup_key_list additionalParameters="tabindex=\"4\"" />
+		</div>
+	</div>
+	<div class="form-actions">
+		<button class="btn btn-primary" type="submit" tabindex="5"><i class="icon-ok icon-white"></i>&nbsp;#i18n{helpdesk.modify_faq.buttonLabelModify}</button>
+	</div>
+	</form>
+	</fieldset>
+	</div>
 </div>
+
 
 

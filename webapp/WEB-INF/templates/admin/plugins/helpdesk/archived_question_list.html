@@ -19,7 +19,71 @@
 		</ul>
 	</#if>
 </#macro>
-
+<div class="row" >
+	<div class="span12">
+		<div class="span3" >
+			<fieldset>
+			<legend>#i18n{helpdesk.archived_question_list.adminTitleLeft}</legend>
+			<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
+			</fieldset>
+		</div>
+		<div id="span8">
+			<fieldset>
+			<legend>
+				#i18n{helpdesk.archived_question_list.adminTitleRight}
+				<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp">
+				<input type="hidden" name="faq_id" value="${faq.id}" />
+				<#if theme?has_content ><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
+				<button class="btn btn-primary" type="submit" ><i class="icon-remove-circle  icon-white"></i>&nbsp;#i18n{helpdesk.archived_question_list.visitorQuestions}</button>
+				</form>
+			</legend>
+			<#if theme?has_content >	
+				<#if helpdesk_archived_question_list?has_content >
+				<table class="table table-striped table-condensed">
+				<thead>
+					<tr>
+						<th>#i18n{helpdesk.archived_question_list.titleQuestion}</th>
+						<th>#i18n{helpdesk.archived_question_list.titleVisitor}</th>
+						<th>#i18n{helpdesk.archived_question_list.titleDate}</th>
+						<th>#i18n{helpdesk.archived_question_list.titleActions}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<#list helpdesk_archived_question_list as visitor_question>
+					<#assign truncated_value = 125 />
+					<tr>
+						<td class="span6">
+						<#if visitor_question.question?length &gt; truncated_value>
+							${visitor_question.question?substring(0,truncated_value-3)}...
+						<#else>
+							${visitor_question.question}
+						</#if>
+						</td>
+						<td>${visitor_question.firstname}&nbsp;${visitor_question.lastname}</td>
+						<td>${visitor_question.date}</td>
+						<td>
+							<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}"  title="" >
+								<i class="icon-edit icon-white"></i>
+							</a>
+							<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}"  title="#i18n{helpdesk.archived_question_list.buttonLabelRemove}" >
+								<i class="icon-trash icon-white"></i>
+							</a>
+						</td>
+					</tr>
+					</#list>
+					</tbody>
+				</table>
+				<#else>
+					<div class="label label-important">#i18n{helpdesk.archived_question_list.noQuestion}</div>
+				</#if>
+			</#if>
+			
+			</fieldset>
+		</div>
+	</div>
+</div>
+<script src="js/jquery/plugins/treeview/jquery.treeview.pack.js" />
+<script src="js/jquery/plugins/treeview/jquery.cookie.js" />
 <script type="text/javascript">
 	$(document).ready(function(){
 		$("#VisitorQuestion").treeview({
@@ -31,61 +95,3 @@
 		
 	});
 </script>
-
-<div id="left" >
-	<div class="content-box">
-   		<h2>#i18n{helpdesk.archived_question_list.adminTitleLeft}</h2>
-	    <p>
-			<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
-		</p>
-	</div>
-</div>
-<div id="right" >
-	<div class="content-box">
-		<h2>#i18n{helpdesk.archived_question_list.adminTitleRight}</h2>
-		<#if theme?has_content >	
-		<#if helpdesk_archived_question_list?has_content >
-		
-		<table>
-			<tr>
-				<th>#i18n{helpdesk.archived_question_list.titleQuestion}</th>
-	 			<th>#i18n{helpdesk.archived_question_list.titleVisitor}</th>
-	 			<th>#i18n{helpdesk.archived_question_list.titleDate}</th>
-				<th>#i18n{helpdesk.archived_question_list.titleActions}</th>
-   			</tr>
-			<#list helpdesk_archived_question_list as visitor_question>
-			<tr>
-	 		    <td>
-					<#assign truncated_value = 125 />
-					<a href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}" ><#if visitor_question.question?length &gt; truncated_value>${visitor_question.question?substring(0,truncated_value-3)}...<#else>${visitor_question.question}</#if></a>
-				</td>
-				<td>
-					${visitor_question.firstname}&nbsp;${visitor_question.lastname} 
-				</td>
-				
-				<td>
-					${visitor_question.date}
-				</td>
-				<td>
-					<a href="jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}" >
-	                	<img src="images/admin/skin/plugins/helpdesk/delete.png" alt="#i18n{helpdesk.archived_question_list.buttonLabelRemove}" title="#i18n{helpdesk.archived_question_list.buttonLabelRemove}" />
-					</a>
-				</td>
-			</tr>
-			</#list>
-		</table>
-		<#else>
-			<p>
-				<em>#i18n{helpdesk.archived_question_list.noQuestion}</em>
-			</p>
-		</#if>
-		</#if>
-		<form method="post" action="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp">
-    	<p>
-    		<#if theme?has_content ><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
-    		<input type="hidden" name="faq_id" value="${faq.id}" />
-			<input class="button" type="submit" name="visitorQuestions" value="#i18n{helpdesk.archived_question_list.visitorQuestions}" />
-		</p>
-	</form>
-	</div>
-</div>

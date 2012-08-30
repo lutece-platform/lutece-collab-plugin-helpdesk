@@ -1,37 +1,39 @@
 <#include "/admin/util/editor/editor.html" />
 <#include "macro_helpdesk.html" />
-
-<div class="content-box" >
-	<h2>#i18n{helpdesk.modify_question_answer.adminTitle}</h2>
-	<form method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoModifyQuestionAnswer.jsp">
-    	<p>
-        	<label for="subject_id">#i18n{helpdesk.modify_question_answer.LabelSubject}</label> * :
-			<select id="subject_id" name="subject_id" id="subject_id" >
-				<@subjectsList items=helpdesk_subject_list default_value="${question_answer.idSubject}" exclude_value="" depth=0 />
-			</select>
-		</p>
-        <p>
-           <label for="question">#i18n{helpdesk.modify_question_answer.LabelQuestion}</label> * :
-           <input type="text" name="question" id="question" size="40" maxlength="" value="${question_answer.question}"/>
-        </p>
-        <p>
-           <label for="html_content">#i18n{helpdesk.modify_question_answer.LabelAnswer}</label> * :
-             <div id="richtext" class="editor">
-                 <textarea id="html_content" class="richtext" name="html_content" style="width:100%;" rows="20" cols="90">
-                     ${html_content}
-                 </textarea>
-             </div>
-        </p>
-        <p>
-           <label for="status">#i18n{helpdesk.modify_question_answer.LabelStatus}</label> * :
-           <input type="checkbox" class="checkbox" name="status" name="status" ${checked} value="1" />
-        </p>
-        <p>
-			<input type="hidden" value="${faq_id}" name="faq_id" />
-			<input type="hidden" name="question_id" value="${question_answer.idQuestionAnswer}" />
-			<input type="submit" value="#i18n{helpdesk.modify_question_answer.buttonLabelModify}" tabindex="10" class="button" />
-			<input type="button" class="button" value="#i18n{helpdesk.modify_question_answer.buttonLabelDelete}" tabindex="11" onclick="this.form.action='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp';this.form.submit();" /> 
-		</p>
-	</form>
+<div class="row" >
+	<div class="span12">
+	<fieldset>
+	<legend>#i18n{helpdesk.modify_question_answer.adminTitle}</legend>
+		<form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoModifyQuestionAnswer.jsp">
+		<input type="hidden" value="${faq_id}" name="faq_id" />
+		<input type="hidden" name="question_id" value="${question_answer.idQuestionAnswer}" />
+		<div class="control-group">
+		<label class="control-label" for="">&nbsp;</label>
+			<div class="controls">
+			<label for="subject_id">#i18n{helpdesk.modify_question_answer.LabelSubject} *</label>
+				<select id="subject_id" name="subject_id" id="subject_id" >
+					<@subjectsList items=helpdesk_subject_list default_value="${question_answer.idSubject}" exclude_value="" depth=0 />
+				</select>
+			</div>
+			<div class="controls">
+			<label for="question">#i18n{helpdesk.modify_question_answer.LabelQuestion} *</label>
+				<input type="text" name="question" id="question" size="40" maxlength="" value="${question_answer.question}"/>
+			</div>
+			<div class="controls">
+			<label for="html_content">#i18n{helpdesk.modify_question_answer.LabelAnswer} *</label>
+				<textarea id="html_content" class="richtext" name="html_content" style="width:80%;" rows="20">${html_content}</textarea>
+			</div>
+			<div class="controls">
+			<label class="checkbox" for="status">#i18n{helpdesk.modify_question_answer.LabelStatus} *
+				<input type="checkbox" class="checkbox" name="status" name="status" ${checked} value="1" /></label>
+			</div>
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-primary" type="submit" >#i18n{helpdesk.modify_question_answer.buttonLabelModify}</button>
+			<button class="btn btn-danger" onclick="this.form.action='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp';this.form.submit();" ><i class="icon-trash icon-white"></i>&nbsp;#i18n{helpdesk.modify_question_answer.buttonLabelDelete}</button>
+		</div> 
+		</form>
+	</fieldset>
+	</div>
 </div>
 <@initEditor />
