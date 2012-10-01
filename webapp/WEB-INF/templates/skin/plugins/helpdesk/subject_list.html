@@ -65,75 +65,97 @@
 	</#if>
 </#macro>
 
-<div id="content" class="span-22 prepend-1 append-1 append-bottom last">
-	<div class="portlet -lutece-border-radius">
-		<a name="top"></a>
-		<h2 class="page-title">#i18n{helpdesk.subject_list.pageTitle}</h2>
-		<form class="default-form" name="form_search" method="post">
+<div class="row">
+	<div class="span12">
+		<div class="portlet">
+			<a name="top"></a>
 			<fieldset>
-				<label class="text-label" for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
-				<input type="text" size="30" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}" class="-lutece-input -lutece-border-radius-mini" />
-				<br/>
-				<label class="text-label" for="">&nbsp;</label>
-				<em>#i18n{helpdesk.subject_list.labelInfoSearch}</em>
-				<br />
-				<label class="text-label" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} : </label>
-				<input type="text" class="dateRange" size="10" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}" />
-				#i18n{helpdesk.subject_list.labelDateEnd} : 
-				<input type="text" class="dateRange" size="10" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}" />
-				<br />
-				<label class="text-label" for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
-				<select id="form_search_subject_id" name="form_search_subject_id" class="-lutece-input -lutece-border-radius-mini" >
-					<option value=""></option>
-					<@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
-				</select>
-				<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true" <#if filter_search_sub_subject>checked="checked"</#if> />#i18n{helpdesk.subject_list.labelSearchSubSubjects}
-				<p class="buttons">
-					<input type="hidden" name="page" value="${path_label}" />
-					<input type="hidden" value="${faq.id}" name="faq_id" />
-					<input id="button-search" class="-lutece-input -lutece-border-radius-mini" type="submit" name="form_search_submit" value="#i18n{helpdesk.subject_list.buttonLabelSearch}" />
-				</p>
-			</fieldset>
-		</form>
-		<p>
-			<a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}">#i18n{helpdesk.subject_list.labelList}</a>
-		</p>
-		<form method="post">
-			<input type="hidden" name="page" value="${path_label}" />
-			<input type="hidden" name="faq_id" value="${faq.id}" />
-			<input type="hidden" name="contact" value="contact" />
-			#i18n{helpdesk.subject_list.labelNoAnswer}
-			<input type="submit" value="#i18n{helpdesk.subject_list.labelContact}" class="-lutece-button" />
-		</form>
-		<#if search_page>
-			<#if helpdesk_question_answer_list?has_content>
-				<ul id="questionAnswer">
-					<#list helpdesk_question_answer_list as questionAnswer>
-						<li>
-						<@getParentSubject subject=questionAnswer.getSubject(plugin) breadcrumb="" />
-						<br />
-						<a name="${questionAnswer.idQuestionAnswer}"></a>
-						<strong>${questionAnswer.question}</strong>
-						<blockquote>${questionAnswer.answer}</blockquote>
-						</li>
-					</#list>
-				</ul>
-			<#else>
-				<blockquote>#i18n{helpdesk.message.search_nok}</blockquote>
-			</#if>
-		<#else>
-			<div class="portlet-background">
-				<@subjectsList items=helpdesk_subject_list typeList="subject" depth=0 />
+			<legend>#i18n{helpdesk.subject_list.pageTitle}</legend>
+			<form class="form-horizontal"  name="form_search" method="post">
+			<div class="control-group">
+			<label class="control-label" class="text-label" for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
+				<div class="controls">
+					<input type="text" class="input-small" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}" class=" " />
+				</div>
 			</div>
-			<@subjectsList items=helpdesk_subject_list typeList="questionAnswer" depth=0 />
-		</#if>
-		<form method="post">
+			<div class="control-group">
+				<label class="control-label" class="text-label" for="">&nbsp;</label>
+					<em>#i18n{helpdesk.subject_list.labelInfoSearch}</em>
+			</div>
+			<div class="control-group">
+			<label class="control-label" class="text-label" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} : </label>
+				<div class="controls">
+					<input type="text" class="dateRange" class="input-mini" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}" />
+				</div>
+				<label>#i18n{helpdesk.subject_list.labelDateEnd}</label>
+				<div class="controls">
+					<input type="text" class="dateRange" class="input-mini" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}" />
+				</div>
+			</div>
+			<div class="control-group">
+			<label class="control-label" class="text-label" for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
+				<div class="controls">
+					<select id="form_search_subject_id" name="form_search_subject_id" class="span2" >
+						<option value=""></option>
+						<@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
+					</select>
+					<label>#i18n{helpdesk.subject_list.labelSearchSubSubjects}
+					<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true" <#if filter_search_sub_subject>checked="checked"</#if> />
+					</label>
+				</div>
+			</div>
+			<div class="form-actions">
+				<input type="hidden" name="page" value="${path_label}" />
+				<input type="hidden" value="${faq.id}" name="faq_id" />
+				<button class="btn btn-primary" type="submit" ><i class="icon-search icon-white"></i>#i18n{helpdesk.subject_list.buttonLabelSearch}</button>
+			</div>
+			
+			</form>
+			</fieldset>
+			<p>
+				<a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}">#i18n{helpdesk.subject_list.labelList}</a>
+			</p>
+			<form class="form-horizontal" method="post">
+			<fieldset>
+			<legend>#i18n{helpdesk.subject_list.labelNoAnswer}</legend>
 			<input type="hidden" name="page" value="${path_label}" />
 			<input type="hidden" name="faq_id" value="${faq.id}" />
 			<input type="hidden" name="contact" value="contact" />
-			#i18n{helpdesk.subject_list.labelNoAnswer}
-			<input type="submit" value="#i18n{helpdesk.subject_list.labelContact}" class="-lutece-button" />
-		</form>
+			<button class="btn btn-primary" type="submit" >#i18n{helpdesk.subject_list.labelContact}</button>
+			</fieldset>
+			</form>
+			<#if search_page>
+				<#if helpdesk_question_answer_list?has_content>
+					<ul id="questionAnswer">
+						<#list helpdesk_question_answer_list as questionAnswer>
+							<li>
+							<@getParentSubject subject=questionAnswer.getSubject(plugin) breadcrumb="" />
+							<br />
+							<a name="${questionAnswer.idQuestionAnswer}"></a>
+							<strong>${questionAnswer.question}</strong>
+							<blockquote>${questionAnswer.answer}</blockquote>
+							</li>
+						</#list>
+					</ul>
+				<#else>
+					<blockquote>#i18n{helpdesk.message.search_nok}</blockquote>
+				</#if>
+			<#else>
+				<div class="portlet-background">
+					<@subjectsList items=helpdesk_subject_list typeList="subject" depth=0 />
+				</div>
+				<@subjectsList items=helpdesk_subject_list typeList="questionAnswer" depth=0 />
+			</#if>
+			<form class="form-horizontal" method="post">
+			<fieldset>
+			<legend>#i18n{helpdesk.subject_list.labelNoAnswer}</legend>
+			<input type="hidden" name="page" value="${path_label}" />
+			<input type="hidden" name="faq_id" value="${faq.id}" />
+			<input type="hidden" name="contact" value="contact" />
+			<button class="btn btn-primary" type="submit" >#i18n{helpdesk.subject_list.labelContact}</button>
+			</fieldset>
+			</form>
+		</div>
 	</div>
 </div>
 

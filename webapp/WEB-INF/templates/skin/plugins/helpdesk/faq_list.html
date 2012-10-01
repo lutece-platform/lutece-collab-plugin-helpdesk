@@ -15,29 +15,44 @@
 </#macro>
 
 <#if faq_list?has_content >
-<div class="span-15 prepend-1 append-1 append-bottom">
+<div class="span">
     <div class="portlet -lutece-border-radius">
         <a name="top"></a>
-        <h2 class="page-title">#i18n{helpdesk.faq_list.portlet_search.title}</h2>
-        <form class="default-form" name="form_search" method="post">
+        <legend>#i18n{helpdesk.faq_list.portlet_search.title}</legend>
+        <form class="form-horizontal"  name="form_search" method="post">
+	<fieldset>
             <fieldset>
-                <label class="text-label" for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
-                <input type="text" size="30" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!"")?html}" class="-lutece-input -lutece-border-radius-mini" />
+                <div class="control-group">
+		<label class="control-label" class="text-label" for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
+                <div class="controls">
+	<input type="text" class="input-small" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!"")?html}" class=" " />
+		</div>
+	</div>
                 <br/>
-                <label class="text-label" for="">&nbsp;</label>
+                <div class="control-group">
+		<label class="control-label" class="text-label" for="">&nbsp;</label>
                 <em>#i18n{helpdesk.faq_list.portlet_search.labelInfoSearch}</em>
                 <br />
-                <label class="text-label" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateBegin} : </label>
-                <input type="text" class="dateRange" size="10" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!"")?html}" />
+                <div class="control-group">
+		<label class="control-label" class="text-label" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateBegin} : </label>
+                <div class="controls">
+	<input type="text" class="dateRange" class="input-mini" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!"")?html}" />
+		</div>
+	</div>
                 #i18n{helpdesk.faq_list.portlet_search.labelDateEnd} : 
-                <input type="text" class="dateRange" size="10" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!"")?html}" />
+                <div class="controls">
+	<input type="text" class="dateRange" class="input-mini" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!"")?html}" />
+		</div>
+	</div>
                 <br />
                 <p class="buttons">
                     <input type="hidden" name="page" value="${path_label}" />
-                    <input id="button-search" class="-lutece-input -lutece-border-radius-mini" type="submit" name="form_search_submit" value="#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}" />
+                    <button class="btn btn-primary" type="submit" >#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}</button>
+	
                 </p>
             </fieldset>
-        </form>
+        </fieldset>
+</form>
         <#if search_page>
             <#if helpdesk_question_answer_list?has_content>
                 <ul id="questionAnswer">
@@ -60,10 +75,10 @@
 </div>
 </#if>
 
-<div id="content" class="span-6 append-1 append-bottom last">
+<div class="span">
 	<div class="portlet -lutece-border-radius">
     	<a name="top"></a>
-        <h2 class="page-title">#i18n{helpdesk.faq_list.portlet_list.title}</h2>
+        <legend>#i18n{helpdesk.faq_list.portlet_list.title}</legend>
 		<#if faq_list?has_content >	
 			<ul>
 				<#list faq_list as faq>

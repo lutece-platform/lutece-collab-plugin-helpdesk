@@ -1,12 +1,15 @@
-<div id="content" class="span-22 prepend-1 append-1 append-bottom last">
+<div class="span">
 	<div class="portlet -lutece-border-radius">
-	<h2 class="page-title">#i18n{helpdesk.contact_result.boxTitle}</h2>
+	<legend>#i18n{helpdesk.contact_result.boxTitle}</legend>
 	<div>#i18n{helpdesk.contact_result.message}</div>
-	<form method="post">
+	<form class="form-horizontal" method="post">
+	<fieldset>
 		<input type="hidden" name="page" value="helpdesk" />
 		<input type="hidden" name="faq_id" value="${faq.id}" />
-		<input type="submit" value="#i18n{helpdesk.contact_result.back}" class="-lutece-button" />
-	</form>
+		<button class="btn btn-primary" type="submit" >#i18n{helpdesk.contact_result.back}</button>
+	
+	</fieldset>
+</form>
 
 	</div>
 </div>
