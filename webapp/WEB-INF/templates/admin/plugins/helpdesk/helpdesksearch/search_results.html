@@ -57,7 +57,7 @@
 			<#-- Number of documents per page selector -->
 			 #i18n{helpdesk.search_results.labelNbDocsPerPage} : 
 			<@NbItemsPerPageSelectorCombo nb_items_per_page />
-			<button class="btn btn-primary" type="submit" ><i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
+			<button class="btn btn-primary btn-small" type="submit" ><i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
 			</form>
 			</fieldset>
 		</div> 
@@ -94,7 +94,7 @@
 			</table>
 			<#if (paginator.itemsCount > 0)>
 			<form class="form-inline" name="export" method="post" action="jsp/admin/plugins/helpdesk/DoExportCSV.jsp">
-				<button class="btn btn-primary" type="submit" ><i class="icon-download icon-white"></i>&nbsp;#i18n{helpdesk.search_results.exportCSV}</button>
+				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-download icon-white"></i>&nbsp;#i18n{helpdesk.search_results.exportCSV}</button>
 			</form>
 			</#if>
 		</div>

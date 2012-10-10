@@ -34,7 +34,7 @@
 				<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/helpdesk/ArchivedQuestionList.jsp">
 				<#if theme?has_content ><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
 				<input type="hidden" name="faq_id" value="${faq.id}" />
-				<button class="btn btn-primary" type="submit" ><i class="icon-cog icon-white">&nbsp;</i>#i18n{helpdesk.visitor_question_list.questionsArchived}</button>
+				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-cog icon-white">&nbsp;</i>#i18n{helpdesk.visitor_question_list.questionsArchived}</button>
 				</form>
 			</legend>
 			<#if theme?has_content >	
