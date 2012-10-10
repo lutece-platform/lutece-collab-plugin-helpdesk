@@ -41,38 +41,38 @@
 			<td>${faq.roleKey}</td>
 			<td>
 			<#if faqModel.MODIFY?has_content >
-    			<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}"  title="${faq.name}" >
+    			<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}"  title="${faq.name}" >
 					<i class="icon-edit icon-white"></i>
 				</a>
 			</#if>
 			<#if faqModel.MANAGE_SUBJECTS?has_content >
-            	<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelSubject}" >
+            	<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelSubject}" >
 					<i class="icon-list-alt icon-white"></i>
 				</a>
 			</#if>
 			<#if faqModel.MANAGE_THEMES?has_content >
-				<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelTheme}" >
+				<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelTheme}" >
 					<i class="icon-tags icon-white"></i>
 				</a>
 			</#if>
 			<#if faqModel.MANAGE_VISITOR_QUESTIONS?has_content >
-				<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}" >
+				<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}" >
 					<i class="icon-list icon-white"></i>
 				</a>
 			</#if>
    	        <#if faqModel.MANAGE_QUESTIONS_ANSWERS?has_content >
-				<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}" >
+				<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}" >
 					<i class="icon-comment icon-white"></i>
 				</a>
 			</#if>
    	        <#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content >
-				<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}" >
+				<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}" >
 					<i class="icon-upload icon-white"></i>
 				</a>
 			</#if>
    	        
    	        <#if faqModel.DELETE?has_content >
-				<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}" >
+				<a class="btn btn-danger btn-small" href="jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}" >
 					<i class="icon-trash icon-white"></i>
 				</a>
 			</#if>

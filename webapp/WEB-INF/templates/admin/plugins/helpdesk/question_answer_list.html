@@ -157,37 +157,37 @@
 						</#if>
 					</td>
 					<td>
-						<a class="btn btn-primary btn-mini" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="" >
+						<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="" >
 								<i class="icon-edit icon-white"></i>
 						</a>
 						<#if question_answer.idOrder &gt; 0>
-						<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoUp}" >
+						<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoUp}" >
 							<i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>
 						</a>
 						<#else>
-						<a class="btn btn-mini disabled" href="javascript:void;">
+						<a class="btn btn-small disabled" href="javascript:void;">
 							<i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>
 						</a>              
 						</#if>  
 						<#if subject.questions?seq_index_of(question_answer) != subject.questions?size-1>
-						<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoDown}" >
+						<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoDown}" >
 								<i class="icon-chevron-down"></i>
 						</a>
 						<#else>
-						<a class="btn btn-mini disabled" href="javascript:void;">
+						<a class="btn btn-small disabled" href="javascript:void;">
 							<i class="icon-chevron-down" title="#i18n{helpdesk.commonList.buttonLabelGoDown}"></i>
 						</a>
 						</#if>   
 						<#if question_answer.enabled>
-						<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.unpublish}" >
+						<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.unpublish}" >
 							<i class="icon-eye-close"></i>
 						</a>
 						<#else>
-						<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.publish}" >
+						<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.publish}" >
 							<i class="icon-eye-open"></i>
 						</a>
 						</#if>
-						<a class="btn btn-danger btn-mini" href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}" >
+						<a class="btn btn-danger btn-small" href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}" >
 							<i class="icon-trash icon-white"></i>
 						</a>
 						</td>

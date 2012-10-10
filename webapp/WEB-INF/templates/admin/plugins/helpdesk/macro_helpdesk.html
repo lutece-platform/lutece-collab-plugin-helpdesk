@@ -42,43 +42,43 @@
                 &nbsp;-&nbsp;${subject.questions?size}&nbsp;#i18n{helpdesk.commonList.labelQuestion}
             </td>
             <td>
-				<a class="btn btn-mini btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
+				<a class="btn btn-small btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
 					<i class="icon-edit icon-white"></i>
 				</a>
 				<#if subject.idOrder &gt; 0>
-            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
+            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
 						<i class="icon-chevron-up"></i>
 	                </a>
                 <#else>
-					<a class="btn btn-mini disabled" href="javascript:void">
+					<a class="btn btn-small disabled" href="javascript:void">
 						<i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>               
 					</a>
             	</#if>
             	<#if items?seq_index_of(subject) != items?size-1>
-            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
+            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
 						<i class="icon-chevron-down"></i>
 	                </a>
-            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
+            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
 						<i class="icon-chevron-right"></i>
 	                </a>
                 <#else>
-					<a class="btn btn-mini disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
+					<a class="btn btn-small disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
 						<i class="icon-chevron-down"></i>
 					</a>
-                	<a class="btn btn-mini disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
+                	<a class="btn btn-small disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
 						<i class="icon-chevron-right"></i>
 					</a>
             	</#if>
             	<#if subject.idOrder == 0 && subject.idParent &gt; 0>
-            		<a class="btn btn-mini" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
 						<i class="icon-chevron-left"></i>
 	                </a>
             	<#else>
-                	<a class="btn btn-mini disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+                	<a class="btn btn-small disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
 						<i class="icon-chevron-left"></i>
 					</a>					
             	</#if>
-				   	<a class="btn btn-mini btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+				   	<a class="btn btn-small btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
 					<i class="icon-trash icon-white"></i>
 				</a>
             </td>            
