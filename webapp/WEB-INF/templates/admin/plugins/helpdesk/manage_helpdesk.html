@@ -36,8 +36,8 @@
 		<#list helpdesk_faq_list as faqModel >
 		<#assign faq = faqModel.faq />
 		<tr>
-       		<td class="span6">${faq.name}</td>
-			<td>${faq.workgroup}</td>
+       		<td class="span6">${faq.name} <a href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}" target="_blank"><i class="icon-globe" title="View ${faq.name}"></i></a></td>
+			<td>${faq.workgroup} </td>
 			<td>${faq.roleKey}</td>
 			<td>
 			<#if faqModel.MODIFY?has_content >
