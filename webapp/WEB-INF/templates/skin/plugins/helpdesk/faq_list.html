@@ -1,94 +1,87 @@
 <#macro getParentSubject subject faq breadcrumb >
-    <#if subject?has_content && faq?has_content>
-        <#if breadcrumb == "">
-            <#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" />
-        <#else>
-            <#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" + " &gt; " + breadcrumb />
-        </#if>
-        <#if subject.getParent(plugin)?has_content && subject.idParent != 0 >
-            <@getParentSubject subject=subject.getParent(plugin) faq=faq breadcrumb=breadcrumbCopy />
-        <#else>
-            <a class="top" href="jsp/site/Portal.jsp?page=${path_label}#top">#i18n{helpdesk.question_list_row.top}</a>
-            <a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}">${faq.name}</a> &gt; ${breadcrumbCopy}
-        </#if>
-    </#if>
+<#if subject?has_content && faq?has_content>
+<#if breadcrumb == "">
+<#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" />
+<#else>
+<#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" + " &gt; " + breadcrumb />
+</#if>
+<#if subject.getParent(plugin)?has_content && subject.idParent != 0 >
+<@getParentSubject subject=subject.getParent(plugin) faq=faq breadcrumb=breadcrumbCopy />
+<#else>
+<a class="top" href="jsp/site/Portal.jsp?page=${path_label}#top">#i18n{helpdesk.question_list_row.top}</a>
+<a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}">${faq.name}</a> &gt; ${breadcrumbCopy}
+</#if>
+</#if>
 </#macro>
 
 <#if faq_list?has_content >
-<div class="span">
-    <div class="portlet -lutece-border-radius">
-        <a name="top"></a>
-        <legend>#i18n{helpdesk.faq_list.portlet_search.title}</legend>
-        <form class="form-horizontal"  name="form_search" method="post">
-	<fieldset>
-            <fieldset>
+<div class="row" >
+    <div class="span12" >
+        <fieldset>
+            <legend>#i18n{helpdesk.faq_list.portlet_search.title}</legend>
+            <form class="form-search"  name="form_search" method="post">
+                <a name="top"></a>
                 <div class="control-group">
-		<label class="control-label" class="text-label" for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
-                <div class="controls">
-	<input type="text" class="input-small" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!"")?html}" class=" " />
-		</div>
-	</div>
-                <br/>
+                    <label class="control-label" for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
+                    <div class="controls">
+                        <input type="text" class="input-xlarge" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!)?html}" class=" " />
+                        <span class="help-text">#i18n{helpdesk.faq_list.portlet_search.labelInfoSearch}</span>
+                    </div>
+                </div>
                 <div class="control-group">
-		<label class="control-label" class="text-label" for="">&nbsp;</label>
-                <em>#i18n{helpdesk.faq_list.portlet_search.labelInfoSearch}</em>
-                <br />
-                <div class="control-group">
-		<label class="control-label" class="text-label" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateBegin} : </label>
-                <div class="controls">
-	<input type="text" class="dateRange" class="input-mini" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!"")?html}" />
-		</div>
-	</div>
-                #i18n{helpdesk.faq_list.portlet_search.labelDateEnd} : 
-                <div class="controls">
-	<input type="text" class="dateRange" class="input-mini" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!"")?html}" />
-		</div>
-	</div>
-                <br />
-                <p class="buttons">
+                    <label class="control-label" for="">&nbsp;</label>
+                       <div class="controls">
+                                <label class="inline" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateBegin}</label>
+                                <input type="text" class="input-small" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!)?html}" >
+                                <label class="inline" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateEnd}</label>
+                                <input type="text" class="input-small" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!)?html}" >
+                            </div>
+                        </div>
                     <input type="hidden" name="page" value="${path_label}" />
-                    <button class="btn btn-primary btn-small" type="submit" >#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}</button>
-	
-                </p>
-            </fieldset>
-        </fieldset>
-</form>
-        <#if search_page>
+                    <button class="btn btn-primary btn-small" type="submit" >
+                        <i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}
+                    </button>
+                    
+            </form>
+            <#if search_page>
             <#if helpdesk_question_answer_list?has_content>
-                <ul id="questionAnswer">
-                    <#list helpdesk_question_answer_list as questionAnswer>
-                        <li>
-                        <#assign currentSubject = questionAnswer.getSubject(plugin)>
-                        <@getParentSubject subject=currentSubject faq=currentSubject.getFaq(plugin) breadcrumb="" />
-                        <br />
-                        <a name="${questionAnswer.idQuestionAnswer}"></a>
-                        <strong>${questionAnswer.question}</strong>
-                        <blockquote>${questionAnswer.answer}</blockquote>
-                        </li>
-                    </#list>
-                </ul>
+            <ul id="questionAnswer">
+                <#list helpdesk_question_answer_list as questionAnswer>
+                <li>
+                    <#assign currentSubject = questionAnswer.getSubject(plugin)>
+                    <@getParentSubject subject=currentSubject faq=currentSubject.getFaq(plugin) breadcrumb="" />
+                    <br />
+                    <a name="${questionAnswer.idQuestionAnswer}"></a>
+                    <strong>${questionAnswer.question}</strong>
+                    <blockquote>${questionAnswer.answer}</blockquote>
+                </li>
+                </#list>
+            </ul>
             <#else>
-                <blockquote>#i18n{helpdesk.message.search_nok}</blockquote>
+            <blockquote>#i18n{helpdesk.message.search_nok}</blockquote>
             </#if>
-        </#if>
+            </#if>
+        </fieldset>
     </div>
 </div>
 </#if>
-
-<div class="span">
-	<div class="portlet -lutece-border-radius">
-    	<a name="top"></a>
-        <legend>#i18n{helpdesk.faq_list.portlet_list.title}</legend>
-		<#if faq_list?has_content >	
-			<ul>
-				<#list faq_list as faq>
-					<li><a href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}">${faq.name}</a></li>
-				</#list>
-			</ul>
-		<#else>
-			<em>#i18n{helpdesk.faq_list.emptyList}</em>
-		</#if>
-	</div>
+<div class="row" >
+    <div class="span12" >
+        <fieldset>
+            <legend>#i18n{helpdesk.faq_list.portlet_list.title}</legend>
+            <a name="top"></a>
+            <#if faq_list?has_content >	
+            <ul>
+                <#list faq_list as faq>
+                <li><a href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}">${faq.name}</a></li>
+                </#list>
+            </ul>
+            <#else>
+            <div class="alert alert-error">#i18n{helpdesk.faq_list.emptyList}</div>
+            </#if>
+            </fieldset>
+    </div>
 </div>
-
+<script src="js/jquery/plugins/ui/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="js/jquery/plugins/ui/ui.datepicker-fr.js"></script>
 <@getDatePickerRange idFieldFrom="form_search_date_begin" idFieldTo="form_search_date_end" language=locale.language />

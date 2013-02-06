@@ -1,15 +1,15 @@
-<div class="span">
-	<div class="portlet -lutece-border-radius">
-	<legend>#i18n{helpdesk.contact_result.boxTitle}</legend>
-	<div>#i18n{helpdesk.contact_result.message}</div>
-	<form class="form-horizontal" method="post">
-	<fieldset>
-		<input type="hidden" name="page" value="helpdesk" />
-		<input type="hidden" name="faq_id" value="${faq.id}" />
-		<button class="btn btn-primary btn-small" type="submit" >#i18n{helpdesk.contact_result.back}</button>
-	
+<div class="row" >
+    <div class="span12" >
+        <fieldset>
+            <legend>#i18n{helpdesk.contact_result.boxTitle}</legend>
+            <div class="alert alert-success"><i class="icon-exclamation-sign"></i>&nbsp;#i18n{helpdesk.contact_result.message}</div>
+            <form class="form-horizontal" method="post">
+            <input type="hidden" name="page" value="helpdesk" />
+            <input type="hidden" name="faq_id" value="${faq.id}" />
+            <button class="btn btn-primary btn-small" type="submit" >
+                <i class="icon-ok icon-white"></i>&nbsp;#i18n{helpdesk.contact_result.back}
+            </button>
+	</form>
 	</fieldset>
-</form>
-
-	</div>
+    </div>
 </div>
