@@ -61,7 +61,7 @@ public class FaqRoleRemovalListener implements RemovalListener
             return true;
         }
 
-        Collection<Faq> listFaq = FaqHome.findAuthorizedFaq( new String[] { strId },
+        Collection<Faq> listFaq = FaqHome.findAuthorizedFaqWhitoutNoneRole( new String[] { strId },
                 PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME ) );
 
         if ( ( listFaq != null ) && ( listFaq.size(  ) > 0 ) )

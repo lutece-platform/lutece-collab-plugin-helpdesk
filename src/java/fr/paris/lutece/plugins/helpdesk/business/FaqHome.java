@@ -33,8 +33,6 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
-import java.util.Collection;
-
 import fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer;
 import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
@@ -44,6 +42,8 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
 import fr.paris.lutece.util.ReferenceList;
+
+import java.util.Collection;
 
 
 /**
@@ -159,8 +159,21 @@ public final class FaqHome
     }
 
     /**
+     * Finds all authorized objects of this type specified by roleKey. Faq with
+     * role "none" will be ignored.
+     * 
+     * @param arrayRoleKey The role key array
+     * @param plugin The Plugin using this data access service
+     * @return A collection of objects
+     */
+    public static Collection<Faq> findAuthorizedFaqWhitoutNoneRole( String[] arrayRoleKey, Plugin plugin )
+    {
+        return _dao.findAuthorizedFaq( arrayRoleKey, plugin );
+    }
+
+    /**
      * Finds all authorized objects of this type specified by roleKey
-     *
+     * 
      * @param arrayRoleKey The role key array
      * @param plugin The Plugin using this data access service
      * @return A collection of objects
