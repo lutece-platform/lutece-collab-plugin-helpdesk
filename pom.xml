@@ -10,7 +10,7 @@
 	<groupId>fr.paris.lutece.plugins</groupId>
 	<artifactId>plugin-helpdesk</artifactId>
 	<packaging>lutece-plugin</packaging>
-	<version>3.0.0</version>
+	<version>3.0.1-SNAPSHOT</version>
 	<name>Lutece helpdesk plugin</name>
 
 	<repositories>
@@ -42,8 +42,8 @@
 		<jiraComponentId>10154</jiraComponentId>
 	</properties>
     <scm>
-        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/tags/plugin-helpdesk-3.0.0</connection>
-        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/tags/plugin-helpdesk-3.0.0</developerConnection>
-        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/tags/plugin-helpdesk-3.0.0</url>
+        <connection>scm:svn:http://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/collaboration/plugin-helpdesk</connection>
+        <developerConnection>scm:svn:https://dev.lutece.paris.fr/svn/lutece/portal/trunk/plugins/collaboration/plugin-helpdesk</developerConnection>
+        <url>http://dev.lutece.paris.fr/viewvc/lutece/portal/trunk/plugins/collaboration/plugin-helpdesk</url>
     </scm>
 </project>
