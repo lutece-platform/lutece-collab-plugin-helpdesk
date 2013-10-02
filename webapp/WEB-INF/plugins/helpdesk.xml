@@ -3,7 +3,7 @@
     <!-- helpdesk Informations -->
     <name>helpdesk</name>
     <class>fr.paris.lutece.plugins.helpdesk.service.HelpdeskPlugin</class>
-    <version>2.1.6</version>
+    <version>3.0.0</version>
     <documentation/>
     <installation/>
     <changes/>
