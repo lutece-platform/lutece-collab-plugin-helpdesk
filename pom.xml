@@ -10,7 +10,7 @@
     <groupId>fr.paris.lutece.plugins</groupId>
     <artifactId>plugin-helpdesk</artifactId>
     <packaging>lutece-plugin</packaging>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.1.0</version>
     <name>Lutece helpdesk plugin</name>
 
     <repositories>
@@ -46,6 +46,7 @@
         <connection>scm:git:https://github.com/lutece-platform/lutece-collab-plugin-helpdesk.git</connection>
         <developerConnection>scm:git:https://github.com/lutece-platform/lutece-collab-plugin-helpdesk.git</developerConnection>
         <url>https://github.com/lutece-platform/lutece-collab-plugin-helpdesk.git</url>
-    </scm>
+      <tag>lutece-collab-plugin-helpdesk-3.1.0</tag>
+  </scm>
     
 </project>
