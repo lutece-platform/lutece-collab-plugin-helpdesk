@@ -1,7 +1,7 @@
 <#macro subjectsList items typeList depth>
-	<#if items?has_content >
+	<#if items?has_content>
 		<ul <#if depth==0>id="${typeList}" class="treeview"</#if>>
-			<#list items as item >
+			<#list items as item>
 				<li>
 					<#assign themeId = 0 />
 					<#if theme?has_content><#assign themeId = theme.id /></#if>
@@ -19,9 +19,9 @@
 		</ul>
 	</#if>
 </#macro>
-<div class="row-fluid" >
-	<div class="span12">
-		<div class="span3" >
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div class="span3">
 			<fieldset>
 			<legend>#i18n{helpdesk.archived_question_list.adminTitleLeft}</legend>
 			<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
@@ -33,12 +33,12 @@
 				#i18n{helpdesk.archived_question_list.adminTitleRight}
 				<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp">
 				<input type="hidden" name="faq_id" value="${faq.id}" />
-				<#if theme?has_content ><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
-				<button class="btn btn-small" type="submit" ><i class="icon-remove-circle"></i>&nbsp;#i18n{helpdesk.archived_question_list.visitorQuestions}</button>
+				<#if theme?has_content><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
+				<button class="btn btn-sm" type="submit"><i class="glyphicon glyphicon-remove-circle"></i>&nbsp;#i18n{helpdesk.archived_question_list.visitorQuestions}</button>
 				</form>
 			</legend>
-			<#if theme?has_content >	
-				<#if helpdesk_archived_question_list?has_content >
+			<#if theme?has_content>	
+				<#if helpdesk_archived_question_list?has_content>
 				<table class="table table-striped table-condensed">
 				<thead>
 					<tr>
@@ -62,11 +62,11 @@
 						<td>${visitor_question.firstname}&nbsp;${visitor_question.lastname}</td>
 						<td>${visitor_question.date}</td>
 						<td>
-							<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}"  title="" >
-								<i class="icon-edit icon-white"></i>
+							<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}"  title="">
+								<i class="glyphicon glyphicon-edit"></i>
 							</a>
-							<a class="btn btn-danger btn-small" href="jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}"  title="#i18n{helpdesk.archived_question_list.buttonLabelRemove}" >
-								<i class="icon-trash icon-white"></i>
+							<a class="btn btn-danger btn-sm" href="jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}"  title="#i18n{helpdesk.archived_question_list.buttonLabelRemove}">
+								<i class="glyphicon glyphicon-trash"></i>
 							</a>
 						</td>
 					</tr>

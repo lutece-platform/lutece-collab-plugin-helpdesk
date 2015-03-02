@@ -1,9 +1,9 @@
 <#macro subjectsList items default_value exclude_value depth>
-	<#if items?has_content >
-	<#list items as subject >
+	<#if items?has_content>
+	<#list items as subject>
 		<#if exclude_value="${subject.id}">
 		<#else>
-			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
 			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
 	        <#assign child_subjects_list = subject.getChilds(plugin) />
 	        <#if child_subjects_list?has_content>
@@ -16,11 +16,11 @@
 </#macro>
 
 <#macro themesList items default_value exclude_value depth>
-	<#if items?has_content >
-	<#list items as theme >
+	<#if items?has_content>
+	<#list items as theme>
 		<#if exclude_value="${theme.id}">
 		<#else>
-			<option <#if default_value="${theme.id}">selected="selected"</#if> value="${theme.id}" >
+			<option <#if default_value="${theme.id}">selected="selected"</#if> value="${theme.id}">
 			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${theme.text}</option>
 	        <#assign child_themes_list = theme.getChilds(plugin) />
 	        <#if child_themes_list?has_content>
@@ -32,9 +32,9 @@
 	</#if>
 </#macro>
 
-<#macro commonListTable items depth jspRef paramId >
-	<#if items?has_content >
-		<#list items as subject >
+<#macro commonListTable items depth jspRef paramId>
+	<#if items?has_content>
+		<#list items as subject>
 		<tr>
             <td>
           		<@indentation depth=depth />
@@ -42,44 +42,44 @@
                 &nbsp;-&nbsp;${subject.questions?size}&nbsp;#i18n{helpdesk.commonList.labelQuestion}
             </td>
             <td>
-				<a class="btn btn-small btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" >
-					<i class="icon-edit icon-white"></i>
+				<a class="btn btn-sm btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}">
+					<i class="glyphicon glyphicon-edit"></i>
 				</a>
 				<#if subject.idOrder &gt; 0>
-            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
-						<i class="icon-chevron-up"></i>
+            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
+						<i class="glyphicon glyphicon-chevron-up"></i>
 	                </a>
                 <#else>
-					<a class="btn btn-small disabled" href="javascript:void">
-						<i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>               
+					<a class="btn btn-sm disabled" href="javascript:void">
+						<i class="glyphicon glyphicon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>               
 					</a>
             	</#if>
             	<#if items?seq_index_of(subject) != items?size-1>
-            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
-						<i class="icon-chevron-down"></i>
+            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
+						<i class="glyphicon glyphicon-chevron-down"></i>
 	                </a>
-            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
-						<i class="icon-chevron-right"></i>
+            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
+						<i class="glyphicon glyphicon-chevron-right"></i>
 	                </a>
                 <#else>
-					<a class="btn btn-small disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
-						<i class="icon-chevron-down"></i>
+					<a class="btn btn-sm disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
+						<i class="glyphicon glyphicon-chevron-down"></i>
 					</a>
-                	<a class="btn btn-small disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
-						<i class="icon-chevron-right"></i>
+                	<a class="btn btn-sm disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
+						<i class="glyphicon glyphicon-chevron-right"></i>
 					</a>
             	</#if>
             	<#if subject.idOrder == 0 && subject.idParent &gt; 0>
-            		<a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
-						<i class="icon-chevron-left"></i>
+            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+						<i class="glyphicon glyphicon-chevron-left"></i>
 	                </a>
             	<#else>
-                	<a class="btn btn-small disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
-						<i class="icon-chevron-left"></i>
+                	<a class="btn btn-sm disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+						<i class="glyphicon glyphicon-chevron-left"></i>
 					</a>					
             	</#if>
-				   	<a class="btn btn-small btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
-					<i class="icon-trash icon-white"></i>
+				   	<a class="btn btn-sm btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+					<i class="glyphicon glyphicon-trash"></i>
 				</a>
             </td>            
         </tr>
@@ -91,7 +91,7 @@
 	</#if>
 </#macro>
 
-<#macro indentation depth >
+<#macro indentation depth>
 	<#if depth &gt; 0>
 		<#list 1..depth as i>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

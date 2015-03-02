@@ -1,10 +1,10 @@
 <#macro subjectsList items typeList depth>
-    <#if items?has_content >
-        <#if depth==0 >
+    <#if items?has_content>
+        <#if depth==0>
         <div id="tree" class="jstree-default">
         </#if>  
         <ul>
-            <#list items as item >
+            <#list items as item>
                 <li id="node-${subject.id}">
                     <#assign subjectId = 0 />
                     <#if subject?has_content><#assign subjectId = subject.id /></#if>
@@ -24,18 +24,18 @@
                 </li>
             </#list>
             </ul>
-        <#if depth==0 >
+        <#if depth==0>
         </div>
         </#if>
     </#if>
 </#macro>
 
 <#macro subjectsListSelect items default_value exclude_value depth>
-    <#if items?has_content >
-    <#list items as subject >
+    <#if items?has_content>
+    <#list items as subject>
         <#if exclude_value="${subject.id}">
         <#else>
-            <option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+            <option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
             <#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
             <#assign child_subjects_list = subject.getChilds(plugin) />
             <#if child_subjects_list?has_content>
@@ -47,9 +47,9 @@
     </#if>
 </#macro>
 
-<div class="row-fluid">
-    <div class="span12" >
-        <div class="span3" >
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
             <fieldset>
             <legend>#i18n{helpdesk.question_answer_list.adminTitleLeft}</legend>
             <@subjectsList items=helpdesk_subject_list typeList="QuestionAnswer" depth=0 />
@@ -62,55 +62,57 @@
                 <label for="query">#i18n{helpdesk.search_results.labelSearch}</label>
                 <input type="text" name="query" size="30" value="<#if query??>${query}</#if>" />
                 <label for="date_start">#i18n{helpdesk.search_results.date_start}:</label>
-                <div class="input-prepend">
-                    <span class="add-on"><i class="icon-calendar"></i></span>
-                    <input type="text" name="date_start" id="date_start" class="input-small" value="<#if date_start_query??>${date_start_query}</#if>" >
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input type="text" name="date_start" id="date_start" class="form-control input-sm" value="<#if date_start_query??>${date_start_query}</#if>">
                 </div>
                 <label for="date_end">#i18n{helpdesk.search_results.date_end}:</label>
-                <div class="input-prepend">
-                    <span class="add-on"><i class="icon-calendar"></i></span>
-                    <input type="text" name="date_end" id="date_end" class="input-small" value="<#if date_end_query??>${date_end_query}</#if>" >
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                    <input type="text" name="date_end" id="date_end" class="form-control input-sm" value="<#if date_end_query??>${date_end_query}</#if>">
                 </div>
                 <label for="form_search_subject_id">#i18n{helpdesk.subjects.title.questions}:</label>
-                <select id="form_search_subject_id" name="form_search_subject_id" >
+                <select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
                     <option value=""></option>
                     <@subjectsListSelect items=helpdesk_subject_list default_value="${subjectId!}" exclude_value="" depth=0 />
                 </select>                   
-                <label class="checkbox">#i18n{helpdesk.subject_list.labelSearchSubSubjects}
-                    <input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true"/>
-                </label>
-                
-                <#-- Number of documents per page selector -->#i18n{helpdesk.search_results.labelNbDocsPerPage} :                 <@NbItemsPerPageSelectorCombo nb_items_per_page />
-                <div class="form-actions">
-                    <button class="btn btn-primary btn-small" type="submit"><i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
+				<div class="checkbox">
+					<label>#i18n{helpdesk.subject_list.labelSearchSubSubjects}
+						<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true"/>
+					</label>
+                </div>
+				
+                <#-- Number of documents per page selector -->#i18n{helpdesk.search_results.labelNbDocsPerPage} : <@NbItemsPerPageSelectorCombo nb_items_per_page />
+                <div class="form-group">
+                    <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
                 </div>
                 </form>
            </fieldset>
         </div>
-        <div class="span8">
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
             <fieldset>
             <legend>#i18n{helpdesk.question_answer_list.adminTitleRight}
             <form class="form-inline pull-right" action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
             <input type="hidden" value="${faq.id}" name="faq_id" />
-            <#if subject?has_content ><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
-            <button class="btn btn-primary btn-small" type="submit" ><i class="icon-plus icon-white"></i>&nbsp;#i18n{helpdesk.question_answer_list.buttonLabelCreate}</button>
+            <#if subject?has_content><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
+            <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-plus"></i>&nbsp;#i18n{helpdesk.question_answer_list.buttonLabelCreate}</button>
             </form>
             </legend>
-            <#if subject?has_content >  
-                <#if subject.questions?has_content >
+            <#if subject?has_content>  
+                <#if subject.questions?has_content>
                 <form class="form-horizontal" id="question_form" name="question_form" action="jsp/admin/plugins/helpdesk/DoActionSelectionQuestionAnswer.jsp">
                 <input type="hidden" value="${faq.id}" name="faq_id" />
-                <#if subject?has_content ><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
-                <div class="control-group">
-                <label class="control-label" for="">&nbsp;</label>
-                    <div class="controls pull-right">
+                <#if subject?has_content><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
+                <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+                    <div class="pull-right">
                     <label for="selection">#i18n{helpdesk.question_answer_list.applySelection} :
                         <select id="selection" name="selection" class="input-medium">
                             <option value="publish">#i18n{helpdesk.question_answer_list.publish}</option>
                             <option value="unpublish">#i18n{helpdesk.question_answer_list.unpublish}</option>
                             <option value="remove">#i18n{helpdesk.question_answer_list.remove}</option>
                         </select>
-                        <button class="btn btn-primary btn-small" type="submit" ><i class="icon-ok icon-white"></i></button>
+                        <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-ok"></i></button>
                     </label>
                     </div>
                 </div>
@@ -130,54 +132,54 @@
                     <td>                        
                         <input id="question_selection" name="question_selection" type="checkbox" value="${question_answer.idQuestionAnswer}" />
                     </td>
-                    <td class="span7">
+                    <td class="col-xs-12 col-sm-12 col-md-7 col-lg-7">
                         ${question_answer.question}
                     </td>
                     <td>
                         <#if question_answer.enabled>
                             <span class="label label-success">
-                                <i class="icon-ok icon-white" title="#i18n{helpdesk.question_answer_list.published}"></i>
+                                <i class="glyphicon glyphicon-ok" title="#i18n{helpdesk.question_answer_list.published}"></i>
                             </span>
                             
                         <#else>
                             <span class="label label-important">
-                                <i class="icon-remove icon-white" title="#i18n{helpdesk.question_answer_list.unpublished}"></i>
+                                <i class="glyphicon glyphicon-remove" title="#i18n{helpdesk.question_answer_list.unpublished}"></i>
                             </span>
                         </#if>
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="" >
-                                <i class="icon-edit icon-white"></i>
+                        <a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="">
+                                <i class="glyphicon glyphicon-edit"></i>
                         </a>
                         <#if question_answer.idOrder &gt; 0>
-                        <a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoUp}" >
-                            <i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>
+                        <a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
+                            <i class="glyphicon glyphicon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>
                         </a>
                         <#else>
-                        <a class="btn btn-small disabled" href="javascript:void;">
-                            <i class="icon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>
+                        <a class="btn btn-sm disabled" href="javascript:void;">
+                            <i class="glyphicon glyphicon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>
                         </a>              
                         </#if>  
                         <#if subject.questions?seq_index_of(question_answer) != subject.questions?size-1>
-                        <a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoDown}" >
-                                <i class="icon-chevron-down"></i>
+                        <a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
+                                <i class="glyphicon glyphicon-chevron-down"></i>
                         </a>
                         <#else>
-                        <a class="btn btn-small disabled" href="javascript:void;">
-                            <i class="icon-chevron-down" title="#i18n{helpdesk.commonList.buttonLabelGoDown}"></i>
+                        <a class="btn btn-sm disabled" href="javascript:void;">
+                            <i class="glyphicon glyphicon-chevron-down" title="#i18n{helpdesk.commonList.buttonLabelGoDown}"></i>
                         </a>
                         </#if>   
                         <#if question_answer.enabled>
-                        <a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.unpublish}" >
-                            <i class="icon-eye-close"></i>
+                        <a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.unpublish}">
+                            <i class="glyphicon glyphicon-eye-close"></i>
                         </a>
                         <#else>
-                        <a class="btn btn-small" href="jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.publish}" >
-                            <i class="icon-eye-open"></i>
+                        <a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.question_answer_list.publish}">
+                            <i class="glyphicon glyphicon-eye-open"></i>
                         </a>
                         </#if>
-                        <a class="btn btn-danger btn-small" href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}" >
-                            <i class="icon-trash icon-white"></i>
+                        <a class="btn btn-danger btn-sm" href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+                            <i class="glyphicon glyphicon-trash"></i>
                         </a>
                         </td>
                         </tr>
@@ -239,7 +241,7 @@
 <#macro NbItemsPerPageSelectorCombo nb_items_per_page>
 <select name="items_per_page" class="input-mini">
     <#list [ "10" , "20" , "50" , "100" ] as nb>
-    <#if nb_items_per_page = nb >
+    <#if nb_items_per_page = nb>
     <option selected="selected" value="${nb}">${nb}</option>
     <#else>
     <option value="${nb}">${nb}</option>

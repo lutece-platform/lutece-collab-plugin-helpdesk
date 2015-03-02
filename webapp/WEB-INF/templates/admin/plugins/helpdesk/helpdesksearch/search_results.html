@@ -1,11 +1,11 @@
-<#macro getParentSubject subject breadcrumb >
+<#macro getParentSubject subject breadcrumb>
 	<#if subject?has_content>
 		<#if breadcrumb == "">
-			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}" >' + subject.text + '</a>' + " &nbsp; " />
+			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}">' + subject.text + '</a>' + " &nbsp; " />
 		<#else>
-			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}" >' + subject.text + '</a>' + " &gt; " + breadcrumb />
+			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}">' + subject.text + '</a>' + " &gt; " + breadcrumb />
 		</#if>
-		<#if subject.getParent(plugin)?has_content && subject.idParent != 0 >
+		<#if subject.getParent(plugin)?has_content && subject.idParent != 0>
 			<@getParentSubject subject=subject.getParent(plugin) breadcrumb=breadcrumbCopy />
 		<#else>			
 			${breadcrumbCopy}
@@ -14,11 +14,11 @@
 </#macro>
 
 <#macro subjectsListSelect items default_value exclude_value depth>
-	<#if items?has_content >
-	<#list items as subject >
+	<#if items?has_content>
+	<#list items as subject>
 		<#if exclude_value="${subject.id}">
 		<#else>
-			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
 			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
 	        <#assign child_subjects_list = subject.getChilds(plugin) />
 	        <#if child_subjects_list?has_content>
@@ -28,9 +28,9 @@
 	</#list>
 	</#if>
 </#macro>
-<div class="row-fluid" >
-	<div class="span12" >
-		<div class="span3">
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 			<fieldset>
 			<legend>#i18n{helpdesk.search_results.labelSearch} </legend>
 			<form class="form" name="search" method="post" action="jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp">
@@ -40,28 +40,30 @@
 			<input type="text" name="query" size="30" value="<#if query??>${query}</#if>" />
 			<span class="datepicker_wrap">	
 				<label for="date_start">#i18n{helpdesk.search_results.date_start}:</label>
-				<input type="text" name="date_start" id="date_start" size="10"  value="<#if date_start_query??>${date_start_query}</#if>"/>	
+				<input type="text" class="form-control input-sm" name="date_start" id="date_start" size="10"  value="<#if date_start_query??>${date_start_query}</#if>"/>	
 			</span>
 			<span class="datepicker_wrap">	
 				<label for="date_end">#i18n{helpdesk.search_results.date_end}:</label>
-				<input type="text" name="date_end" id="date_end" size="10"  value="<#if date_end_query??>${date_end_query}</#if>"/>	
+				<input type="text" class="form-control input-sm" name="date_end" id="date_end" size="10"  value="<#if date_end_query??>${date_end_query}</#if>"/>	
 			</span>
 			<label for="form_search_subject_id">#i18n{helpdesk.subjects.title.questions}:</label>
-			<select id="form_search_subject_id" name="form_search_subject_id"  >
+			<select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
 				<option value=""></option>
 				<@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
 			</select>
-			<label class="checkbox" for="form_search_sub_subjects">			
+			<div class="checkbox">
+			<label for="form_search_sub_subjects">			
 				<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true" <#if filter_search_sub_subject> checked="checked"</#if> />#i18n{helpdesk.subject_list.labelSearchSubSubjects}
 			</label>
+			</div>
 			<#-- Number of documents per page selector -->
 			 #i18n{helpdesk.search_results.labelNbDocsPerPage} : 
 			<@NbItemsPerPageSelectorCombo nb_items_per_page />
-			<button class="btn btn-primary btn-small" type="submit" ><i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
+			<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
 			</form>
 			</fieldset>
 		</div> 
-		<div class="span8">	
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
 			<#if error??>
 			<div class="alert alert-error">	  	
 				<h4>#i18n{helpdesk.search_results.error}</h4>
@@ -84,17 +86,17 @@
 				<tr>
 					<td><@getParentSubject subject=result.getSubject(plugin) breadcrumb="" /></td>                   
 					<td>
-						<a class="btn btn-primary btn-small" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}"  title="" >
-						<i class="icon-edit icon-white"></i>
+						<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}"  title="">
+						<i class="glyphicon glyphicon-edit"></i>
 						</a>
 					</td>
 				</tr>            
 			</#list>
 			</tbody>
 			</table>
-			<#if (paginator.itemsCount > 0)>
+			<#if (paginator.itemsCount> 0)>
 			<form class="form-inline" name="export" method="post" action="jsp/admin/plugins/helpdesk/DoExportCSV.jsp">
-				<button class="btn btn-primary btn-small" type="submit" ><i class="icon-download icon-white"></i>&nbsp;#i18n{helpdesk.search_results.exportCSV}</button>
+				<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-download"></i>&nbsp;#i18n{helpdesk.search_results.exportCSV}</button>
 			</form>
 			</#if>
 		</div>
@@ -105,9 +107,9 @@
 
 <#-- Number of items per page selector - Combo Box implementation -->
 <#macro NbItemsPerPageSelectorCombo nb_items_per_page>
-<select name="items_per_page" class="span1">
+<select name="items_per_page" class="col-xs-12 col-sm-12 col-md-1 col-lg-1">
 <#list [ "10" , "20" , "50" , "100" ] as nb>
-    <option <#if nb_items_per_page = nb >selected="selected"</#if> value="${nb}">${nb}</option>
+    <option <#if nb_items_per_page = nb>selected="selected"</#if> value="${nb}">${nb}</option>
  </#list>
 </select>
 </#macro>
@@ -115,9 +117,9 @@
 <#-- Number of items per page selector - Radio List implementation -->
 <#macro NbItemsPerPageSelectorRadioList nb_items_per_page>
 <#list [ "5" , "10" , "20" , "50" ] as nb>
-<div class="controls">
-	<label class="control-label" for="items_per_page${nb}">${nb}
-		<input value="${nb}" id="items_per_page${nb}" name="items_per_page" type="radio" class="radio" <#if nb = nb_items_per_page >checked="checked"</#if> />
+<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+	<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="items_per_page${nb}">${nb}
+		<input value="${nb}" id="items_per_page${nb}" name="items_per_page" type="radio" class="radio" <#if nb = nb_items_per_page>checked="checked"</#if> />
 	</label>
 </div>
 </#list>

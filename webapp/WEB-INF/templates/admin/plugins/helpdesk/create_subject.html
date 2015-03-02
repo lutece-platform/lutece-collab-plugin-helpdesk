@@ -1,27 +1,27 @@
 <#include "macro_helpdesk.html" />
-<div class="row-fluid" >
-	<div class="span12">
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 	<fieldset>
 	<legend>#i18n{helpdesk.create_subject.adminTitle}</legend>
 	<form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateSubject.jsp">
 	<input type="hidden" value="${faq_id}" name="faq_id" />
-    <div class="control-group">
-		<label class="control-label" for="">&nbsp;</label>
-		<div class="controls">
+    <div class="form-group">
+		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 			<label for="subject">#i18n{helpdesk.create_subject.LabelSubject} *</label>
-			<input type="text" name="subject" id="subject" tabindex="1" size="50" maxlength="50"/>
+			<input type="text" name="subject" id="subject" tabindex="1" size="50" maxlength="50" class="form-control input-sm">
 		</div>
-        <div class="controls">
+        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 			<label for="parent_id">#i18n{helpdesk.create_subject.LabelParent} *</label>
-            <select id="parent_id" name="parent_id" >
-            	<option value="0" >#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
+            <select id="parent_id" name="parent_id" class="form-control input-sm">
+            	<option value="0">#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
 				<@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
 			</select>
 		</div>
 	</div>
-	<div class="form-actions">
-		<button class="btn btn-primary btn-small" type="submit" >
-			<i class="icon-ok icon-white"></i>&nbsp;#i18n{helpdesk.create_subject.buttonLabelCreate}
+	<div class="form-group">
+		<button class="btn btn-primary btn-sm" type="submit">
+			<i class="glyphicon glyphicon-ok"></i>&nbsp;#i18n{helpdesk.create_subject.buttonLabelCreate}
 		</button>
 	</div>
 	</form>

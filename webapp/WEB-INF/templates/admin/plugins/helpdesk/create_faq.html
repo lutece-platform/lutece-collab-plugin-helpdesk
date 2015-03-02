@@ -1,30 +1,30 @@
 <#include "macro_helpdesk.html" />
-<div class="row-fluid" >
-	<div class="span12" >
+<div class="row">
+	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 	<fieldset>
 	<legend>#i18n{helpdesk.create_faq.adminTitle}</legend>
 	<form class="form-horizontal" method="post" name="create_faq" action="jsp/admin/plugins/helpdesk/DoCreateFaq.jsp">
-    <div class="control-group">
-    <label class="control-label" for="">&nbsp;</label>
-		<div class="controls">
+    <div class="form-group">
+    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 				<label for="name">#i18n{helpdesk.create_faq.LabelName} *</label>
-				<input type="text" name="name" id="name" tabindex="1" maxlength="50"/>
+				<input type="text" name="name" id="name" tabindex="1" maxlength="50" class="form-control input-sm">
 		</div>
-       <div class="controls">
+       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 			<label  for="description">#i18n{helpdesk.create_faq.LabelDescription} *</label>
-				<input type="text" name="description" id="description" tabindex="2" maxlength="50"/>
+				<input type="text" name="description" id="description" tabindex="2" maxlength="50" class="form-control input-sm">
 		</div>
-		<div class="controls">
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 			<label  for="role_key">#i18n{helpdesk.create_faq.LabelRoleKey}</label>
-				<@comboWithParams name="role_key" default_value="${role_key_default_value}" items=role_key_list additionalParameters=" tabindex=3" />
+				<@comboWithParams name="role_key" default_value="${role_key_default_value}" items=role_key_list additionalParameters=" tabindex=3 form-control input-sm" />
 			</div>
-		<div class="controls">
+		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
 			<label for="workgroup_key">#i18n{helpdesk.create_faq.LabelWorkgroupKey}</label>
-			<@comboWithParams name="workgroup_key" default_value="${workgroup_key_default_value}" items=workgroup_key_list additionalParameters=" tabindex=4" />
+			<@comboWithParams name="workgroup_key" default_value="${workgroup_key_default_value}" items=workgroup_key_list additionalParameters=" tabindex=4 form-control input-sm" />
 		</div>
 	</div>
-	<div class="form-actions">
-		<button class="btn btn-primary btn-small" type="submit" tabindex="5"><i class="icon-ok icon-white"></i>&nbsp;#i18n{helpdesk.create_faq.buttonLabelCreate}</button>
+	<div class="form-group">
+		<button class="btn btn-primary btn-sm" type="submit" tabindex="5"><i class="glyphicon glyphicon-ok"></i>&nbsp;#i18n{helpdesk.create_faq.buttonLabelCreate}</button>
 	</div>
 	</form>
 	</fieldset>
