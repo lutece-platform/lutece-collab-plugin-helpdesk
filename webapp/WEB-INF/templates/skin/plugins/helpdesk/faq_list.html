@@ -1,11 +1,11 @@
-<#macro getParentSubject subject faq breadcrumb >
+<#macro getParentSubject subject faq breadcrumb>
 <#if subject?has_content && faq?has_content>
 <#if breadcrumb == "">
 <#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" />
 <#else>
 <#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" + " &gt; " + breadcrumb />
 </#if>
-<#if subject.getParent(plugin)?has_content && subject.idParent != 0 >
+<#if subject.getParent(plugin)?has_content && subject.idParent != 0>
 <@getParentSubject subject=subject.getParent(plugin) faq=faq breadcrumb=breadcrumbCopy />
 <#else>
 <a class="top" href="jsp/site/Portal.jsp?page=${path_label}#top">#i18n{helpdesk.question_list_row.top}</a>
@@ -14,31 +14,31 @@
 </#if>
 </#macro>
 
-<#if faq_list?has_content >
-<div class="row" >
-    <div class="span12" >
+<#if faq_list?has_content>
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <fieldset>
             <legend>#i18n{helpdesk.faq_list.portlet_search.title}</legend>
-            <form class="form-search"  name="form_search" method="post">
+            <form class="form-search" name="form_search" method="post">
                 <a name="top"></a>
-                <div class="control-group">
-                    <label class="control-label" for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
-                    <div class="controls">
-                        <input type="text" class="input-xlarge" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!)?html}" class=" " />
+                <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
+                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                        <input type="text" class="input-sm" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!)?html}" class=" " />
                     </div>
                 </div>
-                <div class="control-group">
-                    <label class="control-label" for="">&nbsp;</label>
-                       <div class="controls">
+                <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+                       <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                                 <label class="inline" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateBegin}</label>
-                                <input type="text" class="input-small" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!)?html}" >
+                                <input type="text" class="input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!)?html}">
                                 <label class="inline" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateEnd}</label>
-                                <input type="text" class="input-small" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!)?html}" >
+                                <input type="text" class="input-sm" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!)?html}">
                             </div>
                         </div>
                     <input type="hidden" name="page" value="${path_label}" />
-                    <button class="btn btn-primary btn-small" type="submit" >
-                        <i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}
+                    <button class="btn btn-primary btn-sm" type="submit">
+                        <i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}
                     </button>
                     
             </form>
@@ -64,12 +64,12 @@
     </div>
 </div>
 </#if>
-<div class="row" >
-    <div class="span12" >
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <fieldset>
             <legend>#i18n{helpdesk.faq_list.portlet_list.title}</legend>
             <a name="top"></a>
-            <#if faq_list?has_content >	
+            <#if faq_list?has_content>	
             <ul>
                 <#list faq_list as faq>
                 <li><a href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}">${faq.name}</a></li>

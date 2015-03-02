@@ -1,20 +1,20 @@
 <#macro subjectsList items typeList depth>
-<#if items?has_content >
+<#if items?has_content>
 <ul id="${typeList}">
-    <#list items as subject >
+    <#list items as subject>
     <li>
         <#if typeList != "subject">
             <h4>&nbsp;${subject.text}
             <#if typeList != "subject">
-                <a class="top btn btn-primary btn-small" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top">
-                    <i class="icon-arrow-up icon-white"></i>&nbsp;#i18n{helpdesk.question_list_row.top}
+                <a class="top btn btn-primary btn-sm" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top">
+                    <i class="glyphicon glyphicon-arrow-up"></i>&nbsp;#i18n{helpdesk.question_list_row.top}
                 </a>
             </#if>
             </h4>
             <a name="${anchor_subject}${subject.id}"></a>
             <ul id="${typeList}">
-                <#list subject.questions as questionAnswer >
-                    <#if questionAnswer.enabled == true >
+                <#list subject.questions as questionAnswer>
+                    <#if questionAnswer.enabled == true>
                         <li>
                             <a name="${anchor_question_answer}${questionAnswer.idQuestionAnswer}"></a>
                             <strong>${questionAnswer.question}</strong>
@@ -25,7 +25,7 @@
             </ul>
         <#else>
             <h4>&nbsp;${subject.text}&nbsp;
-              <a class="btn btn-mini btn-primary" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}"><i class="icon-tag"></i></a>
+              <a class="btn btn-mini btn-primary" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}"><i class="glyphicon glyphicon-tag"></i></a>
             </h4>
         </#if>
       
@@ -40,11 +40,11 @@
 </#macro>
 
 <#macro subjectsListSelect items default_value exclude_value depth>
-<#if items?has_content >
-<#list items as subject >
+<#if items?has_content>
+<#list items as subject>
 <#if exclude_value="${subject.id}">
 <#else>
-<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}" >
+<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
     <#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
 <#assign child_subjects_list = subject.getChilds(plugin) />
 <#if child_subjects_list?has_content>
@@ -56,18 +56,18 @@
 </#if>
 </#macro>
 
-<#macro getParentSubject subject breadcrumb >
+<#macro getParentSubject subject breadcrumb>
 <#if subject?has_content>
 <#if breadcrumb == "">
 <#assign breadcrumbCopy = subject.text />
 <#else>
 <#assign breadcrumbCopy = subject.text + " &gt; " + breadcrumb />
 </#if>
-<#if subject.getParent(plugin)?has_content && subject.idParent != 0 >
+<#if subject.getParent(plugin)?has_content && subject.idParent != 0>
 <@getParentSubject subject=subject.getParent(plugin) breadcrumb=breadcrumbCopy />
 <#else>
- <a class="top btn btn-primary btn-small" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top">
-    <i class="icon-arrow-up icon-white"></i>&nbsp;#i18n{helpdesk.question_list_row.top}
+ <a class="top btn btn-primary btn-sm" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top">
+    <i class="glyphicon glyphicon-arrow-up"></i>&nbsp;#i18n{helpdesk.question_list_row.top}
  </a>
 ${breadcrumbCopy}
 </#if>
@@ -75,32 +75,32 @@ ${breadcrumbCopy}
 </#macro>
 
 <div class="row">
-    <div class="span12">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
         <div class="portlet">
             <a name="top"></a>
             <fieldset>
                 <legend>#i18n{helpdesk.subject_list.pageTitle}</legend>
                 <form class="form-search well well-small"  name="form_search" method="post">
                 <div class="offset1">
-                    <div class="control-group">
-                        <label class="control-label" for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
-                        <div class="controls">
-                            <input type="text" class="input-xlarge" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}" >
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
+                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                            <input type="text" class="form-control input-sm" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}">
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label" for="">&nbsp;</label>
-                        <div class="controls">
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                             <label class="inline" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} : </label>
-                            <input type="text" class="input-small" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}" />
-                            <label class="inline" >#i18n{helpdesk.subject_list.labelDateEnd}</label>
-                            <input type="text" class="input-small" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}" />
+                            <input type="text" class="form-control input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}" />
+                            <label class="inline">#i18n{helpdesk.subject_list.labelDateEnd}</label>
+                            <input type="text" class="form-control input-sm" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}" />
                         </div>
                     </div>
-                    <div class="control-group">
-                        <label class="control-label"  for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
-                        <div class="controls">
-                            <select id="form_search_subject_id" name="form_search_subject_id" class="input-large" >
+                    <div class="form-group">
+                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3">  for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
+                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                            <select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
                                 <option value=""></option>
                                 <@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
                             </select>
@@ -111,14 +111,14 @@ ${breadcrumbCopy}
                     </div>
                         <input type="hidden" name="page" value="${path_label}" />
                         <input type="hidden" value="${faq.id}" name="faq_id" />
-                        <button class="btn btn-primary btn-small" type="submit" >
-                            <i class="icon-search icon-white"></i>&nbsp;#i18n{helpdesk.subject_list.buttonLabelSearch}
+                        <button class="btn btn-primary btn-sm" type="submit">
+                            <i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.subject_list.buttonLabelSearch}
                         </button>
                    </div> 
                 </form>
             </fieldset>
-            <a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}" class="btn btn-info btn-small">
-                <i class="icon-list icon-white"></i>&nbsp;#i18n{helpdesk.subject_list.labelList}
+            <a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}" class="btn btn-info btn-sm">
+                <i class="glyphicon glyphicon-list"></i>&nbsp;#i18n{helpdesk.subject_list.labelList}
             </a>
             <form class="form-horizontal" method="post">
                 <fieldset>
@@ -126,7 +126,7 @@ ${breadcrumbCopy}
                     <input type="hidden" name="page" value="${path_label}" />
                     <input type="hidden" name="faq_id" value="${faq.id}" />
                     <input type="hidden" name="contact" value="contact" />
-                    <button class="btn btn-primary btn-small" type="submit" ><i class="icon-envelope icon-white"></i>&nbsp;#i18n{helpdesk.subject_list.labelContact}</button>
+                    <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-envelope"></i>&nbsp;#i18n{helpdesk.subject_list.labelContact}</button>
                 </fieldset>
             </form>
             <#if search_page>
@@ -157,8 +157,8 @@ ${breadcrumbCopy}
                     <input type="hidden" name="page" value="${path_label}" />
                     <input type="hidden" name="faq_id" value="${faq.id}" />
                     <input type="hidden" name="contact" value="contact" />
-                    <button class="btn btn-primary btn-small" type="submit" >
-                        <i class="icon-envelope icon-white"></i>&nbsp;#i18n{helpdesk.subject_list.labelContact}
+                    <button class="btn btn-primary btn-sm" type="submit">
+                        <i class="glyphicon glyphicon-envelope"></i>&nbsp;#i18n{helpdesk.subject_list.labelContact}
                     </button>
                 </fieldset>
             </form>
