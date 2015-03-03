@@ -22,13 +22,13 @@
             <form class="form-search" name="form_search" method="post">
                 <a name="top"></a>
                 <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
+                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="form_search_keywords">#i18n{helpdesk.faq_list.portlet_search.labelSearch} : </label>
                     <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-                        <input type="text" class="input-sm" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!)?html}" class=" " />
+                        <input type="text" class="input-sm" id="form_search_keywords" name="form_search_keywords" value="${(filter_searched_keywords!)?html}">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="">&nbsp;</label>
                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                                 <label class="inline" for="form_search_date_begin">#i18n{helpdesk.faq_list.portlet_search.labelDateBegin}</label>
                                 <input type="text" class="input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${(filter_date_begin!)?html}">
@@ -36,7 +36,7 @@
                                 <input type="text" class="input-sm" id="form_search_date_end" name="form_search_date_end" value="${(filter_date_end!)?html}">
                             </div>
                         </div>
-                    <input type="hidden" name="page" value="${path_label}" />
+                    <input type="hidden" name="page" value="${path_label}">
                     <button class="btn btn-primary btn-sm" type="submit">
                         <i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}
                     </button>

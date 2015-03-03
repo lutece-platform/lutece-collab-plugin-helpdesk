@@ -25,7 +25,7 @@
             </ul>
         <#else>
             <h4>&nbsp;${subject.text}&nbsp;
-              <a class="btn btn-mini btn-primary" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}"><i class="glyphicon glyphicon-tag"></i></a>
+              <a class="btn btn-xs btn-primary" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}"><i class="glyphicon glyphicon-tag"></i></a>
             </h4>
         </#if>
       
@@ -80,16 +80,16 @@ ${breadcrumbCopy}
             <a name="top"></a>
             <fieldset>
                 <legend>#i18n{helpdesk.subject_list.pageTitle}</legend>
-                <form class="form-search well well-small"  name="form_search" method="post">
+                <form class="form-search well well-sm"  name="form_search" method="post">
                 <div class="offset1">
                     <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
+                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                             <input type="text" class="form-control input-sm" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="">&nbsp;</label>
                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                             <label class="inline" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} : </label>
                             <input type="text" class="form-control input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}" />
@@ -98,7 +98,7 @@ ${breadcrumbCopy}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3">  for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
+                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
                         <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
                             <select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
                                 <option value=""></option>
