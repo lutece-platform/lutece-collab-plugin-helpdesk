@@ -7,13 +7,14 @@
 		<input type="hidden" value="${faq_id}" name="faq_id" />
 		<input type="hidden" name="subject_id" value="${subject.id}" />
 		<div class="form-group">
-		<label class="form-groups" for="">&nbsp;</label>
+			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3">#i18n{helpdesk.modify_subject.LabelSubject} *</label>
 			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label>#i18n{helpdesk.modify_subject.LabelSubject} *</label>
-				<input type="text" class="form-control input-sm" name="subject" id="subject" value="${subject.text}" maxlength="50"/>
+				<input type="text" class="form-control input-sm" name="subject" id="subject" value="${subject.text}" maxlength="50">
 			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="parent_id">#i18n{helpdesk.modify_subject.LabelParent} *</label>
 			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label for="parent_id">#i18n{helpdesk.modify_subject.LabelParent} *</label>
 			<select id="parent_id" name="parent_id" class="form-control input-sm">
 			<option <#if subject.idParent==0>selected="selected"</#if> value="0">
 				#i18n{helpdesk.commonList.rootAbstractSubjectName}
@@ -23,7 +24,9 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<button class="btn btn-primary btn-sm" type="submit"><i class=""></i>#i18n{helpdesk.modify_subject.buttonLabelModify}</button>
+			<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
+				<button class="btn btn-primary btn-sm" type="submit"><i class=""></i>#i18n{helpdesk.modify_subject.buttonLabelModify}</button>
+			</div>
 		</div>
 		</form> 
     </fieldset>

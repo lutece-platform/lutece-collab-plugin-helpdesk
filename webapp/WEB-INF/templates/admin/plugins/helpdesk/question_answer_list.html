@@ -57,34 +57,60 @@
             <fieldset>
             <legend>#i18n{helpdesk.search_results.labelSearch}</legend>
                 <form class="form" method="post" name="fullTextSearch" action="jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp">
-                <input type="hidden" value="${faq.id}" name="faq_id" />                     
-                <input type="hidden" name="page" value="search" />
-                <label for="query">#i18n{helpdesk.search_results.labelSearch}</label>
-                <input type="text" name="query" size="30" value="<#if query??>${query}</#if>" />
-                <label for="date_start">#i18n{helpdesk.search_results.date_start}:</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                    <input type="text" name="date_start" id="date_start" class="form-control input-sm" value="<#if date_start_query??>${date_start_query}</#if>">
-                </div>
-                <label for="date_end">#i18n{helpdesk.search_results.date_end}:</label>
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                    <input type="text" name="date_end" id="date_end" class="form-control input-sm" value="<#if date_end_query??>${date_end_query}</#if>">
-                </div>
-                <label for="form_search_subject_id">#i18n{helpdesk.subjects.title.questions}:</label>
-                <select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
-                    <option value=""></option>
-                    <@subjectsListSelect items=helpdesk_subject_list default_value="${subjectId!}" exclude_value="" depth=0 />
-                </select>                   
-				<div class="checkbox">
-					<label>#i18n{helpdesk.subject_list.labelSearchSubSubjects}
-						<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true"/>
-					</label>
-                </div>
+                <input type="hidden" value="${faq.id}" name="faq_id">                     
+                <input type="hidden" name="page" value="search">
 				
-                <#-- Number of documents per page selector -->#i18n{helpdesk.search_results.labelNbDocsPerPage} : <@NbItemsPerPageSelectorCombo nb_items_per_page />
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-12 col-md-12 col-lg-12" for="query">#i18n{helpdesk.search_results.labelSearch}</label>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<input type="text" name="query" size="30" value="<#if query??>${query}</#if>" class="form-control input-sm">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-xs-12 col-sm-12 col-md-12 col-lg-12" for="date_start">#i18n{helpdesk.search_results.date_start}:</label>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="input-group">
+							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							<input type="text" name="date_start" id="date_start" class="form-control input-sm" value="<#if date_start_query??>${date_start_query}</#if>">
+						</div>
+					</div>
+                </div>
                 <div class="form-group">
-                    <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
+					<label class="col-xs-12 col-sm-12 col-md-12 col-lg-12" for="date_end">#i18n{helpdesk.search_results.date_end}:</label>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+						<input type="text" name="date_end" id="date_end" class="form-control input-sm" value="<#if date_end_query??>${date_end_query}</#if>">
+					</div>
+                </div>
+                <div class="form-group">
+					<label class="col-xs-12 col-sm-12 col-md-12 col-lg-12" for="form_search_subject_id">#i18n{helpdesk.subjects.title.questions}:</label>
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
+							<option value=""></option>
+							<@subjectsListSelect items=helpdesk_subject_list default_value="${subjectId!}" exclude_value="" depth=0 />
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true"/>
+								#i18n{helpdesk.subject_list.labelSearchSubSubjects}
+							</label>
+						</div>
+					</div>
+                </div>
+				<div class="form-group">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <#-- Number of documents per page selector -->#i18n{helpdesk.search_results.labelNbDocsPerPage} : <@NbItemsPerPageSelectorCombo nb_items_per_page />
+				</div>
+                </div>
+                <div class="form-group">
+					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+						<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
+					</div>
                 </div>
                 </form>
            </fieldset>
@@ -93,26 +119,25 @@
             <fieldset>
             <legend>#i18n{helpdesk.question_answer_list.adminTitleRight}
             <form class="form-inline pull-right" action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
-            <input type="hidden" value="${faq.id}" name="faq_id" />
-            <#if subject?has_content><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
+            <input type="hidden" value="${faq.id}" name="faq_id">
+            <#if subject?has_content><input type="hidden" value="${subject.id}" name="subject_id"></#if>
             <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-plus"></i>&nbsp;#i18n{helpdesk.question_answer_list.buttonLabelCreate}</button>
             </form>
             </legend>
             <#if subject?has_content>  
                 <#if subject.questions?has_content>
                 <form class="form-horizontal" id="question_form" name="question_form" action="jsp/admin/plugins/helpdesk/DoActionSelectionQuestionAnswer.jsp">
-                <input type="hidden" value="${faq.id}" name="faq_id" />
-                <#if subject?has_content><input type="hidden" value="${subject.id}" name="subject_id" /></#if>
+                <input type="hidden" value="${faq.id}" name="faq_id">
+                <#if subject?has_content><input type="hidden" value="${subject.id}" name="subject_id"></#if>
                 <div class="form-group">
-                <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
                     <div class="pull-right">
                     <label for="selection">#i18n{helpdesk.question_answer_list.applySelection} :
-                        <select id="selection" name="selection" class="input-medium">
+                        <select id="selection" name="selection" class="">
                             <option value="publish">#i18n{helpdesk.question_answer_list.publish}</option>
                             <option value="unpublish">#i18n{helpdesk.question_answer_list.unpublish}</option>
                             <option value="remove">#i18n{helpdesk.question_answer_list.remove}</option>
                         </select>
-                        <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-ok"></i></button>
+                        <button class="btn btn-primary btn-xs" type="submit"><i class="glyphicon glyphicon-ok"></i></button>
                     </label>
                     </div>
                 </div>
@@ -148,7 +173,7 @@
                         </#if>
                     </td>
                     <td>
-                        <a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="">
+                        <a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}"  title="">
                                 <i class="glyphicon glyphicon-edit"></i>
                         </a>
                         <#if question_answer.idOrder &gt; 0>
@@ -178,7 +203,7 @@
                             <i class="glyphicon glyphicon-eye-open"></i>
                         </a>
                         </#if>
-                        <a class="btn btn-danger btn-sm" href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+                        <a class="btn btn-danger btn-xs" href="jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}">
                             <i class="glyphicon glyphicon-trash"></i>
                         </a>
                         </td>
@@ -239,7 +264,7 @@
 
 <#-- Number of items per page selector - Combo Box implementation -->
 <#macro NbItemsPerPageSelectorCombo nb_items_per_page>
-<select name="items_per_page" class="input-mini">
+<select name="items_per_page" class="">
     <#list [ "10" , "20" , "50" , "100" ] as nb>
     <#if nb_items_per_page = nb>
     <option selected="selected" value="${nb}">${nb}</option>

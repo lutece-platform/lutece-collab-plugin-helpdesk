@@ -14,11 +14,11 @@
 	    </#if>
 	</#list>
 	</select>                            
-	<button class="btn btn-primary btn-sm" type="submit" title="#i18n{helpdesk.faq.buttonItemsPerPage}"><i class="glyphicon glyphicon-ok"></i></button>
+	<button class="btn btn-primary btn-xs" type="submit" title="#i18n{helpdesk.faq.buttonItemsPerPage}"><i class="glyphicon glyphicon-ok"></i></button>
 	</form -->
 	<#if CREATE?has_content>
 	<form class="form-inline pull-right" action="jsp/admin/plugins/helpdesk/CreateFaq.jsp">
-		<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-plus"></i>&nbsp;#i18n{helpdesk.faq.buttonLabelCreate}</button>
+		<button class="btn btn-primary btn-xs" type="submit"><i class="glyphicon glyphicon-plus"></i>&nbsp;#i18n{helpdesk.faq.buttonLabelCreate}</button>
 	</form>
 	</#if>  
 	</legend>
@@ -41,38 +41,38 @@
 			<td>${faq.roleKey}</td>
 			<td>
 			<#if faqModel.MODIFY?has_content>
-    			<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}"  title="${faq.name}">
+    			<a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}"  title="${faq.name}">
 					<i class="glyphicon glyphicon-edit"></i>
 				</a>
 			</#if>
 			<#if faqModel.MANAGE_SUBJECTS?has_content>
-            	<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelSubject}">
+            	<a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelSubject}">
 					<i class="glyphicon glyphicon-question-sign"></i>
 				</a>
 			</#if>
 			<#if faqModel.MANAGE_THEMES?has_content>
-				<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelTheme}">
+				<a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelTheme}">
 					<i class="glyphicon glyphicon-tags"></i>
 				</a>
 			</#if>
 			<#if faqModel.MANAGE_VISITOR_QUESTIONS?has_content>
-				<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}">
+				<a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}">
 					<i class="glyphicon glyphicon-list"></i>
 				</a>
 			</#if>
    	        <#if faqModel.MANAGE_QUESTIONS_ANSWERS?has_content>
-				<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}">
+				<a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}">
 					<i class="glyphicon glyphicon-comment"></i>
 				</a>
 			</#if>
    	        <#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content>
-				<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}">
+				<a class="btn btn-primary btn-xs" href="jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}">
 					<i class="glyphicon glyphicon-upload"></i>
 				</a>
 			</#if>
    	        
    	        <#if faqModel.DELETE?has_content>
-				<a class="btn btn-danger btn-sm" href="jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+				<a class="btn btn-danger btn-xs" href="jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}"  title="#i18n{helpdesk.commonList.buttonLabelDelete}">
 					<i class="glyphicon glyphicon-trash"></i>
 				</a>
 			</#if>

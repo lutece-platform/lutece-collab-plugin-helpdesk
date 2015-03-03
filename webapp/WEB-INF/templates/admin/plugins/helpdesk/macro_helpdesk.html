@@ -42,43 +42,43 @@
                 &nbsp;-&nbsp;${subject.questions?size}&nbsp;#i18n{helpdesk.commonList.labelQuestion}
             </td>
             <td>
-				<a class="btn btn-sm btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}">
+				<a class="btn btn-xs btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}">
 					<i class="glyphicon glyphicon-edit"></i>
 				</a>
 				<#if subject.idOrder &gt; 0>
-            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
+            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
 						<i class="glyphicon glyphicon-chevron-up"></i>
 	                </a>
                 <#else>
-					<a class="btn btn-sm disabled" href="javascript:void">
+					<a class="btn btn-xs disabled" href="javascript:void">
 						<i class="glyphicon glyphicon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>               
 					</a>
             	</#if>
             	<#if items?seq_index_of(subject) != items?size-1>
-            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
+            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
 						<i class="glyphicon glyphicon-chevron-down"></i>
 	                </a>
-            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
+            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
 						<i class="glyphicon glyphicon-chevron-right"></i>
 	                </a>
                 <#else>
-					<a class="btn btn-sm disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
+					<a class="btn btn-xs disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
 						<i class="glyphicon glyphicon-chevron-down"></i>
 					</a>
-                	<a class="btn btn-sm disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
+                	<a class="btn btn-xs disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
 						<i class="glyphicon glyphicon-chevron-right"></i>
 					</a>
             	</#if>
             	<#if subject.idOrder == 0 && subject.idParent &gt; 0>
-            		<a class="btn btn-sm" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
 						<i class="glyphicon glyphicon-chevron-left"></i>
 	                </a>
             	<#else>
-                	<a class="btn btn-sm disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
+                	<a class="btn btn-xs disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
 						<i class="glyphicon glyphicon-chevron-left"></i>
 					</a>					
             	</#if>
-				   	<a class="btn btn-sm btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
+				   	<a class="btn btn-xs btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
 					<i class="glyphicon glyphicon-trash"></i>
 				</a>
             </td>            

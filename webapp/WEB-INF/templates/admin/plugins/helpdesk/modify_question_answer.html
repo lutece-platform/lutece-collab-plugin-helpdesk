@@ -8,31 +8,40 @@
 		<input type="hidden" value="${faq_id}" name="faq_id" />
 		<input type="hidden" name="question_id" value="${question_answer.idQuestionAnswer}" />
 		<div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3"> for="">&nbsp;</label>
+			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="subject_id">#i18n{helpdesk.modify_question_answer.LabelSubject} *</label>
 			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label for="subject_id">#i18n{helpdesk.modify_question_answer.LabelSubject} *</label>
 				<select id="subject_id" name="subject_id" id="subject_id" class="form-control input-sm">
 					<@subjectsList items=helpdesk_subject_list default_value="${question_answer.idSubject}" exclude_value="" depth=0 />
 				</select>
 			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="question">#i18n{helpdesk.modify_question_answer.LabelQuestion} *</label>
 			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label for="question">#i18n{helpdesk.modify_question_answer.LabelQuestion} *</label>
 				<input type="text" class="form-control input-sm" name="question" id="question" size="40" maxlength="" value="${question_answer.question}"/>
 			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="html_content">#i18n{helpdesk.modify_question_answer.LabelAnswer} *</label>
 			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label for="html_content">#i18n{helpdesk.modify_question_answer.LabelAnswer} *</label>
 				<textarea id="html_content" class="richtext form-control input-sm" name="html_content" style="width:80%;" rows="20">${html_content}</textarea>
 			</div>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<div class="checkbox">
-				<label for="status">#i18n{helpdesk.modify_question_answer.LabelStatus} *
-					<input type="checkbox" class="checkbox" name="status" name="status" ${checked} value="1" /></label>
+		</div>
+		<div class="form-group">
+			<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
+				<div class="checkbox">
+					<label for="status">
+						<input type="checkbox" class="checkbox" name="status" name="status" ${checked} value="1">
+						#i18n{helpdesk.modify_question_answer.LabelStatus} *
+					</label>
 				</div>
 			</div>
 		</div>
 		<div class="form-group">
-			<button class="btn btn-primary btn-sm" type="submit">#i18n{helpdesk.modify_question_answer.buttonLabelModify}</button>
-			<button class="btn btn-danger btn-sm" onclick="this.form.action='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp';this.form.submit();"><i class="glyphicon glyphicon-trash"></i>&nbsp;#i18n{helpdesk.modify_question_answer.buttonLabelDelete}</button>
+			<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
+				<button class="btn btn-primary btn-sm" type="submit">#i18n{helpdesk.modify_question_answer.buttonLabelModify}</button>
+				<button class="btn btn-danger btn-sm" onclick="this.form.action='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp';this.form.submit();"><i class="glyphicon glyphicon-trash"></i>&nbsp;#i18n{helpdesk.modify_question_answer.buttonLabelDelete}</button>
+			</div> 
 		</div> 
 		</form>
 	</fieldset>
