@@ -59,15 +59,12 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queries.ChainedFilter;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.CachingWrapperFilter;
-import org.apache.lucene.search.Filter;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
-import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
@@ -102,7 +99,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
         ArrayList<SearchItem> listResults = new ArrayList<SearchItem>( );
         IndexSearcher searcher = null;
 
-        Filter filterRole = getFilterRoles( request );
+        Query filterRole = getFilterRoles( request );
 
         try
         {
@@ -123,8 +120,9 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             }
 
             //Type (=helpdesk)
-            PhraseQuery queryType = new PhraseQuery( );
-            queryType.add( new Term( HelpdeskSearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME ) );
+            PhraseQuery.Builder queryTypeBuilder = new PhraseQuery.Builder( );
+            queryTypeBuilder.add( new Term( HelpdeskSearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME ) );
+            PhraseQuery queryType = queryTypeBuilder.build( );
             queries.add( queryType.toString( ) );
             fields.add( HelpdeskSearchItem.FIELD_TYPE );
             flags.add( BooleanClause.Occur.MUST );
@@ -182,13 +180,17 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
                 }
             }
 
-            Query queryMulti = MultiFieldQueryParser.parse( IndexationService.LUCENE_INDEX_VERSION,
+            Query queryMulti = MultiFieldQueryParser.parse(
                     (String[]) queries.toArray( new String[queries.size( )] ),
                     (String[]) fields.toArray( new String[fields.size( )] ),
                     (BooleanClause.Occur[]) flags.toArray( new BooleanClause.Occur[flags.size( )] ),
                     IndexationService.getAnalyser( ) );
 
-            TopDocs topDocs = searcher.search( queryMulti, filterRole, LuceneSearchEngine.MAX_RESPONSES );
+            BooleanQuery.Builder bQueryMultiBuilder = new BooleanQuery.Builder( );
+            bQueryMultiBuilder.add( queryMulti, BooleanClause.Occur.SHOULD );
+            bQueryMultiBuilder.add( filterRole, BooleanClause.Occur.FILTER );
+
+            TopDocs topDocs = searcher.search( bQueryMultiBuilder.build( ), LuceneSearchEngine.MAX_RESPONSES );
 
             ScoreDoc[] hits = topDocs.scoreDocs;
 
@@ -211,11 +213,11 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
     /**
      * Generate the Lutece role filter if necessary
      * @param request The {@link HttpServletRequest}
-     * @return The {@link Filter} by Lutece Role
+     * @return The {@link Query} by Lutece Role
      */
-    private Filter getFilterRoles( HttpServletRequest request )
+    private Query getFilterRoles( HttpServletRequest request )
     {
-        Filter filterRole = null;
+        Query filterRole = null;
         boolean bFilterResult = false;
         LuteceUser user = null;
 
@@ -223,7 +225,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
         {
             user = SecurityService.getInstance( ).getRegisteredUser( request );
 
-            Filter[] filtersRole = null;
+            Query[] filtersRole = null;
 
             if ( user != null )
             {
@@ -231,12 +233,12 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
                 if ( userRoles != null )
                 {
-                    filtersRole = new Filter[userRoles.length + 1];
+                    filtersRole = new Query[userRoles.length + 1];
 
                     for ( int i = 0; i < userRoles.length; i++ )
                     {
                         Query queryRole = new TermQuery( new Term( SearchItem.FIELD_ROLE, userRoles[i] ) );
-                        filtersRole[i] = new CachingWrapperFilter( new QueryWrapperFilter( queryRole ) );
+                        filtersRole[i] = queryRole;
                     }
                 }
                 else
@@ -246,14 +248,19 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             }
             else
             {
-                filtersRole = new Filter[1];
+                filtersRole = new Query[1];
             }
 
             if ( !bFilterResult )
             {
                 Query queryRole = new TermQuery( new Term( SearchItem.FIELD_ROLE, Page.ROLE_NONE ) );
-                filtersRole[filtersRole.length - 1] = new CachingWrapperFilter( new QueryWrapperFilter( queryRole ) );
-                filterRole = new ChainedFilter( filtersRole, ChainedFilter.OR );
+                filtersRole[filtersRole.length - 1] = queryRole;
+
+                BooleanQuery.Builder bQueryBuilder = new BooleanQuery.Builder( );
+                for (Query queryFilterRole : filtersRole) {
+                    bQueryBuilder.add(queryFilterRole, BooleanClause.Occur.SHOULD );
+                }
+                filterRole = bQueryBuilder.build( );
             }
         }
 
