@@ -69,6 +69,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.BytesRef;
 
 
@@ -101,9 +102,8 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
         Query filterRole = getFilterRoles( request );
 
-        try
+        try( Directory directory = IndexationService.getDirectoryIndex( ) ; IndexReader ir = DirectoryReader.open( directory ) ; )
         {
-            IndexReader ir = DirectoryReader.open( IndexationService.getDirectoryIndex( ) );
             searcher = new IndexSearcher( ir );
 
             Collection<String> queries = new ArrayList<String>( );
