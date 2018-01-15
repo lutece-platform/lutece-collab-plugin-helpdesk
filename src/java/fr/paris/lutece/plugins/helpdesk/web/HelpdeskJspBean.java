@@ -1042,40 +1042,42 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         _multiSelectionValues = strIdQuestionAnswers;
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
 
-    	if( strAction.equals( CONSTANT_REMOVE ) )
-    	{    		
-            
-    		UrlItem url = new UrlItem( JSP_DO_REMOVE_SELECTION );
-            
-            url.addParameter( PARAMETER_SUBJECT_ID, strIdSubject );
-            url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
-
-            return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_DELETE_SELECTION, url.getUrl(  ),
-                AdminMessage.TYPE_CONFIRMATION );
-    	}
-        
-        for( String strIdQuestionAnswer : strIdQuestionAnswers )
+        if ( strIdQuestionAnswers != null && strIdQuestionAnswers.length > 0 )
         {
-        	int nIdQuestionAnswer = Integer.parseInt( strIdQuestionAnswer );
-
-            QuestionAnswer questionAnswer = QuestionAnswerHome.findByPrimaryKey( nIdQuestionAnswer, getPlugin(  ) );
-
-            if ( questionAnswer != null )
-            {
-            	if( ( strAction.equals( CONSTANT_PUBLISH ) ) && ( ! questionAnswer.isEnabled( ) ) )
-            	{
-            		 questionAnswer.setStatus( QuestionAnswer.STATUS_PUBLISHED );
-                     QuestionAnswerHome.update( questionAnswer, getPlugin(  ) );
-            	}
-            	else if( ( strAction.equals( CONSTANT_UNPUBLISH ) ) && (  questionAnswer.isEnabled( ) ) )
-            	{
-           		 	questionAnswer.setStatus( QuestionAnswer.STATUS_UNPUBLISHED );
-                    QuestionAnswerHome.update( questionAnswer, getPlugin(  ) );
-            	}
-               
-            }          
-        }
+        	if( strAction.equals( CONSTANT_REMOVE ) )
+        	{    		
+                
+        		UrlItem url = new UrlItem( JSP_DO_REMOVE_SELECTION );
+                
+                url.addParameter( PARAMETER_SUBJECT_ID, strIdSubject );
+                url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
+    
+                return AdminMessageService.getMessageUrl( request, MESSAGE_CONFIRM_DELETE_SELECTION, url.getUrl(  ),
+                    AdminMessage.TYPE_CONFIRMATION );
+        	}
         
+            for( String strIdQuestionAnswer : strIdQuestionAnswers )
+            {
+                int nIdQuestionAnswer = Integer.parseInt( strIdQuestionAnswer );
+
+                QuestionAnswer questionAnswer = QuestionAnswerHome.findByPrimaryKey( nIdQuestionAnswer, getPlugin(  ) );
+
+                if ( questionAnswer != null )
+                {
+                    if( ( strAction.equals( CONSTANT_PUBLISH ) ) && ( ! questionAnswer.isEnabled( ) ) )
+                    {
+                         questionAnswer.setStatus( QuestionAnswer.STATUS_PUBLISHED );
+                         QuestionAnswerHome.update( questionAnswer, getPlugin(  ) );
+                    }
+                    else if( ( strAction.equals( CONSTANT_UNPUBLISH ) ) && (  questionAnswer.isEnabled( ) ) )
+                    {
+                        questionAnswer.setStatus( QuestionAnswer.STATUS_UNPUBLISHED );
+                        QuestionAnswerHome.update( questionAnswer, getPlugin(  ) );
+                    }
+                   
+                }          
+            }
+    	}
 
         // If the operation is successfull, redirect towards the list of question/answer couples
         UrlItem url = new UrlItem( JSP_QUESTION_ANSWER_LIST );
