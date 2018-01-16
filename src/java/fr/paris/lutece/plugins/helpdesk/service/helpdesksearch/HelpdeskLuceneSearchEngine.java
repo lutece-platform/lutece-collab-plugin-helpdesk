@@ -188,7 +188,10 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
             BooleanQuery.Builder bQueryMultiBuilder = new BooleanQuery.Builder( );
             bQueryMultiBuilder.add( queryMulti, BooleanClause.Occur.MUST );
-            bQueryMultiBuilder.add( filterRole, BooleanClause.Occur.FILTER );
+            if ( filterRole != null )
+            {
+                bQueryMultiBuilder.add( filterRole, BooleanClause.Occur.FILTER );
+            }
 
             TopDocs topDocs = searcher.search( bQueryMultiBuilder.build( ), LuceneSearchEngine.MAX_RESPONSES );
 
