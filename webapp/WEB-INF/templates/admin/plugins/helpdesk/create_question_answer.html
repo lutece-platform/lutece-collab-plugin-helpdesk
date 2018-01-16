@@ -1,41 +1,41 @@
 <#include "/admin/util/editor/editor.html" />
 <#include "macro_helpdesk.html" />
 <div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<fieldset>
-	<legend>#i18n{helpdesk.create_question_answer.adminTitle}</legend>
-		<form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateQuestionAnswer.jsp">
-		<#if theme_id??><input type="hidden" value="${theme_id}" name="theme_id" /></#if>
-		<input type="hidden" value="${faq_id}" name="faq_id" />
-		<div class="form-group">
-			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="">&nbsp;</label>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label for="subject_id">#i18n{helpdesk.create_question_answer.LabelSubject} *</label>
-				<select id="subject_id" name="subject_id" class="form-control input-sm">
-					<@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
-				</select>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<label for="question">#i18n{helpdesk.create_question_answer.LabelQuestion} *</label>
-				<input type="text" name="question" id="question" size="40" maxlength="" value="${question}" class="form-control input-sm">
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<label for="html_content">#i18n{helpdesk.create_question_answer.LabelAnswer} * </label> 
-				<textarea id="html_content" class="richtext form-control input-sm" name="html_content" style="width:100%;" rows="20">${html_content}</textarea>
-			</div>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<div class="checkbox">
-					<label for="status">#i18n{helpdesk.create_question_answer.LabelStatus} *
-						<input type="checkbox" class="checkbox" name="status" id="status" checked="checked" value="1">
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="form-group">
-			<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-ok"></i>&nbsp;#i18n{helpdesk.create_subject.buttonLabelCreate}</button>
-		</div>
-		</form>
-	</fieldset>
-	</div>	
-</div>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <fieldset>
+    <legend>#i18n{helpdesk.create_question_answer.adminTitle}</legend>
+        <form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateQuestionAnswer.jsp">
+        <#if theme_id??><input type="hidden" value="${theme_id}" name="theme_id" /></#if>
+        <input type="hidden" value="${faq_id}" name="faq_id" />
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+            <label for="subject_id">#i18n{helpdesk.create_question_answer.LabelSubject} *</label>
+                <select id="subject_id" name="subject_id" class="form-control input-sm">
+                    <@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
+                </select>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+            <label for="question">#i18n{helpdesk.create_question_answer.LabelQuestion} *</label>
+                <input type="text" name="question" id="question" size="40" maxlength="" value="${question}" class="form-control input-sm">
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <label for="html_content">#i18n{helpdesk.create_question_answer.LabelAnswer} * </label> 
+                <textarea id="html_content" class="richtext form-control input-sm" name="html_content" style="width:100%;" rows="20">${html_content}</textarea>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <div class="checkbox col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                    <input type="checkbox" name="status" id="status" checked="checked" value="1">
+                    <label for="status">#i18n{helpdesk.create_question_answer.LabelStatus} *</label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+            <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-ok"></i>&nbsp;#i18n{helpdesk.create_subject.buttonLabelCreate}</button>
+            </div>
+        </div>
+        </form>
+    </fieldset>
+    </div>  
+</div>  
 <@initEditor />
