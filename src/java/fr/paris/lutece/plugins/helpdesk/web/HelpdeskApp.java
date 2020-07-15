@@ -58,6 +58,7 @@ import fr.paris.lutece.portal.service.security.SecurityService;
 import fr.paris.lutece.portal.service.template.AppTemplateService;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.portal.web.xpages.XPage;
 import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.date.DateUtil;
@@ -67,6 +68,7 @@ import fr.paris.lutece.util.string.StringUtil;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,7 +81,11 @@ import org.apache.commons.lang.StringUtils;
  */
 public class HelpdeskApp implements XPageApplication
 {
-    //Public constants
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1592321991604068308L;
+	//Public constants
     public static final String ANCHOR_SUBJECT = "subject_";
     public static final String ANCHOR_QUESTION_ANSWER = "question_answer_";
     public static final String PARAMETER_FAQ_ID = "faq_id";
@@ -185,8 +191,8 @@ public class HelpdeskApp implements XPageApplication
         if ( ( strIdFaq == null ) || !strIdFaq.matches( REGEX_ID ) )
         {
             page.setContent( getFaqList( request, plugin ) );
-            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, request.getLocale(  ) ) );
-            page.setTitle( I18nService.getLocalizedString( MESSAGE_FAQ_LIST, request.getLocale(  ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
+            page.setTitle( I18nService.getLocalizedString( MESSAGE_FAQ_LIST, getLocale( request ) ) );
 
             return page;
         }
@@ -215,20 +221,20 @@ public class HelpdeskApp implements XPageApplication
         if ( ( strContact != null ) && strContact.equals( PARAMETER_CONTACT ) )
         {
             page.setContent( getContactForm( request, plugin, faq ) );
-            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, request.getLocale(  ) ) );
-            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, request.getLocale(  ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
+            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, getLocale( request ) ) );
         }
         else if ( ( strContact != null ) && strContact.equals( PARAMETER_CONTACT_RESULT ) )
         {
             page.setContent( getContactFormResult( request, faq ) );
-            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, request.getLocale(  ) ) );
-            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, request.getLocale(  ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
+            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, getLocale( request ) ) );
         }
         else
         {
             page.setContent( getSubjectListSearch( request, plugin, faq ) );
-            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, request.getLocale(  ) ) );
-            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST_RESULTS, request.getLocale(  ) ) );
+            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
+            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST_RESULTS, getLocale( request ) ) );
         }
 
         return page;
@@ -250,7 +256,7 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_FAQ, faq );
         model.put( FULL_URL, request.getRequestURL(  ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM, request.getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM, getLocale( request ), model );
 
         return template.getHtml(  );
     }
@@ -299,8 +305,8 @@ public class HelpdeskApp implements XPageApplication
                 CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
-        String strToday = DateUtil.getCurrentDateString(  ); //FIXME
-        java.sql.Date dateDateVQ = DateUtil.getDateSql( strToday ); //FIXME
+        String strToday = DateUtil.getCurrentDateString( getLocale( request )  ); //FIXME
+        java.sql.Date dateDateVQ = java.sql.Date.valueOf( strToday ); //FIXME
 
         int nIdTheme = Integer.parseInt( strThemeId );
         Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, plugin );
@@ -325,11 +331,11 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_PLUGIN_NAME, plugin );
         model.put( FULL_URL, request.getRequestURL(  ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_SEND_VISITOR_QUESTION, request.getLocale(  ),
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_SEND_VISITOR_QUESTION, getLocale( request ),
                 model );
 
         String strPortal = AppPropertiesService.getProperty( MESSAGE_PORTAL_NAME );    
-        String strEmailWebmaster = I18nService.getLocalizedString( MESSAGE_WEBMASTER_EMAIL, request.getLocale(  ) );
+        String strEmailWebmaster = I18nService.getLocalizedString( MESSAGE_WEBMASTER_EMAIL, getLocale( request ) );
         String strMessage = template.getHtml(  );
         strSubject = AppPropertiesService.getProperty( PROPERTY_MAIL_SUBJECT_PREFIX )
     		+ CONSTANT_SPACE + strPortal + CONSTANT_MINUS + strSubject;
@@ -359,7 +365,7 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_FAQ, faq );
         model.put( FULL_URL, request.getRequestURL(  ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_RESULT, request.getLocale(  ),
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_RESULT, getLocale( request ),
                 model );
 
         return template.getHtml(  );
@@ -378,7 +384,7 @@ public class HelpdeskApp implements XPageApplication
         //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
         model.put( FULL_URL, request.getRequestURL(  ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_ERROR, request.getLocale(  ),
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_ERROR, getLocale( request ),
                 model );
 
         return template.getHtml(  );
@@ -423,8 +429,8 @@ public class HelpdeskApp implements XPageApplication
                 SiteMessageService.setMessage( request, MESSAGE_SEARCH_DATE_MANDATORY, SiteMessage.TYPE_STOP );
             }
 
-            Date dateBegin = DateUtil.formatDate( strDateBegin, request.getLocale(  ) );
-            Date dateEnd = DateUtil.formatDate( strDateEnd, request.getLocale(  ) );
+            Date dateBegin = DateUtil.formatDate( strDateBegin, getLocale( request ) );
+            Date dateEnd = DateUtil.formatDate( strDateEnd, getLocale( request ) );
 
             if ( ( dateBegin == null ) ^ ( dateEnd == null ) )
             {
@@ -459,14 +465,14 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_FILTER_SEARCH_SUB_SUBJECT, bSearchSubSubjects );
         model.put( MARK_PATH_LABEL, HelpdeskPlugin.PLUGIN_NAME );
         model.put( MARK_SUBJECT_LIST, listSubjects );
-        model.put( MARK_LOCALE, request.getLocale(  ) );
+        model.put( MARK_LOCALE, getLocale( request ) );
         model.put( MARK_ANCHOR_SUBJECT, ANCHOR_SUBJECT );
         model.put( MARK_ANCHOR_QUESTION_ANSWER, ANCHOR_QUESTION_ANSWER );
         model.put( MARK_FAQ, faq );
         //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
         model.put( FULL_URL, request.getRequestURL(  ) );
 
-        HtmlTemplate t = AppTemplateService.getTemplate( TEMPLATE_SUBJECT_LIST, request.getLocale(  ), model );
+        HtmlTemplate t = AppTemplateService.getTemplate( TEMPLATE_SUBJECT_LIST, getLocale( request ), model );
 
         return t.getHtml(  );
     }
@@ -499,8 +505,8 @@ public class HelpdeskApp implements XPageApplication
                 SiteMessageService.setMessage( request, MESSAGE_SEARCH_DATE_MANDATORY, SiteMessage.TYPE_STOP );
             }
 
-            Date dateBegin = DateUtil.formatDate( strDateBegin, request.getLocale(  ) );
-            Date dateEnd = DateUtil.formatDate( strDateEnd, request.getLocale(  ) );
+            Date dateBegin = DateUtil.formatDate( strDateBegin, getLocale( request ) );
+            Date dateEnd = DateUtil.formatDate( strDateEnd, getLocale( request ) );
 
             if ( ( dateBegin == null ) ^ ( dateEnd == null ) )
             {
@@ -541,15 +547,27 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_FILTER_DATE_BEGIN, strDateBegin );
         model.put( MARK_FILTER_DATE_END, strDateEnd );
         model.put( MARK_PATH_LABEL, HelpdeskPlugin.PLUGIN_NAME );
-        model.put( MARK_LOCALE, request.getLocale(  ) );
+        model.put( MARK_LOCALE, getLocale( request ) );
         model.put( MARK_ANCHOR_SUBJECT, ANCHOR_SUBJECT );
         model.put( MARK_ANCHOR_QUESTION_ANSWER, ANCHOR_QUESTION_ANSWER );
         model.put( MARK_FAQ_LIST, faqList );
         //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
         model.put( FULL_URL, request.getRequestURL(  ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_FAQ_LIST, request.getLocale(  ), model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_FAQ_LIST, getLocale( request ), model );
 
         return template.getHtml(  );
+    }
+    
+    /**
+     * Default getLocale() implementation. Could be overriden
+     * 
+     * @param request
+     *            The HTTP request
+     * @return The Locale
+     */
+    protected Locale getLocale( HttpServletRequest request )
+    {
+        return LocaleService.getContextUserLocale( request );
     }
 }
