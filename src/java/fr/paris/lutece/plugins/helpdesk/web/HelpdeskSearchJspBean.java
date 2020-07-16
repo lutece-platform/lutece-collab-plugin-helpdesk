@@ -72,6 +72,11 @@ import au.com.bytecode.opencsv.CSVWriter;
  */
 public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7066027910451554625L;
+
 	//Templates
     private static final String TEMPLATE_RESULTS = "admin/plugins/helpdesk/helpdesksearch/search_results.html";  
    
@@ -134,7 +139,7 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
         String strQuery = request.getParameter( PARAMETER_QUERY );
         String strSearchPageUrl = AppPropertiesService.getProperty( PROPERTY_SEARCH_PAGE_URL );
         String strError = null;
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         Locale locale = getLocale(  );
 
         // Check XSS characters
@@ -275,18 +280,18 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
      * @param response la reponse
      * @return listToCSVWriter the list of formated question
      */
-    private List<String[]> getCSVListFromRequest(HttpServletRequest request) 
+    private List<String[]> getCSVListFromRequest( HttpServletRequest request ) 
     {
     	Plugin plugin = getPlugin(  );   	
     	List<String> listField = null;
-    	if ( _listResults != null && _listResults.size( ) > 0)
+    	if ( _listResults != null && !_listResults.isEmpty( ) )
     	{    	
 			//on crée les titres des colonnes du CSV
-			List<String[]> listToCSVWriter = new ArrayList<String[]>(  );
+			List<String[]> listToCSVWriter = new ArrayList<>(  );
 			
 			for ( QuestionAnswer questionAnswer : _listResults )
 			{
-				listField = new ArrayList<String>(  );
+				listField = new ArrayList<>(  );
 				listField.add(Integer.toString( questionAnswer.getIdSubject( ) ) );
 				listField.add(Integer.toString( questionAnswer.getIdOrder( ) ) );
 				listField.add( questionAnswer.getQuestion( ) );

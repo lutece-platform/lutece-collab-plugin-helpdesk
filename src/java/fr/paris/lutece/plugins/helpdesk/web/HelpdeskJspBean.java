@@ -97,7 +97,12 @@ import fr.paris.lutece.util.url.UrlItem;
  */
 public class HelpdeskJspBean extends PluginAdminPageJspBean
 {
-    //right
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 5215455818471088640L;
+
+	//right
     public static final String RIGHT_MANAGE_HELPDESK = "HELPDESK_MANAGEMENT";
 
     //Jsp
@@ -336,7 +341,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return getSubjectsList( request );
         }
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<>(  );
         setPageTitleProperty( MESSAGE_PAGE_TITLE_CREATE_SUBJECT );
 
         Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance(  )
@@ -634,7 +639,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
-        if ( ( subject == null ) || ( subject.getChilds( getPlugin(  ) ).size(  ) > 0 ) )
+        if ( ( subject == null ) || ( !subject.getChilds( getPlugin(  ) ).isEmpty( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANNOT_DELETE_SUBJECT, AdminMessage.TYPE_STOP );
         }
@@ -671,7 +676,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
 
         //FIXME display error message
-        if ( ( subject == null ) || ( subject.getChilds( getPlugin(  ) ).size(  ) > 0 ) )
+        if ( ( subject == null ) || ( !subject.getChilds( getPlugin(  ) ).isEmpty( ) ) )
         {
             return url.getUrl(  );
         }
@@ -717,7 +722,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         Collection<Subject> listSubject = (Collection<Subject>) SubjectHome.getInstance(  )
                                                                            .findByIdFaq( faq.getId(  ), getPlugin(  ) );
 
-        if ( ( subject == null ) && ( listSubject.size(  ) > 0 ) )
+        if ( ( subject == null ) && ( !listSubject.isEmpty( ) ) )
         {
             subject = listSubject.iterator(  ).next(  );
         }
@@ -849,7 +854,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
     public String doCreateQuestionAnswer( HttpServletRequest request )
     {
         Faq faq = getAuthorizedFaq( request, FaqResourceIdService.PERMISSION_MANAGE_QUESTIONS_ANSWERS );
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         if ( faq == null )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_ACCESS_DENIED, AdminMessage.TYPE_STOP );
@@ -1268,7 +1273,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return getVisitorQuestionList( request );
         }
 
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         setPageTitleProperty( MESSAGE_PAGE_TITLE_MODIFY_VISITOR_QUESTION );
 
         int nIdVisitorQuestion = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
@@ -1355,12 +1360,12 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance(  )
                                                                     .findByIdFaq( faq.getId(  ), getPlugin(  ) );
 
-        if ( ( theme == null ) && ( listThemes.size(  ) > 0 ) )
+        if ( ( theme == null ) && ( !listThemes.isEmpty( ) ) )
         {
             theme = listThemes.iterator(  ).next(  );
         }
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<>(  );
         setPageTitleProperty( MESSAGE_PAGE_TITLE_VISITOR_QUESTION_LIST );
 
         model.put( MARK_THEME_LIST, listThemes );
@@ -1480,7 +1485,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
         }
 
-        if ( ( theme == null ) && ( listThemes.size(  ) > 0 ) )
+        if ( ( theme == null ) && ( !listThemes.isEmpty( ) ) )
         {
             theme = listThemes.iterator(  ).next(  );
         }
@@ -1545,7 +1550,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return getManageHelpdesk( request );
         }
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<>(  );
         setPageTitleProperty( MESSAGE_PAGE_TITLE_IMPORT_QUESTION_ANSWER_LIST );
 
         model.put( MARK_FAQ, faq );
@@ -1708,7 +1713,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
         
-        Collection<QuestionAnswer> questionAnswerList = new ArrayList<QuestionAnswer>(  );
+        Collection<QuestionAnswer> questionAnswerList = new ArrayList<>(  );
         
         List<String[]> listQuestionAnswers = getRowsFromCsvFile( request, false );
 
@@ -1718,7 +1723,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         // the file is empty
-        if ( ( listQuestionAnswers == null ) || ( listQuestionAnswers.size(  ) == 0 ) )
+        if ( ( listQuestionAnswers == null ) || ( listQuestionAnswers.isEmpty( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY, AdminMessage.TYPE_STOP );
         }
@@ -1752,7 +1757,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         
-        Collection<QuestionAnswer> questionAnswerList = new ArrayList<QuestionAnswer>(  );
+        Collection<QuestionAnswer> questionAnswerList = new ArrayList<>(  );
         boolean bDeleteList = ( request.getParameter( PARAMETER_DELETE_LIST ) != null ) ? true : false;
         List<String[]> listQuestionAnswers = getRowsFromCsvFile( request, true );
 
@@ -1762,7 +1767,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         // the file is empty
-        if ( ( listQuestionAnswers == null ) || ( listQuestionAnswers.size(  ) == 0 ) )
+        if ( ( listQuestionAnswers == null ) || ( listQuestionAnswers.isEmpty( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY, AdminMessage.TYPE_STOP );
         }
@@ -1861,13 +1866,13 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return JSP_MANAGE_HELPDESK_LIST;
         }
 
-        if ( ( listQuestion.size(  ) != 0 ) )
+        if ( ( !listQuestion.isEmpty( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANNOT_DELETE_THEME_QUESTION_EXISTS,
                 url.getUrl(  ), AdminMessage.TYPE_STOP );
         }
 
-        if ( theme.getChilds( getPlugin(  ) ).size(  ) > 0 )
+        if ( theme.getChilds( getPlugin(  ) ).isEmpty( ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANNOT_DELETE_THEME_SUB_THEME_EXISTS,
                 AdminMessage.TYPE_STOP );
@@ -1903,7 +1908,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return url.getUrl(  );
         }
 
-        if ( ( listQuestion.size(  ) == 0 ) && ( theme.getChilds( getPlugin(  ) ).size(  ) == 0 ) )
+        if ( ( listQuestion.isEmpty( ) ) && ( theme.getChilds( getPlugin(  ) ).isEmpty()  ) )
         {
             if ( theme.getIdParent(  ) == 0 )
             {
@@ -1939,7 +1944,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return getManageHelpdeskAdmin( request );
         }
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<>(  );
 
         setPageTitleProperty( MESSAGE_PAGE_TITLE_CREATE_THEME );
 
@@ -2248,8 +2253,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
      */
     public String getManageHelpdesk( HttpServletRequest request )
     {
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
-        Collection<HashMap> subModelFaqList = new ArrayList<HashMap>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
+        Collection<HashMap> subModelFaqList = new ArrayList<>(  );
 
         setPageTitleProperty( MESSAGE_PAGE_TITLE_FAQ_LIST );
 
@@ -2441,8 +2446,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         UrlItem url = new UrlItem( JSP_DO_REMOVE_FAQ );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
 
-        if ( ( faq.getSubjectsList( getPlugin(  ) ).size(  ) > 0 ) ||
-                ( faq.getThemesList( getPlugin(  ) ).size(  ) > 0 ) )
+        if ( ( !faq.getSubjectsList( getPlugin(  ) ).isEmpty( ) ) ||
+                ( !faq.getThemesList( getPlugin(  ) ).isEmpty( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANNOT_DELETE_FAQ, AdminMessage.TYPE_STOP );
         }
@@ -2465,8 +2470,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
 
-        if ( ( faq.getSubjectsList( getPlugin(  ) ).size(  ) > 0 ) ||
-                ( faq.getThemesList( getPlugin(  ) ).size(  ) > 0 ) )
+        if ( ( !faq.getSubjectsList( getPlugin(  ) ).isEmpty( ) ) ||
+                ( !faq.getThemesList( getPlugin(  ) ).isEmpty( ) ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CANNOT_DELETE_FAQ, AdminMessage.TYPE_STOP );
         }
@@ -2685,7 +2690,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
      */
     private Collection<String> getAuthorizedActionCollection( Faq faq )
     {
-        Collection<String> listActions = new ArrayList<String>(  );
+        Collection<String> listActions = new ArrayList<>(  );
 
         if ( RBACService.isAuthorized( Faq.RESOURCE_TYPE, RBAC.WILDCARD_RESOURCES_ID,
                     FaqResourceIdService.PERMISSION_CREATE, getUser(  ) ) )

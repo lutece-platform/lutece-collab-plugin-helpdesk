@@ -249,7 +249,7 @@ public class HelpdeskApp implements XPageApplication
      */
     public String getContactForm( HttpServletRequest request, Plugin plugin, Faq faq )
     {
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<>(  );
         model.put( MARK_THEME_LIST, (Collection<Theme>) ThemeHome.getInstance(  ).findByIdFaq( faq.getId(  ), plugin ) );
         model.put( MARK_PLUGIN, plugin );
         model.put( MARK_DEFAULT_VALUE, "" );
@@ -269,7 +269,7 @@ public class HelpdeskApp implements XPageApplication
     public void doSendQuestionMail( HttpServletRequest request )
         throws SiteMessageException
     {
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
 
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
 
@@ -305,8 +305,8 @@ public class HelpdeskApp implements XPageApplication
                 CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
-        String strToday = DateUtil.getCurrentDateString( getLocale( request )  ); //FIXME
-        java.sql.Date dateDateVQ = java.sql.Date.valueOf( strToday ); //FIXME
+        String strToday = DateUtil.getCurrentDateString( getLocale( request )  );
+        java.sql.Date dateDateVQ = java.sql.Date.valueOf( strToday );
 
         int nIdTheme = Integer.parseInt( strThemeId );
         Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, plugin );
@@ -361,7 +361,7 @@ public class HelpdeskApp implements XPageApplication
     {
         doSendQuestionMail( request );
 
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         model.put( MARK_FAQ, faq );
         model.put( FULL_URL, request.getRequestURL(  ) );
 
@@ -379,7 +379,7 @@ public class HelpdeskApp implements XPageApplication
      */
     public String getContactFormError( HttpServletRequest request, Faq faq ) //Error must be handled by Message Service
     {
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         model.put( MARK_FAQ, faq );
         //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
         model.put( FULL_URL, request.getRequestURL(  ) );
@@ -453,7 +453,7 @@ public class HelpdeskApp implements XPageApplication
         Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance(  )
                                                                             .findByIdFaq( faq.getId(  ), plugin );
 
-        Map<String, Object> model = new HashMap<String, Object>(  );
+        Map<String, Object> model = new HashMap<>(  );
 
         model.put( MARK_SEARCH_PAGE, bSearchPage );
         model.put( MARK_QUESTIONANSWER_LIST, listQuestionAnswer );
@@ -519,7 +519,7 @@ public class HelpdeskApp implements XPageApplication
         }
 
     	
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
+        HashMap<String, Object> model = new HashMap<>(  );
         Collection<Faq> faqList = null;
 
         if ( SecurityService.isAuthenticationEnable(  ) )
