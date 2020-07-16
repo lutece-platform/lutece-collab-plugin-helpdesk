@@ -203,7 +203,7 @@ public class HelpdeskIndexer implements SearchIndexer
     public List<Document> getDocuments( String strDocument ) throws IOException, InterruptedException,
             SiteMessageException
     {
-        List<org.apache.lucene.document.Document> listDocs = new ArrayList<org.apache.lucene.document.Document>( );
+        List<org.apache.lucene.document.Document> listDocs = new ArrayList<>( );
         String strPortalUrl = AppPathService.getPortalUrl( );
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
 
@@ -445,7 +445,7 @@ public class HelpdeskIndexer implements SearchIndexer
      */
     public List<String> getListType( )
     {
-        List<String> listType = new ArrayList<String>( );
+        List<String> listType = new ArrayList<>( );
         listType.add( HelpdeskPlugin.PLUGIN_NAME );
         return listType;
     }
