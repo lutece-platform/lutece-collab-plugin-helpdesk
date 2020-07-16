@@ -190,7 +190,7 @@ public final class FaqHome
         {
         	//add the role "none"
         	arrayRoleKeyLocal = new String[ arrayRoleKey.length + 1 ];
-        	for(int i = 0; i < arrayRoleKey.length; i++)
+        	for( int i = 0; i < arrayRoleKey.length; i++ )
         	{
         		arrayRoleKeyLocal[i] = arrayRoleKey[i];
         	}

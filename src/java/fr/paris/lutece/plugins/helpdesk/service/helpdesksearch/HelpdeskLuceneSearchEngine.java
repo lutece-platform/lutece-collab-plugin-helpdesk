@@ -97,7 +97,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
     public List<SearchResult> getSearchResults( int nIdFaq, String strContent, Date dateBegin, Date dateEnd,
             Subject subject, boolean bSearchSubSubjects, HttpServletRequest request )
     {
-        ArrayList<SearchItem> listResults = new ArrayList<SearchItem>( );
+        ArrayList<SearchItem> listResults = new ArrayList<>( );
         IndexSearcher searcher = null;
 
         Query filterRole = getFilterRoles( request );
@@ -277,7 +277,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
      */
     private List<SearchResult> convertList( List<SearchItem> listSource )
     {
-        List<SearchResult> listDest = new ArrayList<SearchResult>( );
+        List<SearchResult> listDest = new ArrayList<>( );
 
         for ( SearchItem item : listSource )
         {

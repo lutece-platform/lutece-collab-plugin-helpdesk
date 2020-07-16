@@ -52,348 +52,369 @@ import java.util.StringTokenizer;
  */
 public final class QuestionAnswerDAO implements IQuestionAnswerDAO
 {
-    private static final String SQL_QUERY_NEW_PK = " SELECT max( id_question_answer ) FROM helpdesk_question_answer";
-    private static final String SQL_QUERY_SELECT = " SELECT id_question_answer, question, answer, id_subject, status, creation_date,id_order FROM helpdesk_question_answer WHERE id_question_answer = ?";
-    private static final String SQL_QUERY_INSERT = " INSERT INTO helpdesk_question_answer ( id_question_answer, question, answer, id_subject, status, creation_date, id_order  ) VALUES ( ?, ?, ?, ?, ?, ?, ? )";
-    private static final String SQL_QUERY_DELETE = " DELETE FROM helpdesk_question_answer WHERE id_question_answer = ?";
-    private static final String SQL_QUERY_DELETE_ALL = " DELETE FROM helpdesk_question_answer ";
-    private static final String SQL_QUERY_DELETE_BY_SUBJECT = " DELETE FROM helpdesk_question_answer WHERE id_subject = ?";
-    private static final String SQL_QUERY_UPDATE = " UPDATE helpdesk_question_answer SET id_question_answer = ?, question = ?, answer = ?, id_subject = ?, status = ?, creation_date = ?, id_order = ? WHERE id_question_answer = ?";
-    private static final String SQL_QUERY_SELECTALL = " SELECT id_question_answer, question, answer, id_subject, status, creation_date, id_order FROM helpdesk_question_answer ";
-    private static final String SQL_QUERY_SELECT_BY_KEYWORDS = " SELECT id_question_answer, question, answer, id_subject, status, creation_date, id_order FROM helpdesk_question_answer ";
-    private static final String SQL_QUERY_SELECT_BY_ID_SUBJECT = " SELECT id_question_answer, question, answer, id_subject, status, creation_date, id_order FROM helpdesk_question_answer WHERE id_subject = ? ";
-    private static final String SQL_QUERY_SELECT_COUNT = " SELECT count(id_question_answer) FROM helpdesk_question_answer WHERE id_subject = ? ";
-    private static final String SQL_QUERY_MAX_ORDER = " SELECT max(id_order) FROM helpdesk_question_answer WHERE id_subject = ? ";
-    
-    // /////////////////////////////////////////////////////////////////////////////////////
-    // Access methods to data
-    /**
-     * Calculate a new primary key to add a new QuestionAnswer
-     *
-     * @param plugin The Plugin using this data access service
-     * @return The new key.
-     */
-    public int newPrimaryKey( Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
+	private static final String SQL_QUERY_NEW_PK = " SELECT max( id_question_answer ) FROM helpdesk_question_answer";
+	private static final String SQL_QUERY_SELECT = " SELECT id_question_answer, question, answer, id_subject, status, creation_date,id_order FROM helpdesk_question_answer WHERE id_question_answer = ?";
+	private static final String SQL_QUERY_INSERT = " INSERT INTO helpdesk_question_answer ( id_question_answer, question, answer, id_subject, status, creation_date, id_order  ) VALUES ( ?, ?, ?, ?, ?, ?, ? )";
+	private static final String SQL_QUERY_DELETE = " DELETE FROM helpdesk_question_answer WHERE id_question_answer = ?";
+	private static final String SQL_QUERY_DELETE_ALL = " DELETE FROM helpdesk_question_answer ";
+	private static final String SQL_QUERY_DELETE_BY_SUBJECT = " DELETE FROM helpdesk_question_answer WHERE id_subject = ?";
+	private static final String SQL_QUERY_UPDATE = " UPDATE helpdesk_question_answer SET id_question_answer = ?, question = ?, answer = ?, id_subject = ?, status = ?, creation_date = ?, id_order = ? WHERE id_question_answer = ?";
+	private static final String SQL_QUERY_SELECTALL = " SELECT id_question_answer, question, answer, id_subject, status, creation_date, id_order FROM helpdesk_question_answer ";
+	private static final String SQL_QUERY_SELECT_BY_KEYWORDS = " SELECT id_question_answer, question, answer, id_subject, status, creation_date, id_order FROM helpdesk_question_answer ";
+	private static final String SQL_QUERY_SELECT_BY_ID_SUBJECT = " SELECT id_question_answer, question, answer, id_subject, status, creation_date, id_order FROM helpdesk_question_answer WHERE id_subject = ? ";
+	private static final String SQL_QUERY_SELECT_COUNT = " SELECT count(id_question_answer) FROM helpdesk_question_answer WHERE id_subject = ? ";
+	private static final String SQL_QUERY_MAX_ORDER = " SELECT max(id_order) FROM helpdesk_question_answer WHERE id_subject = ? ";
 
-        int nKey;
+	// /////////////////////////////////////////////////////////////////////////////////////
+	// Access methods to data
+	/**
+	 * Calculate a new primary key to add a new QuestionAnswer
+	 *
+	 * @param plugin The Plugin using this data access service
+	 * @return The new key.
+	 */
+	public int newPrimaryKey( Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
+		{
+			daoUtil.executeQuery(  );
 
-        if ( !daoUtil.next(  ) )
-        {
-            // if the table is empty
-            nKey = 1;
-        }
+			int nKey;
 
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
+			if ( !daoUtil.next(  ) )
+			{
+				// if the table is empty
+				nKey = 1;
+			}
 
-        return nKey;
-    }
+			nKey = daoUtil.getInt( 1 ) + 1;
+			daoUtil.free(  );
 
-    /**
-     * Insert a new record in the table.
-     *
-     * @param questionAnswer The Instance of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
-     */
-    public void insert( QuestionAnswer questionAnswer, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        questionAnswer.setIdQuestionAnswer( newPrimaryKey( plugin ) );
-        daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
-        daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
-        daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
-        daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
+			return nKey;
+		}
+	}
 
-        if ( questionAnswer.isEnabled(  ) )
-        {
-            daoUtil.setInt( 5, 1 );
-        }
+	/**
+	 * Insert a new record in the table.
+	 *
+	 * @param questionAnswer The Instance of the object QuestionAnswer
+	 * @param plugin The Plugin using this data access service
+	 */
+	public void insert( QuestionAnswer questionAnswer, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+		{
+			questionAnswer.setIdQuestionAnswer( newPrimaryKey( plugin ) );
+			daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
+			daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
+			daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
+			daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
 
-        else
-        {
-            daoUtil.setInt( 5, 0 );
-        }
+			if ( questionAnswer.isEnabled(  ) )
+			{
+				daoUtil.setInt( 5, 1 );
+			}
 
-        daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
-        daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
+			else
+			{
+				daoUtil.setInt( 5, 0 );
+			}
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
+			daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
+			daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
 
-    /**
-     * Delete a record from the table
-     *
-     * @param nIdQuestionAnswer The indentifier of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
-     */
-    public void delete( int nIdQuestionAnswer, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdQuestionAnswer );
+			daoUtil.executeUpdate(  );
+			daoUtil.free(  );
+		}
+	}
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
+	/**
+	 * Delete a record from the table
+	 *
+	 * @param nIdQuestionAnswer The indentifier of the object QuestionAnswer
+	 * @param plugin The Plugin using this data access service
+	 */
+	public void delete( int nIdQuestionAnswer, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdQuestionAnswer );
 
-    /**
-     * Delete all records from the table
-     *
-     * @param plugin The Plugin using this data access service
-     */
-    public void deleteAll( Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL, plugin );
+			daoUtil.executeUpdate(  );
+			daoUtil.free(  );
+		}
+	}
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
+	/**
+	 * Delete all records from the table
+	 *
+	 * @param plugin The Plugin using this data access service
+	 */
+	public void deleteAll( Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL, plugin ) )
+		{
 
-    /**
-     * Delete a record from the table
-     *
-     * @param nIdSubject The indentifier of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
-     */
-    public void deleteBySubject( int nIdSubject, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_SUBJECT, plugin );
-        daoUtil.setInt( 1, nIdSubject );
+			daoUtil.executeUpdate(  );
+			daoUtil.free(  );
+		}
+	}
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
+	/**
+	 * Delete a record from the table
+	 *
+	 * @param nIdSubject The indentifier of the object QuestionAnswer
+	 * @param plugin The Plugin using this data access service
+	 */
+	public void deleteBySubject( int nIdSubject, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_SUBJECT, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdSubject );
 
-    /**
-     * load the data of QuestionAnswer from the table
-     *
-     * @param nIdQuestionAnswer The indentifier of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
-     * @return The Instance of the object QuestionAnswer
-     */
-    public QuestionAnswer load( int nIdQuestionAnswer, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdQuestionAnswer );
-        daoUtil.executeQuery(  );
+			daoUtil.executeUpdate(  );
+			daoUtil.free(  );
+		}
+	}
 
-        QuestionAnswer questionanswer = null;
+	/**
+	 * load the data of QuestionAnswer from the table
+	 *
+	 * @param nIdQuestionAnswer The indentifier of the object QuestionAnswer
+	 * @param plugin The Plugin using this data access service
+	 * @return The Instance of the object QuestionAnswer
+	 */
+	public QuestionAnswer load( int nIdQuestionAnswer, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdQuestionAnswer );
+			daoUtil.executeQuery(  );
 
-        if ( daoUtil.next(  ) )
-        {
-            questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-        }
+			QuestionAnswer questionanswer = null;
 
-        daoUtil.free(  );
+			if ( daoUtil.next(  ) )
+			{
+				questionanswer = new QuestionAnswer(  );
+				questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+				questionanswer.setQuestion( daoUtil.getString( 2 ) );
+				questionanswer.setAnswer( daoUtil.getString( 3 ) );
+				questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+				questionanswer.setStatus( daoUtil.getInt( 5 ) );
+				questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+				questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+			}
 
-        return questionanswer;
-    }
+			daoUtil.free(  );
 
-    /**
-     * Update the record in the table
-     *
-     * @param questionAnswer The instance of the QuestionAnswer to update
-     * @param plugin The Plugin using this data access service
-     */
-    public void store( QuestionAnswer questionAnswer, Plugin plugin )
-    {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+			return questionanswer;
+		}
+	}
 
-        daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
-        daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
-        daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
-        daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
+	/**
+	 * Update the record in the table
+	 *
+	 * @param questionAnswer The instance of the QuestionAnswer to update
+	 * @param plugin The Plugin using this data access service
+	 */
+	public void store( QuestionAnswer questionAnswer, Plugin plugin )
+	{
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+		{
 
-        if ( questionAnswer.isEnabled(  ) )
-        {
-            daoUtil.setInt( 5, 1 );
-        }
-        else
-        {
-            daoUtil.setInt( 5, 0 );
-        }
+			daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
+			daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
+			daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
+			daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
 
-        daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
-        daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
-        daoUtil.setInt( 8, questionAnswer.getIdQuestionAnswer(  ) );
+			if ( questionAnswer.isEnabled(  ) )
+			{
+				daoUtil.setInt( 5, 1 );
+			}
+			else
+			{
+				daoUtil.setInt( 5, 0 );
+			}
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
-    }
+			daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
+			daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
+			daoUtil.setInt( 8, questionAnswer.getIdQuestionAnswer(  ) );
 
-    /**
-     * Find all objects.
-     *
-     * @param plugin The Plugin using this data access service
-     * @return A Collection of objects
-     */
-    public List<QuestionAnswer> findAll( Plugin plugin )
-    {
-        List listQuestionAnswer = new ArrayList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+			daoUtil.executeUpdate(  );
+			daoUtil.free(  );
+		}
+	}
 
-        while ( daoUtil.next(  ) )
-        {
-            QuestionAnswer questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-            listQuestionAnswer.add( questionanswer );
-        }
+	/**
+	 * Find all objects.
+	 *
+	 * @param plugin The Plugin using this data access service
+	 * @return A Collection of objects
+	 */
+	public List<QuestionAnswer> findAll( Plugin plugin )
+	{
+		List<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+		{
+			daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+			while ( daoUtil.next(  ) )
+			{
+				QuestionAnswer questionanswer = new QuestionAnswer(  );
+				questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+				questionanswer.setQuestion( daoUtil.getString( 2 ) );
+				questionanswer.setAnswer( daoUtil.getString( 3 ) );
+				questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+				questionanswer.setStatus( daoUtil.getInt( 5 ) );
+				questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+				questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+				listQuestionAnswer.add( questionanswer );
+			}
 
-        return listQuestionAnswer;
-    }
+			daoUtil.free(  );
+		}
 
-    /**
-     * load the data of QuestionAnswer from the table
-     *
-     * @param strKeywords The keywords which are searched in question/answer
-     * @param plugin The Plugin using this data access service
-     * @return The collection of QuestionAnswer object
-     */
-    public List<QuestionAnswer> findByKeywords( String strKeywords, Plugin plugin )
-    {
-        // Temporary variable to avoid reassigning strKeywords :
-        String strKeywordsEscaped = StringUtil.substitute( strKeywords, "\\'", "'" );
-        List listQuestionAnswer = new ArrayList(  );
+		return listQuestionAnswer;
+	}
 
-        StringTokenizer st = new StringTokenizer( strKeywordsEscaped );
+	/**
+	 * load the data of QuestionAnswer from the table
+	 *
+	 * @param strKeywords The keywords which are searched in question/answer
+	 * @param plugin The Plugin using this data access service
+	 * @return The collection of QuestionAnswer object
+	 */
+	public List<QuestionAnswer> findByKeywords( String strKeywords, Plugin plugin )
+	{
+		// Temporary variable to avoid reassigning strKeywords :
+		String strKeywordsEscaped = StringUtil.substitute( strKeywords, "\\'", "'" );
+		List<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
 
-        int counter = 0;
-        String sqlRequest = SQL_QUERY_SELECT_BY_KEYWORDS;
+		StringTokenizer st = new StringTokenizer( strKeywordsEscaped );
 
-        while ( st.hasMoreTokens(  ) )
-        {
-            String motActuel = st.nextToken(  );
+		int counter = 0;
+		String sqlRequest = SQL_QUERY_SELECT_BY_KEYWORDS;
 
-            if ( counter == 0 )
-            {
-                sqlRequest += ( " WHERE status = 1 AND (question like '%" + motActuel + "%' OR answer like '%" +
-                motActuel + "%')" );
-            }
-            else
-            {
-                sqlRequest += ( " AND (question like '%" + motActuel + "%' OR answer like '%" + motActuel + "%')" );
-            }
+		while ( st.hasMoreTokens(  ) )
+		{
+			String motActuel = st.nextToken(  );
 
-            counter++;
-        }
+			if ( counter == 0 )
+			{
+				sqlRequest += ( " WHERE status = 1 AND (question like '%" + motActuel + "%' OR answer like '%" +
+						motActuel + "%')" );
+			}
+			else
+			{
+				sqlRequest += ( " AND (question like '%" + motActuel + "%' OR answer like '%" + motActuel + "%')" );
+			}
 
-        sqlRequest += " order by id_subject ";
+			counter++;
+		}
 
-        DAOUtil daoUtil = new DAOUtil( sqlRequest, plugin );
-        daoUtil.executeQuery(  );
+		sqlRequest += " order by id_subject ";
 
-        while ( daoUtil.next(  ) )
-        {
-            QuestionAnswer questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-            listQuestionAnswer.add( questionanswer );
-        }
+		try( DAOUtil daoUtil = new DAOUtil( sqlRequest, plugin ) )
+		{
+			daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+			while ( daoUtil.next(  ) )
+			{
+				QuestionAnswer questionanswer = new QuestionAnswer(  );
+				questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+				questionanswer.setQuestion( daoUtil.getString( 2 ) );
+				questionanswer.setAnswer( daoUtil.getString( 3 ) );
+				questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+				questionanswer.setStatus( daoUtil.getInt( 5 ) );
+				questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+				questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+				listQuestionAnswer.add( questionanswer );
+			}
 
-        return listQuestionAnswer;
-    }
+			daoUtil.free(  );
+		}
 
-    /**
-     * Find questions specified by id subject
-     * @param nIdSubject The Id of the subject
-     * @param plugin The current plugin using this method
-     * @return A Collection containing the results
-     */
-    public Collection<QuestionAnswer> findByIdSubject( int nIdSubject, Plugin plugin )
-    {
-        Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<QuestionAnswer>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_SUBJECT, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
+		return listQuestionAnswer;
+	}
 
-        while ( daoUtil.next(  ) )
-        {
-            QuestionAnswer questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-            listQuestionAnswer.add( questionanswer );
-        }
+	/**
+	 * Find questions specified by id subject
+	 * @param nIdSubject The Id of the subject
+	 * @param plugin The current plugin using this method
+	 * @return A Collection containing the results
+	 */
+	public Collection<QuestionAnswer> findByIdSubject( int nIdSubject, Plugin plugin )
+	{
+		Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_SUBJECT, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdSubject );
+			daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+			while ( daoUtil.next(  ) )
+			{
+				QuestionAnswer questionanswer = new QuestionAnswer(  );
+				questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+				questionanswer.setQuestion( daoUtil.getString( 2 ) );
+				questionanswer.setAnswer( daoUtil.getString( 3 ) );
+				questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+				questionanswer.setStatus( daoUtil.getInt( 5 ) );
+				questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+				questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+				listQuestionAnswer.add( questionanswer );
+			}
 
-        return listQuestionAnswer;
-    }
+			daoUtil.free(  );
+		}
+		return listQuestionAnswer;
+	}
 
-    /**
-     *
-     * @param plugin The Plugin using this data access service
-     * @param nIdSubject The Subject ID
-     * @return count
-     */
-    public int countbySubject( int nIdSubject, Plugin plugin )
-    {
-        int count = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_COUNT, plugin );
+	/**
+	 *
+	 * @param plugin The Plugin using this data access service
+	 * @param nIdSubject The Subject ID
+	 * @return count
+	 */
+	public int countbySubject( int nIdSubject, Plugin plugin )
+	{
+		int count = 0;
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_COUNT, plugin ) )
+		{
 
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
+			daoUtil.setInt( 1, nIdSubject );
+			daoUtil.executeQuery(  );
 
-        while ( daoUtil.next(  ) )
-        {
-            count = daoUtil.getInt( 1 );
-        }
+			while ( daoUtil.next(  ) )
+			{
+				count = daoUtil.getInt( 1 );
+			}
 
-        daoUtil.free(  );
+			daoUtil.free(  );
+		}
+		return count;
+	}
 
-        return count;
-    }
-    
-    /**
-     * Get the max order of a given subject
-     * @param nIdSubject The id of the Subject
-     * @param plugin The {@link Plugin}
-     * @return the max order
-     */
-    public int getMaxOrder( int nIdSubject, Plugin plugin )
-    {
-        int nMaxOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
+	/**
+	 * Get the max order of a given subject
+	 * @param nIdSubject The id of the Subject
+	 * @param plugin The {@link Plugin}
+	 * @return the max order
+	 */
+	public int getMaxOrder( int nIdSubject, Plugin plugin )
+	{
+		int nMaxOrder = 0;
+		try( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin ) )
+		{
+			daoUtil.setInt( 1, nIdSubject );
+			daoUtil.executeQuery(  );
 
-        if ( daoUtil.next(  ) )
-        {
-            nMaxOrder = daoUtil.getInt( 1 );
-        }
+			if ( daoUtil.next(  ) )
+			{
+				nMaxOrder = daoUtil.getInt( 1 );
+			}
 
-        daoUtil.free(  );
-
-        return nMaxOrder;
-    }
+			daoUtil.free(  );
+		}
+		return nMaxOrder;
+	}
 }

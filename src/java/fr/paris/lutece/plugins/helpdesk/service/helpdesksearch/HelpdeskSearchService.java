@@ -93,7 +93,7 @@ public class HelpdeskSearchService
     public Collection<QuestionAnswer> getSearchResults( int nIdFaq, String strQuery, Date dateBegin, Date dateEnd,
         Subject subject, boolean bSearchSubSubjects, HttpServletRequest request, Plugin plugin )
     {
-        Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<QuestionAnswer>(  );
+        Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
         HelpdeskSearchEngine engine = (HelpdeskSearchEngine) SpringContextService.getPluginBean( plugin.getName(  ),
                 BEAN_SEARCH_ENGINE );
         List<SearchResult> listResults = engine.getSearchResults( nIdFaq, strQuery, dateBegin, dateEnd, subject,
