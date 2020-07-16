@@ -64,7 +64,6 @@ import fr.paris.lutece.portal.web.xpages.XPageApplication;
 import fr.paris.lutece.util.date.DateUtil;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.string.StringUtil;
-
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -305,9 +304,9 @@ public class HelpdeskApp implements XPageApplication
                 CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
-        String strToday = DateUtil.getCurrentDateString( getLocale( request )  );
-        java.sql.Date dateDateVQ = java.sql.Date.valueOf( strToday );
-
+        String strToday = DateUtil.getCurrentDateString( getLocale( request ) );
+        java.sql.Date dateDateVQ = DateUtil.formatDateSql( strToday, getLocale( request ) );
+        
         int nIdTheme = Integer.parseInt( strThemeId );
         Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, plugin );
 
