@@ -77,22 +77,22 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+        	daoUtil.executeQuery(  );
+
+            int nKey;
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free(  );
-
-        return nKey;
     }
 
     /**
@@ -103,17 +103,18 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public synchronized void insert( AbstractSubject abstractSubject, Plugin plugin )
     {
-        Subject subject = (Subject) abstractSubject;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        subject.setId( newPrimaryKey( plugin ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+        	Subject subject = (Subject) abstractSubject;
+            subject.setId( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, subject.getId(  ) );
-        daoUtil.setString( 2, subject.getText(  ) );
-        daoUtil.setInt( 3, subject.getIdParent(  ) );
-        daoUtil.setInt( 4, subject.getIdOrder(  ) );
+            daoUtil.setInt( 1, subject.getId(  ) );
+            daoUtil.setString( 2, subject.getText(  ) );
+            daoUtil.setInt( 3, subject.getIdParent(  ) );
+            daoUtil.setInt( 4, subject.getIdOrder(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -124,11 +125,12 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public void delete( int nIdSubject, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdSubject );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdSubject );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -140,26 +142,26 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public Subject load( int nIdSubject, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
-
-        Subject subject = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            subject = new Subject(  );
-            subject.setId( daoUtil.getInt( 1 ) );
-            subject.setText( daoUtil.getString( 2 ) );
-            subject.setIdParent( daoUtil.getInt( 3 ) );
-            subject.setIdOrder( daoUtil.getInt( 4 ) );
-            // Load questions
-            subject.setQuestions( findQuestions( nIdSubject, plugin ) );
+        	daoUtil.setInt( 1, nIdSubject );
+            daoUtil.executeQuery(  );
+
+            Subject subject = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                subject = new Subject(  );
+                subject.setId( daoUtil.getInt( 1 ) );
+                subject.setText( daoUtil.getString( 2 ) );
+                subject.setIdParent( daoUtil.getInt( 3 ) );
+                subject.setIdOrder( daoUtil.getInt( 4 ) );
+                // Load questions
+                subject.setQuestions( findQuestions( nIdSubject, plugin ) );
+            }
+
+            return subject;
         }
-
-        daoUtil.free(  );
-
-        return subject;
     }
 
     /**
@@ -170,16 +172,16 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public void store( AbstractSubject abstractSubject, Plugin plugin )
     {
-        Subject subject = (Subject) abstractSubject;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+        	Subject subject = (Subject) abstractSubject;
+        	daoUtil.setString( 1, subject.getText(  ) );
+            daoUtil.setInt( 2, subject.getIdParent(  ) );
+            daoUtil.setInt( 3, subject.getIdOrder(  ) );
+            daoUtil.setInt( 4, subject.getId(  ) );
 
-        daoUtil.setString( 1, subject.getText(  ) );
-        daoUtil.setInt( 2, subject.getIdParent(  ) );
-        daoUtil.setInt( 3, subject.getIdOrder(  ) );
-        daoUtil.setInt( 4, subject.getId(  ) );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -189,24 +191,24 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public List<?extends AbstractSubject> findAll( Plugin plugin )
     {
-        List<Subject> list = new ArrayList<Subject>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            Subject subject = new Subject(  );
-            subject.setId( daoUtil.getInt( 1 ) );
-            subject.setText( daoUtil.getString( 2 ) );
-            subject.setIdParent( daoUtil.getInt( 3 ) );
-            subject.setIdOrder( daoUtil.getInt( 4 ) );
-            subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
-            list.add( subject );
+        	List<Subject> list = new ArrayList<Subject>(  );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Subject subject = new Subject(  );
+                subject.setId( daoUtil.getInt( 1 ) );
+                subject.setText( daoUtil.getString( 2 ) );
+                subject.setIdParent( daoUtil.getInt( 3 ) );
+                subject.setIdOrder( daoUtil.getInt( 4 ) );
+                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                list.add( subject );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -216,18 +218,18 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public ReferenceList findSubject( Plugin plugin )
     {
-        ReferenceList list = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+        	ReferenceList list = new ReferenceList(  );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -238,25 +240,25 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public Collection<?extends AbstractSubject> findByIdParent( int nIdParent, Plugin plugin )
     {
-        Collection<Subject> listSubjects = new ArrayList<Subject>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PARENT_ID, plugin );
-        daoUtil.setInt( 1, nIdParent );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PARENT_ID, plugin ) )
         {
-            Subject subject = new Subject(  );
-            subject.setId( daoUtil.getInt( 1 ) );
-            subject.setText( daoUtil.getString( 2 ) );
-            subject.setIdParent( nIdParent );
-            subject.setIdOrder( daoUtil.getInt( 3 ) );
-            subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
-            listSubjects.add( subject );
+        	Collection<Subject> listSubjects = new ArrayList<Subject>(  );
+        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Subject subject = new Subject(  );
+                subject.setId( daoUtil.getInt( 1 ) );
+                subject.setText( daoUtil.getString( 2 ) );
+                subject.setIdParent( nIdParent );
+                subject.setIdOrder( daoUtil.getInt( 3 ) );
+                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                listSubjects.add( subject );
+            }
+
+            return listSubjects;
         }
-
-        daoUtil.free(  );
-
-        return listSubjects;
     }
 
     /**
@@ -267,25 +269,25 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public Collection<?extends AbstractSubject> findByIdFaq( int nIdFaq, Plugin plugin )
     {
-        Collection<Subject> listSubjects = new ArrayList<Subject>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ID, plugin );
-        daoUtil.setInt( 1, nIdFaq );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ID, plugin ) )
         {
-            Subject subject = new Subject(  );
-            subject.setId( daoUtil.getInt( 1 ) );
-            subject.setText( daoUtil.getString( 2 ) );
-            subject.setIdParent( daoUtil.getInt( 3 ) );
-            subject.setIdOrder( daoUtil.getInt( 4 ) );
-            subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
-            listSubjects.add( subject );
+        	Collection<Subject> listSubjects = new ArrayList<>(  );
+        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Subject subject = new Subject(  );
+                subject.setId( daoUtil.getInt( 1 ) );
+                subject.setText( daoUtil.getString( 2 ) );
+                subject.setIdParent( daoUtil.getInt( 3 ) );
+                subject.setIdOrder( daoUtil.getInt( 4 ) );
+                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                listSubjects.add( subject );
+            }
+
+            return listSubjects;
         }
-
-        daoUtil.free(  );
-
-        return listSubjects;
     }
 
     /**
@@ -296,27 +298,27 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public List<QuestionAnswer> findQuestions( int nIdSubject, Plugin plugin )
     {
-        List<QuestionAnswer> list = new ArrayList<QuestionAnswer>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_QUESTION, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_QUESTION, plugin ) )
         {
-            QuestionAnswer question = new QuestionAnswer(  );
-            question.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            question.setQuestion( daoUtil.getString( 2 ) );
-            question.setAnswer( daoUtil.getString( 3 ) );
-            question.setIdSubject( daoUtil.getInt( 4 ) );
-            question.setStatus( daoUtil.getInt( 5 ) );
-            question.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            question.setIdOrder( daoUtil.getInt( 7 ) );
-            list.add( question );
+        	List<QuestionAnswer> list = new ArrayList<>(  );
+        	daoUtil.setInt( 1, nIdSubject );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                QuestionAnswer question = new QuestionAnswer(  );
+                question.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+                question.setQuestion( daoUtil.getString( 2 ) );
+                question.setAnswer( daoUtil.getString( 3 ) );
+                question.setIdSubject( daoUtil.getInt( 4 ) );
+                question.setStatus( daoUtil.getInt( 5 ) );
+                question.setCreationDate( daoUtil.getTimestamp( 6 ) );
+                question.setIdOrder( daoUtil.getInt( 7 ) );
+                list.add( question );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -327,19 +329,19 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public int countQuestion( int nIdSubject, Plugin plugin )
     {
-        int nCount = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_COUNT_QUESTION, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_COUNT_QUESTION, plugin ) )
         {
-            nCount = daoUtil.getInt( 1 );
+        	int nCount = 0;
+        	daoUtil.setInt( 1, nIdSubject );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                nCount = daoUtil.getInt( 1 );
+            }
+
+            return nCount;
         }
-
-        daoUtil.free(  );
-
-        return nCount;
     }
 
     /**
@@ -350,19 +352,19 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public int getMaxOrder( int nIdParent, Plugin plugin )
     {
-        int nMaxOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin );
-        daoUtil.setInt( 1, nIdParent );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin ) )
         {
-            nMaxOrder = daoUtil.getInt( 1 );
+        	int nMaxOrder = 0;
+        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.executeQuery(  );
+
+            if ( daoUtil.next(  ) )
+            {
+                nMaxOrder = daoUtil.getInt( 1 );
+            }
+
+            return nMaxOrder;
         }
-
-        daoUtil.free(  );
-
-        return nMaxOrder;
     }
 
     /**
@@ -374,27 +376,27 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public Subject findByOrder( int nIdParent, int nOrder, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ORDER_ID, plugin );
-        daoUtil.setInt( 1, nIdParent );
-        daoUtil.setInt( 2, nOrder );
-        daoUtil.executeQuery(  );
-
-        Subject subject = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ORDER_ID, plugin ) )
         {
-            subject = new Subject(  );
-            subject.setId( daoUtil.getInt( 1 ) );
-            subject.setText( daoUtil.getString( 2 ) );
-            subject.setIdParent( nIdParent );
-            subject.setIdOrder( nOrder );
-            // Load questions
-            subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.setInt( 2, nOrder );
+            daoUtil.executeQuery(  );
+
+            Subject subject = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                subject = new Subject(  );
+                subject.setId( daoUtil.getInt( 1 ) );
+                subject.setText( daoUtil.getString( 2 ) );
+                subject.setIdParent( nIdParent );
+                subject.setIdOrder( nOrder );
+                // Load questions
+                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+            }
+
+            return subject;
         }
-
-        daoUtil.free(  );
-
-        return subject;
     }
 
     /**
@@ -406,27 +408,27 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public Subject findByFaqOrder( int nIdFaq, int nOrder, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ORDER_ID, plugin );
-        daoUtil.setInt( 1, nIdFaq );
-        daoUtil.setInt( 2, nOrder );
-        daoUtil.executeQuery(  );
-
-        Subject subject = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ORDER_ID, plugin ) )
         {
-            subject = new Subject(  );
-            subject.setId( daoUtil.getInt( 1 ) );
-            subject.setText( daoUtil.getString( 2 ) );
-            subject.setIdParent( daoUtil.getInt( 3 ) );
-            subject.setIdOrder( daoUtil.getInt( 4 ) );
-            // Load questions
-            subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.setInt( 2, nOrder );
+            daoUtil.executeQuery(  );
+
+            Subject subject = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                subject = new Subject(  );
+                subject.setId( daoUtil.getInt( 1 ) );
+                subject.setText( daoUtil.getString( 2 ) );
+                subject.setIdParent( daoUtil.getInt( 3 ) );
+                subject.setIdOrder( daoUtil.getInt( 4 ) );
+                // Load questions
+                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+            }
+
+            return subject;
         }
-
-        daoUtil.free(  );
-
-        return subject;
     }
 
     /**
@@ -438,13 +440,13 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public synchronized void insertLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_LN_FAQ, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_LN_FAQ, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 2, nIdFaq );
 
-        daoUtil.setInt( 1, nIdAbstractSubject );
-        daoUtil.setInt( 2, nIdFaq );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -456,13 +458,13 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public synchronized void deleteLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LN_FAQ, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LN_FAQ, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 2, nIdFaq );
 
-        daoUtil.setInt( 1, nIdAbstractSubject );
-        daoUtil.setInt( 2, nIdFaq );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -473,11 +475,11 @@ public final class SubjectDAO implements ISubjectDAO
      */
     public synchronized void deleteAllLinksToFaq( int nIdAbstractSubject, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL_LN_FAQ, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL_LN_FAQ, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdAbstractSubject );
 
-        daoUtil.setInt( 1, nIdAbstractSubject );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 }
