@@ -71,7 +71,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 
 /**
@@ -299,8 +299,8 @@ public class HelpdeskApp implements XPageApplication
                 CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
-        String strToday = DateUtil.getCurrentDateString(  ); //FIXME
-        java.sql.Date dateDateVQ = DateUtil.getDateSql( strToday ); //FIXME
+        String strToday = DateUtil.getCurrentDateString( null );
+        java.sql.Date dateDateVQ = DateUtil.formatDateSql( strToday, null );
 
         int nIdTheme = Integer.parseInt( strThemeId );
         Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, plugin );
