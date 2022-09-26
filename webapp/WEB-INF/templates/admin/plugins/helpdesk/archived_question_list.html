@@ -34,7 +34,7 @@
 				<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp">
 				<input type="hidden" name="faq_id" value="${faq.id}" />
 				<#if theme?has_content><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
-				<button class="btn btn-sm" type="submit"><i class="glyphicon glyphicon-remove-circle"></i>&nbsp;#i18n{helpdesk.archived_question_list.visitorQuestions}</button>
+				<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' type='submit'/>
 				</form>
 			</legend>
 			<#if theme?has_content>	
@@ -62,12 +62,8 @@
 						<td>${visitor_question.firstname}&nbsp;${visitor_question.lastname}</td>
 						<td>${visitor_question.date}</td>
 						<td>
-							<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}"  title="">
-								<i class="glyphicon glyphicon-edit"></i>
-							</a>
-							<a class="btn btn-danger btn-sm" href="jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}"  title="#i18n{helpdesk.archived_question_list.buttonLabelRemove}">
-								<i class="glyphicon glyphicon-trash"></i>
-							</a>
+							<@aButton href='jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}' buttonIcon='edit'/>
+							<@aButton class='btn-danger' href='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}' title='#i18n{helpdesk.archived_question_list.buttonLabelRemove}' hideTitle=['all'] buttonIcon='trash'/>
 						</td>
 					</tr>
 					</#list>

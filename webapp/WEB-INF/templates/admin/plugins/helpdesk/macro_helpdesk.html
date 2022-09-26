@@ -42,45 +42,25 @@
                 &nbsp;-&nbsp;${subject.questions?size}&nbsp;#i18n{helpdesk.commonList.labelQuestion}
             </td>
             <td>
-				<a class="btn btn-xs btn-primary" href="jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}">
-					<i class="glyphicon glyphicon-edit"></i>
-				</a>
+            	<@aButton href='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' buttonIcon='edit'/>
 				<#if subject.idOrder &gt; 0>
-            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoUp}">
-						<i class="glyphicon glyphicon-chevron-up"></i>
-	                </a>
+					<@aButton href='jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' class='btn-light' hideTitle=['all'] buttonIcon='chevron-up'/>
                 <#else>
-					<a class="btn btn-xs disabled" href="javascript:void">
-						<i class="glyphicon glyphicon-chevron-up" title="#i18n{helpdesk.commonList.buttonLabelGoUp}"></i>               
-					</a>
+                	<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' class='btn-light disabled' hideTitle=['all'] buttonIcon='chevron-up'/>
             	</#if>
             	<#if items?seq_index_of(subject) != items?size-1>
-            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoDown}">
-						<i class="glyphicon glyphicon-chevron-down"></i>
-	                </a>
-            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoIn}">
-						<i class="glyphicon glyphicon-chevron-right"></i>
-	                </a>
+            		<@aButton href='jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoDown}' class='btn-light' hideTitle=['all'] buttonIcon='chevron-down'/>
+            		<@aButton href='jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoIn}' class='btn-light' hideTitle=['all'] buttonIcon='chevron-right'/>
                 <#else>
-					<a class="btn btn-xs disabled" title="#i18n{helpdesk.commonList.buttonLabelGoDown}" href="javascript:void">
-						<i class="glyphicon glyphicon-chevron-down"></i>
-					</a>
-                	<a class="btn btn-xs disabled" title="#i18n{helpdesk.commonList.buttonLabelGoIn}" href="javascript:void">
-						<i class="glyphicon glyphicon-chevron-right"></i>
-					</a>
+                	<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoDown}' class='btn-light disabled' hideTitle=['all'] buttonIcon='chevron-down'/>
+            		<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoIn}' class='btn-light disabled' hideTitle=['all'] buttonIcon='chevron-right'/>
             	</#if>
             	<#if subject.idOrder == 0 && subject.idParent &gt; 0>
-            		<a class="btn btn-xs" href="jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
-						<i class="glyphicon glyphicon-chevron-left"></i>
-	                </a>
+            		<@aButton href='jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoOut}' class='btn-light disabled' hideTitle=['all'] buttonIcon='chevron-left'/>
             	<#else>
-                	<a class="btn btn-xs disabled" href="javascript:void" title="#i18n{helpdesk.commonList.buttonLabelGoOut}">
-						<i class="glyphicon glyphicon-chevron-left"></i>
-					</a>					
+            		<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoOut}' class='btn-light disabled' hideTitle=['all'] buttonIcon='chevron-left'/>
             	</#if>
-				   	<a class="btn btn-xs btn-danger"  href="jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}" title="#i18n{helpdesk.commonList.buttonLabelDelete}">
-					<i class="glyphicon glyphicon-trash"></i>
-				</a>
+            		<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelDelete}' class='btn-danger' hideTitle=['all'] buttonIcon='trash'/>
             </td>            
         </tr>
         <#assign child_subjects_list = subject.getChilds(plugin) />
