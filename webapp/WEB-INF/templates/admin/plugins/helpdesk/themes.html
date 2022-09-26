@@ -5,9 +5,7 @@
 	<legend>#i18n{helpdesk.themes.adminTitle}
 	<form class="form-inline pull-right" action="jsp/admin/plugins/helpdesk/CreateTheme.jsp">
 		<input type="hidden" value="${faq.id}" name="faq_id" />
-	    <button class="btn btn-primary btn-sm" type="submit">
-			<i class="glyphicon glyphicon-plus"></i>&nbsp;#i18n{helpdesk.themes.themeAdd}
-		</button>
+		<@button title='#i18n{helpdesk.themes.themeAdd}' buttonIcon='plus' size='sm' type='submit'/>
 	</form>
 	</legend>
 	<@paginationAdmin paginator=paginator combo=1 />

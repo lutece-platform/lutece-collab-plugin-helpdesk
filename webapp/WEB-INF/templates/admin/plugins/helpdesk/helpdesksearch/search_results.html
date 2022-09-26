@@ -59,7 +59,7 @@
 			<#-- Number of documents per page selector -->
 			 #i18n{helpdesk.search_results.labelNbDocsPerPage} : 
 			<@NbItemsPerPageSelectorCombo nb_items_per_page />
-			<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.search_results.buttonSearch}</button>
+			<@button title='#i18n{helpdesk.faq.buttonLabelCreate}' buttonIcon='search' type='submit' title='#i18n{helpdesk.search_results.buttonSearch}' size='sm'/>
 			</form>
 			</fieldset>
 		</div> 
@@ -86,9 +86,7 @@
 				<tr>
 					<td><@getParentSubject subject=result.getSubject(plugin) breadcrumb="" /></td>                   
 					<td>
-						<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}"  title="">
-						<i class="glyphicon glyphicon-edit"></i>
-						</a>
+						<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' buttonIcon='edit'/>
 					</td>
 				</tr>            
 			</#list>
@@ -96,7 +94,7 @@
 			</table>
 			<#if (paginator.itemsCount> 0)>
 			<form class="form-inline" name="export" method="post" action="jsp/admin/plugins/helpdesk/DoExportCSV.jsp">
-				<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-download"></i>&nbsp;#i18n{helpdesk.search_results.exportCSV}</button>
+				<@button buttonIcon='download' type='submit' title='#i18n{helpdesk.search_results.exportCSV}' size='sm'/>
 			</form>
 			</#if>
 		</div>

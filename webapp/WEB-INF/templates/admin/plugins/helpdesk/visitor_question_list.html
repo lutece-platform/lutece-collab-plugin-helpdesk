@@ -34,7 +34,7 @@
 				<form class="form-inline pull-right" method="post" action="jsp/admin/plugins/helpdesk/ArchivedQuestionList.jsp">
 				<#if theme?has_content><input type="hidden" value="${theme.id}" name="theme_id" /></#if>
 				<input type="hidden" name="faq_id" value="${faq.id}" />
-				<button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-cog">&nbsp;</i>#i18n{helpdesk.visitor_question_list.questionsArchived}</button>
+				<@button title='#i18n{helpdesk.visitor_question_list.questionsArchived}' buttonIcon='cog' type='submit' size='sm'/>
 				</form>
 			</legend>
 			<#if theme?has_content>	
@@ -61,9 +61,7 @@
 						<td>${visitor_question.firstname}&nbsp;${visitor_question.lastname}</td>
 						<td>${visitor_question.date}</td>
 						<td>
-							<a class="btn btn-primary btn-sm" href="jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}&theme_id=${theme.id}"  title="#i18n{helpdesk.visitor_question_list.buttonLabelAnswer}">
-								<i class="glyphicon glyphicon-comment"></i>
-							</a>
+							<@aButton href='jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}&theme_id=${theme.id}' title='#i18n{helpdesk.visitor_question_list.buttonLabelAnswer}' hideTitle=['all'] buttonIcon='comment'/>
 						</td>
 					</tr>
 				</#list>
