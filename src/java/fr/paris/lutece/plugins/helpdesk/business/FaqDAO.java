@@ -70,22 +70,22 @@ public final class FaqDAO implements IFaqDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+        	daoUtil.executeQuery(  );
+
+            int nKey;
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free(  );
-
-        return nKey;
     }
 
     /**
@@ -96,17 +96,18 @@ public final class FaqDAO implements IFaqDAO
      */
     public synchronized void insert( Faq faq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        faq.setId( newPrimaryKey( plugin ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+        	faq.setId( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, faq.getId(  ) );
-        daoUtil.setString( 2, faq.getName(  ) );
-        daoUtil.setString( 3, faq.getDescription(  ) );
-        daoUtil.setString( 4, faq.getRoleKey(  ) );
-        daoUtil.setString( 5, faq.getWorkgroup(  ) );
+            daoUtil.setInt( 1, faq.getId(  ) );
+            daoUtil.setString( 2, faq.getName(  ) );
+            daoUtil.setString( 3, faq.getDescription(  ) );
+            daoUtil.setString( 4, faq.getRoleKey(  ) );
+            daoUtil.setString( 5, faq.getWorkgroup(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -117,11 +118,12 @@ public final class FaqDAO implements IFaqDAO
      */
     public void delete( int nIdFaq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdFaq );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdFaq );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -133,25 +135,24 @@ public final class FaqDAO implements IFaqDAO
      */
     public Faq load( int nIdFaq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdFaq );
-        daoUtil.executeQuery(  );
-
-        Faq faq = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            faq = new Faq(  );
-            faq.setId( daoUtil.getInt( 1 ) );
-            faq.setName( daoUtil.getString( 2 ) );
-            faq.setDescription( daoUtil.getString( 3 ) );
-            faq.setRoleKey( daoUtil.getString( 4 ) );
-            faq.setWorkgroup( daoUtil.getString( 5 ) );
-        }
+        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
+            Faq faq = null;
 
-        return faq;
+            if ( daoUtil.next(  ) )
+            {
+                faq = new Faq(  );
+                faq.setId( daoUtil.getInt( 1 ) );
+                faq.setName( daoUtil.getString( 2 ) );
+                faq.setDescription( daoUtil.getString( 3 ) );
+                faq.setRoleKey( daoUtil.getString( 4 ) );
+                faq.setWorkgroup( daoUtil.getString( 5 ) );
+            }
+            return faq;
+        }        
     }
 
     /**
@@ -162,16 +163,16 @@ public final class FaqDAO implements IFaqDAO
      */
     public void store( Faq faq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+        	daoUtil.setString( 1, faq.getName(  ) );
+            daoUtil.setString( 2, faq.getDescription(  ) );
+            daoUtil.setString( 3, faq.getRoleKey(  ) );
+            daoUtil.setString( 4, faq.getWorkgroup(  ) );
+            daoUtil.setInt( 5, faq.getId(  ) );
 
-        daoUtil.setString( 1, faq.getName(  ) );
-        daoUtil.setString( 2, faq.getDescription(  ) );
-        daoUtil.setString( 3, faq.getRoleKey(  ) );
-        daoUtil.setString( 4, faq.getWorkgroup(  ) );
-        daoUtil.setInt( 5, faq.getId(  ) );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -181,24 +182,23 @@ public final class FaqDAO implements IFaqDAO
      */
     public Collection<Faq> findAll( Plugin plugin )
     {
-        Collection<Faq> list = new ArrayList<Faq>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            Faq faq = new Faq(  );
-            faq.setId( daoUtil.getInt( 1 ) );
-            faq.setName( daoUtil.getString( 2 ) );
-            faq.setDescription( daoUtil.getString( 3 ) );
-            faq.setRoleKey( daoUtil.getString( 4 ) );
-            faq.setWorkgroup( daoUtil.getString( 5 ) );
-            list.add( faq );
-        }
+        	Collection<Faq> list = new ArrayList<>(  );
+        	daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
-
-        return list;
+            while ( daoUtil.next(  ) )
+            {
+                Faq faq = new Faq(  );
+                faq.setId( daoUtil.getInt( 1 ) );
+                faq.setName( daoUtil.getString( 2 ) );
+                faq.setDescription( daoUtil.getString( 3 ) );
+                faq.setRoleKey( daoUtil.getString( 4 ) );
+                faq.setWorkgroup( daoUtil.getString( 5 ) );
+                list.add( faq );
+            }
+            return list;
+        }        
     }
 
     /**
@@ -208,18 +208,18 @@ public final class FaqDAO implements IFaqDAO
      */
     public ReferenceList findReferenceList( Plugin plugin )
     {
-        ReferenceList list = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
+    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+    	{
+            ReferenceList list = new ReferenceList(  );
+            daoUtil.executeQuery(  );
 
-        while ( daoUtil.next(  ) )
-        {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
-        }
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
 
-        daoUtil.free(  );
-
-        return list;
+            return list;
+    	}
     }
 
     /**
@@ -253,8 +253,9 @@ public final class FaqDAO implements IFaqDAO
      */
     private Collection<Faq> findByKey( String[] arrayKeys, boolean bAdminWorkgroup, Plugin plugin )
     {
-        Collection<Faq> list = new ArrayList<Faq>(  );
-        String strSql = SQL_QUERY_SELECT_AUTHORIZED_SELECT;
+        Collection<Faq> list = new ArrayList<>(  );
+        StringBuilder sB = new StringBuilder( );
+        sB.append( SQL_QUERY_SELECT_AUTHORIZED_SELECT );
 
         if ( arrayKeys.length == 0 )
         {
@@ -267,44 +268,43 @@ public final class FaqDAO implements IFaqDAO
         {
             if ( i++ > 1 )
             {
-                strSql += SQL_QUERY_SELECT_AUTHORIZED_OR;
+                sB.append( SQL_QUERY_SELECT_AUTHORIZED_OR );
             }
 
             if ( bAdminWorkgroup )
             {
-                strSql += SQL_QUERY_SELECT_AUTHORIZED_WORKGROUP_KEY;
+                sB.append( SQL_QUERY_SELECT_AUTHORIZED_WORKGROUP_KEY );
             }
             else
             {
-                strSql += SQL_QUERY_SELECT_AUTHORIZED_ROLE_KEY;
+                sB.append( SQL_QUERY_SELECT_AUTHORIZED_ROLE_KEY );
             }
         }
 
-        strSql += SQL_QUERY_SELECT_AUTHORIZED_ORDER_BY;
+        sB.append( SQL_QUERY_SELECT_AUTHORIZED_ORDER_BY );
 
-        DAOUtil daoUtil = new DAOUtil( strSql, plugin );
-        i = 1;
-
-        for ( String strKey : arrayKeys )
+        try ( DAOUtil daoUtil = new DAOUtil( sB.toString( ), plugin ) )
         {
-            daoUtil.setString( i++, strKey );
+        	i = 1;
+
+            for ( String strKey : arrayKeys )
+            {
+                daoUtil.setString( i++, strKey );
+            }
+
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Faq faq = new Faq(  );
+                faq.setId( daoUtil.getInt( 1 ) );
+                faq.setName( daoUtil.getString( 2 ) );
+                faq.setDescription( daoUtil.getString( 3 ) );
+                faq.setRoleKey( daoUtil.getString( 4 ) );
+                faq.setWorkgroup( daoUtil.getString( 5 ) );
+                list.add( faq );
+            }
         }
-
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
-        {
-            Faq faq = new Faq(  );
-            faq.setId( daoUtil.getInt( 1 ) );
-            faq.setName( daoUtil.getString( 2 ) );
-            faq.setDescription( daoUtil.getString( 3 ) );
-            faq.setRoleKey( daoUtil.getString( 4 ) );
-            faq.setWorkgroup( daoUtil.getString( 5 ) );
-            list.add( faq );
-        }
-
-        daoUtil.free(  );
-
         return list;
     }
 
@@ -316,21 +316,19 @@ public final class FaqDAO implements IFaqDAO
      */
     public Faq findBySubjectId( int nSubjectId, Plugin plugin )
     {
-        Faq faq = new Faq(  );
-        String strSql = SQL_QUERY_SELECT_BY_SUBJECT;
-        DAOUtil daoUtil = new DAOUtil( strSql, plugin );
-        daoUtil.setInt( 1, nSubjectId );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SUBJECT, plugin ) )
         {
-            faq.setId( daoUtil.getInt( 1 ) );
-            faq.setRoleKey( daoUtil.getString( 2 ) );
-        }
+            Faq faq = new Faq(  );
+        	daoUtil.setInt( 1, nSubjectId );
+            daoUtil.executeQuery(  );
 
-        daoUtil.free(  );
-        
-        return faq;
+            if ( daoUtil.next(  ) )
+            {
+                faq.setId( daoUtil.getInt( 1 ) );
+                faq.setRoleKey( daoUtil.getString( 2 ) );
+            }
+            return faq;
+        }
     }
 
     /**
@@ -340,17 +338,16 @@ public final class FaqDAO implements IFaqDAO
      */
     public ReferenceList findListFaq( Plugin plugin )
     {
-        ReferenceList list = new ReferenceList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            ReferenceList list = new ReferenceList(  );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
+            }
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 }

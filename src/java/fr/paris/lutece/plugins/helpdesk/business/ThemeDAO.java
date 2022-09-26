@@ -75,22 +75,22 @@ public final class ThemeDAO implements IThemeDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+        	daoUtil.executeQuery(  );
+
+            int nKey;
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free(  );
-
-        return nKey;
     }
 
     /**
@@ -101,18 +101,19 @@ public final class ThemeDAO implements IThemeDAO
      */
     public synchronized void insert( AbstractSubject abstractSubject, Plugin plugin )
     {
-        Theme theme = (Theme) abstractSubject;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        theme.setId( newPrimaryKey( plugin ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+        	Theme theme = (Theme) abstractSubject;
+        	theme.setId( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, theme.getId(  ) );
-        daoUtil.setString( 2, theme.getText(  ) );
-        daoUtil.setInt( 3, theme.getIdMailingList(  ) );
-        daoUtil.setInt( 4, theme.getIdParent(  ) );
-        daoUtil.setInt( 5, theme.getIdOrder(  ) );
+            daoUtil.setInt( 1, theme.getId(  ) );
+            daoUtil.setString( 2, theme.getText(  ) );
+            daoUtil.setInt( 3, theme.getIdMailingList(  ) );
+            daoUtil.setInt( 4, theme.getIdParent(  ) );
+            daoUtil.setInt( 5, theme.getIdOrder(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -123,11 +124,12 @@ public final class ThemeDAO implements IThemeDAO
      */
     public void delete( int nIdTheme, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdTheme );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdTheme );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -139,27 +141,27 @@ public final class ThemeDAO implements IThemeDAO
      */
     public Theme load( int nIdTheme, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdTheme );
-        daoUtil.executeQuery(  );
-
-        Theme theme = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            theme = new Theme(  );
-            theme.setId( nIdTheme );
-            theme.setText( daoUtil.getString( 1 ) );
-            theme.setIdMailingList( daoUtil.getInt( 2 ) );
-            theme.setIdParent( daoUtil.getInt( 3 ) );
-            theme.setIdOrder( daoUtil.getInt( 4 ) );
-            // Load questions
-            theme.setQuestions( findQuestions( nIdTheme, plugin ) );
+        	daoUtil.setInt( 1, nIdTheme );
+            daoUtil.executeQuery(  );
+
+            Theme theme = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                theme = new Theme(  );
+                theme.setId( nIdTheme );
+                theme.setText( daoUtil.getString( 1 ) );
+                theme.setIdMailingList( daoUtil.getInt( 2 ) );
+                theme.setIdParent( daoUtil.getInt( 3 ) );
+                theme.setIdOrder( daoUtil.getInt( 4 ) );
+                // Load questions
+                theme.setQuestions( findQuestions( nIdTheme, plugin ) );
+            }
+
+            return theme;
         }
-
-        daoUtil.free(  );
-
-        return theme;
     }
 
     /**
@@ -171,16 +173,16 @@ public final class ThemeDAO implements IThemeDAO
     public void store( AbstractSubject abstractSubject, Plugin plugin )
     {
         Theme theme = (Theme) abstractSubject;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+        	daoUtil.setString( 1, theme.getText(  ) );
+            daoUtil.setInt( 2, theme.getIdMailingList(  ) );
+            daoUtil.setInt( 3, theme.getIdParent(  ) );
+            daoUtil.setInt( 4, theme.getIdOrder(  ) );
+            daoUtil.setInt( 5, theme.getId(  ) );
 
-        daoUtil.setString( 1, theme.getText(  ) );
-        daoUtil.setInt( 2, theme.getIdMailingList(  ) );
-        daoUtil.setInt( 3, theme.getIdParent(  ) );
-        daoUtil.setInt( 4, theme.getIdOrder(  ) );
-        daoUtil.setInt( 5, theme.getId(  ) );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -190,25 +192,25 @@ public final class ThemeDAO implements IThemeDAO
      */
     public List<?extends AbstractSubject> findAll( Plugin plugin )
     {
-        List<Theme> list = new ArrayList<Theme>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        List<Theme> list = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            Theme theme = new Theme(  );
-            theme.setId( daoUtil.getInt( 1 ) );
-            theme.setText( daoUtil.getString( 2 ) );
-            theme.setIdMailingList( daoUtil.getInt( 3 ) );
-            theme.setIdParent( daoUtil.getInt( 4 ) );
-            theme.setIdOrder( daoUtil.getInt( 5 ) );
-            theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
-            list.add( theme );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Theme theme = new Theme(  );
+                theme.setId( daoUtil.getInt( 1 ) );
+                theme.setText( daoUtil.getString( 2 ) );
+                theme.setIdMailingList( daoUtil.getInt( 3 ) );
+                theme.setIdParent( daoUtil.getInt( 4 ) );
+                theme.setIdOrder( daoUtil.getInt( 5 ) );
+                theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                list.add( theme );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -219,26 +221,27 @@ public final class ThemeDAO implements IThemeDAO
      */
     public Collection<?extends AbstractSubject> findByIdParent( int nIdParent, Plugin plugin )
     {
-        Collection<Theme> listThemes = new ArrayList<Theme>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PARENT_ID, plugin );
-        daoUtil.setInt( 1, nIdParent );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        Collection<Theme> listThemes = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PARENT_ID, plugin ) )
         {
-            Theme theme = new Theme(  );
-            theme.setId( daoUtil.getInt( 1 ) );
-            theme.setText( daoUtil.getString( 2 ) );
-            theme.setIdMailingList( daoUtil.getInt( 3 ) );
-            theme.setIdParent( nIdParent );
-            theme.setIdOrder( daoUtil.getInt( 4 ) );
-            theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
-            listThemes.add( theme );
+        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Theme theme = new Theme(  );
+                theme.setId( daoUtil.getInt( 1 ) );
+                theme.setText( daoUtil.getString( 2 ) );
+                theme.setIdMailingList( daoUtil.getInt( 3 ) );
+                theme.setIdParent( nIdParent );
+                theme.setIdOrder( daoUtil.getInt( 4 ) );
+                theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                listThemes.add( theme );
+            }
+
+            return listThemes;
         }
-
-        daoUtil.free(  );
-
-        return listThemes;
+        
     }
 
     /**
@@ -249,26 +252,26 @@ public final class ThemeDAO implements IThemeDAO
      */
     public Collection<?extends AbstractSubject> findByIdFaq( int nIdFaq, Plugin plugin )
     {
-        Collection<Theme> listThemes = new ArrayList<Theme>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ID, plugin );
-        daoUtil.setInt( 1, nIdFaq );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        Collection<Theme> listThemes = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ID, plugin ) )
         {
-            Theme theme = new Theme(  );
-            theme.setId( daoUtil.getInt( 1 ) );
-            theme.setText( daoUtil.getString( 2 ) );
-            theme.setIdMailingList( daoUtil.getInt( 3 ) );
-            theme.setIdParent( daoUtil.getInt( 4 ) );
-            theme.setIdOrder( daoUtil.getInt( 5 ) );
-            theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
-            listThemes.add( theme );
+        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                Theme theme = new Theme(  );
+                theme.setId( daoUtil.getInt( 1 ) );
+                theme.setText( daoUtil.getString( 2 ) );
+                theme.setIdMailingList( daoUtil.getInt( 3 ) );
+                theme.setIdParent( daoUtil.getInt( 4 ) );
+                theme.setIdOrder( daoUtil.getInt( 5 ) );
+                theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                listThemes.add( theme );
+            }
+
+            return listThemes;
         }
-
-        daoUtil.free(  );
-
-        return listThemes;
     }
 
     /**
@@ -279,30 +282,30 @@ public final class ThemeDAO implements IThemeDAO
      */
     public Collection<VisitorQuestion> findQuestions( int nIdTheme, Plugin plugin )
     {
-        Collection<VisitorQuestion> listVisitorQuestion = new ArrayList<VisitorQuestion>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_QUESTION, plugin );
-        daoUtil.setString( 1, "" ); // answer == "" -> not archived question
-        daoUtil.setInt( 2, nIdTheme );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_QUESTION, plugin ) )
         {
-            VisitorQuestion visitorQuestion = new VisitorQuestion(  );
-            visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
-            visitorQuestion.setLastname( daoUtil.getString( 2 ) );
-            visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
-            visitorQuestion.setEmail( daoUtil.getString( 4 ) );
-            visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
-            visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
-            visitorQuestion.setDate( daoUtil.getDate( 7 ) );
-            visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
-            visitorQuestion.setIdTheme( nIdTheme );
-            listVisitorQuestion.add( visitorQuestion );
+        	Collection<VisitorQuestion> listVisitorQuestion = new ArrayList<>(  );
+        	daoUtil.setString( 1, "" ); // answer == "" -> not archived question
+            daoUtil.setInt( 2, nIdTheme );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+                visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
+                visitorQuestion.setLastname( daoUtil.getString( 2 ) );
+                visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
+                visitorQuestion.setEmail( daoUtil.getString( 4 ) );
+                visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
+                visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
+                visitorQuestion.setDate( daoUtil.getDate( 7 ) );
+                visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
+                visitorQuestion.setIdTheme( nIdTheme );
+                listVisitorQuestion.add( visitorQuestion );
+            }
+
+            return listVisitorQuestion;
         }
-
-        daoUtil.free(  );
-
-        return listVisitorQuestion;
     }
 
     /**
@@ -313,19 +316,19 @@ public final class ThemeDAO implements IThemeDAO
      */
     public int getMaxOrder( int nIdParent, Plugin plugin )
     {
-        int nMaxOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin );
-        daoUtil.setInt( 1, nIdParent );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin ) )
         {
-            nMaxOrder = daoUtil.getInt( 1 );
+        	int nMaxOrder = 0;
+        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.executeQuery(  );
+
+            if ( daoUtil.next(  ) )
+            {
+                nMaxOrder = daoUtil.getInt( 1 );
+            }
+
+            return nMaxOrder;
         }
-
-        daoUtil.free(  );
-
-        return nMaxOrder;
     }
 
     /**
@@ -337,26 +340,26 @@ public final class ThemeDAO implements IThemeDAO
      */
     public Theme findByOrder( int nIdParent, int nOrder, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ORDER_ID, plugin );
-        daoUtil.setInt( 1, nIdParent );
-        daoUtil.setInt( 2, nOrder );
-        daoUtil.executeQuery(  );
-
-        Theme theme = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ORDER_ID, plugin ) )
         {
-            theme = new Theme(  );
-            theme.setId( daoUtil.getInt( 1 ) );
-            theme.setText( daoUtil.getString( 2 ) );
-            theme.setIdMailingList( daoUtil.getInt( 3 ) );
-            theme.setIdParent( nIdParent );
-            theme.setIdOrder( nOrder );
+        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.setInt( 2, nOrder );
+            daoUtil.executeQuery(  );
+
+            Theme theme = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                theme = new Theme(  );
+                theme.setId( daoUtil.getInt( 1 ) );
+                theme.setText( daoUtil.getString( 2 ) );
+                theme.setIdMailingList( daoUtil.getInt( 3 ) );
+                theme.setIdParent( nIdParent );
+                theme.setIdOrder( nOrder );
+            }
+
+            return theme;
         }
-
-        daoUtil.free(  );
-
-        return theme;
     }
 
     /**
@@ -368,26 +371,26 @@ public final class ThemeDAO implements IThemeDAO
      */
     public Theme findByFaqOrder( int nIdFaq, int nOrder, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ORDER_ID, plugin );
-        daoUtil.setInt( 1, nIdFaq );
-        daoUtil.setInt( 2, nOrder );
-        daoUtil.executeQuery(  );
-
-        Theme theme = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ORDER_ID, plugin ) )
         {
-            theme = new Theme(  );
-            theme.setId( daoUtil.getInt( 1 ) );
-            theme.setText( daoUtil.getString( 2 ) );
-            theme.setIdMailingList( daoUtil.getInt( 3 ) );
-            theme.setIdParent( daoUtil.getInt( 4 ) );
-            theme.setIdOrder( daoUtil.getInt( 5 ) );
+        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.setInt( 2, nOrder );
+            daoUtil.executeQuery(  );
+
+            Theme theme = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                theme = new Theme(  );
+                theme.setId( daoUtil.getInt( 1 ) );
+                theme.setText( daoUtil.getString( 2 ) );
+                theme.setIdMailingList( daoUtil.getInt( 3 ) );
+                theme.setIdParent( daoUtil.getInt( 4 ) );
+                theme.setIdOrder( daoUtil.getInt( 5 ) );
+            }
+
+            return theme;
         }
-
-        daoUtil.free(  );
-
-        return theme;
     }
 
     /**
@@ -399,13 +402,13 @@ public final class ThemeDAO implements IThemeDAO
      */
     public synchronized void insertLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_LN_FAQ, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_LN_FAQ, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 2, nIdFaq );
 
-        daoUtil.setInt( 1, nIdAbstractSubject );
-        daoUtil.setInt( 2, nIdFaq );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -417,13 +420,13 @@ public final class ThemeDAO implements IThemeDAO
      */
     public synchronized void deleteLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LN_FAQ, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LN_FAQ, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 2, nIdFaq );
 
-        daoUtil.setInt( 1, nIdAbstractSubject );
-        daoUtil.setInt( 2, nIdFaq );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -434,11 +437,11 @@ public final class ThemeDAO implements IThemeDAO
      */
     public synchronized void deleteAllLinksToFaq( int nIdAbstractSubject, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL_LN_FAQ, plugin );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL_LN_FAQ, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdAbstractSubject );
 
-        daoUtil.setInt( 1, nIdAbstractSubject );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 }
