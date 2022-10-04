@@ -65,6 +65,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.IndexOptions;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ParseContext;
@@ -280,6 +281,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
         FieldType ft = new FieldType( StringField.TYPE_STORED );
         ft.setOmitNorms( false );
+        ft.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ), ft ) );
 
@@ -358,9 +360,11 @@ public class HelpdeskIndexer implements SearchIndexer
 
         FieldType ft = new FieldType( StringField.TYPE_STORED );
         ft.setOmitNorms( false );
+        ft.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
 
         FieldType ftNotStored = new FieldType( StringField.TYPE_NOT_STORED );
         ftNotStored.setOmitNorms( false );
+        ftNotStored.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
 
         // Add the url as a field named "url".  Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
