@@ -45,8 +45,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 
-/* ajouter ici : import fr.paris.lutece.(nom_projet).util.*; */
-
 /**
  * This class provides Data Access methods for QuestionAnswerAnswer objects
  */
@@ -75,21 +73,22 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+        	daoUtil.executeQuery(  );
+
+            int nKey;
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-        daoUtil.free(  );
-
-        return nKey;
     }
 
     /**
@@ -100,28 +99,29 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public void insert( QuestionAnswer questionAnswer, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        questionAnswer.setIdQuestionAnswer( newPrimaryKey( plugin ) );
-        daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
-        daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
-        daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
-        daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
-
-        if ( questionAnswer.isEnabled(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
         {
-            daoUtil.setInt( 5, 1 );
+        	questionAnswer.setIdQuestionAnswer( newPrimaryKey( plugin ) );
+            daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
+            daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
+            daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
+            daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
+
+            if ( questionAnswer.isEnabled(  ) )
+            {
+                daoUtil.setInt( 5, 1 );
+            }
+
+            else
+            {
+                daoUtil.setInt( 5, 0 );
+            }
+
+            daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
+            daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
+
+            daoUtil.executeUpdate(  );
         }
-
-        else
-        {
-            daoUtil.setInt( 5, 0 );
-        }
-
-        daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
-        daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
     }
 
     /**
@@ -132,11 +132,12 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public void delete( int nIdQuestionAnswer, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdQuestionAnswer );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdQuestionAnswer );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -146,10 +147,10 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public void deleteAll( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL, plugin );
-
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL, plugin ) )
+        {
+        	daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -160,11 +161,12 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public void deleteBySubject( int nIdSubject, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_SUBJECT, plugin );
-        daoUtil.setInt( 1, nIdSubject );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_BY_SUBJECT, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdSubject );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -176,27 +178,26 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public QuestionAnswer load( int nIdQuestionAnswer, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdQuestionAnswer );
-        daoUtil.executeQuery(  );
-
-        QuestionAnswer questionanswer = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+        	daoUtil.setInt( 1, nIdQuestionAnswer );
+            daoUtil.executeQuery(  );
+
+            QuestionAnswer questionanswer = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                questionanswer = new QuestionAnswer(  );
+                questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+                questionanswer.setQuestion( daoUtil.getString( 2 ) );
+                questionanswer.setAnswer( daoUtil.getString( 3 ) );
+                questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+                questionanswer.setStatus( daoUtil.getInt( 5 ) );
+                questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+                questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+            }
+            return questionanswer;
         }
-
-        daoUtil.free(  );
-
-        return questionanswer;
     }
 
     /**
@@ -207,28 +208,28 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public void store( QuestionAnswer questionAnswer, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-
-        daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
-        daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
-        daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
-        daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
-
-        if ( questionAnswer.isEnabled(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
-            daoUtil.setInt( 5, 1 );
-        }
-        else
-        {
-            daoUtil.setInt( 5, 0 );
-        }
+        	daoUtil.setInt( 1, questionAnswer.getIdQuestionAnswer(  ) );
+            daoUtil.setString( 2, questionAnswer.getQuestion(  ) );
+            daoUtil.setString( 3, questionAnswer.getAnswer(  ) );
+            daoUtil.setInt( 4, questionAnswer.getIdSubject(  ) );
 
-        daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
-        daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
-        daoUtil.setInt( 8, questionAnswer.getIdQuestionAnswer(  ) );
+            if ( questionAnswer.isEnabled(  ) )
+            {
+                daoUtil.setInt( 5, 1 );
+            }
+            else
+            {
+                daoUtil.setInt( 5, 0 );
+            }
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.setTimestamp( 6, new Timestamp( questionAnswer.getCreationDate(  ).getTime(  ) ) );
+            daoUtil.setInt( 7, questionAnswer.getIdOrder( ) );
+            daoUtil.setInt( 8, questionAnswer.getIdQuestionAnswer(  ) );
+
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -239,26 +240,25 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public List<QuestionAnswer> findAll( Plugin plugin )
     {
-        List listQuestionAnswer = new ArrayList(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            QuestionAnswer questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-            listQuestionAnswer.add( questionanswer );
+        	List<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                QuestionAnswer questionanswer = new QuestionAnswer(  );
+                questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+                questionanswer.setQuestion( daoUtil.getString( 2 ) );
+                questionanswer.setAnswer( daoUtil.getString( 3 ) );
+                questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+                questionanswer.setStatus( daoUtil.getInt( 5 ) );
+                questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+                questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+                listQuestionAnswer.add( questionanswer );
+            }
+            return listQuestionAnswer;
         }
-
-        daoUtil.free(  );
-
-        return listQuestionAnswer;
     }
 
     /**
@@ -272,12 +272,13 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
     {
         // Temporary variable to avoid reassigning strKeywords :
         String strKeywordsEscaped = StringUtil.substitute( strKeywords, "\\'", "'" );
-        List listQuestionAnswer = new ArrayList(  );
+        List<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
 
         StringTokenizer st = new StringTokenizer( strKeywordsEscaped );
 
         int counter = 0;
-        String sqlRequest = SQL_QUERY_SELECT_BY_KEYWORDS;
+        StringBuilder sB = new StringBuilder( );
+        sB.append( SQL_QUERY_SELECT_BY_KEYWORDS );
 
         while ( st.hasMoreTokens(  ) )
         {
@@ -285,38 +286,38 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
 
             if ( counter == 0 )
             {
-                sqlRequest += ( " WHERE status = 1 AND (question like '%" + motActuel + "%' OR answer like '%" +
+                sB.append( " WHERE status = 1 AND (question like '%" + motActuel + "%' OR answer like '%" +
                 motActuel + "%')" );
             }
             else
             {
-                sqlRequest += ( " AND (question like '%" + motActuel + "%' OR answer like '%" + motActuel + "%')" );
+            	sB.append( " AND (question like '%" + motActuel + "%' OR answer like '%" + motActuel + "%')" );
             }
 
             counter++;
         }
 
-        sqlRequest += " order by id_subject ";
+        sB.append(" order by id_subject ");
 
-        DAOUtil daoUtil = new DAOUtil( sqlRequest, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( sB.toString( ), plugin ) )
         {
-            QuestionAnswer questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-            listQuestionAnswer.add( questionanswer );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                QuestionAnswer questionanswer = new QuestionAnswer(  );
+                questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+                questionanswer.setQuestion( daoUtil.getString( 2 ) );
+                questionanswer.setAnswer( daoUtil.getString( 3 ) );
+                questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+                questionanswer.setStatus( daoUtil.getInt( 5 ) );
+                questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+                questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+                listQuestionAnswer.add( questionanswer );
+            }
+
+            return listQuestionAnswer;
         }
-
-        daoUtil.free(  );
-
-        return listQuestionAnswer;
     }
 
     /**
@@ -327,27 +328,27 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public Collection<QuestionAnswer> findByIdSubject( int nIdSubject, Plugin plugin )
     {
-        Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<QuestionAnswer>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_SUBJECT, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ID_SUBJECT, plugin ) )
         {
-            QuestionAnswer questionanswer = new QuestionAnswer(  );
-            questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
-            questionanswer.setQuestion( daoUtil.getString( 2 ) );
-            questionanswer.setAnswer( daoUtil.getString( 3 ) );
-            questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
-            questionanswer.setStatus( daoUtil.getInt( 5 ) );
-            questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
-            questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
-            listQuestionAnswer.add( questionanswer );
+            Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<>(  );
+        	daoUtil.setInt( 1, nIdSubject );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                QuestionAnswer questionanswer = new QuestionAnswer(  );
+                questionanswer.setIdQuestionAnswer( daoUtil.getInt( 1 ) );
+                questionanswer.setQuestion( daoUtil.getString( 2 ) );
+                questionanswer.setAnswer( daoUtil.getString( 3 ) );
+                questionanswer.setIdSubject( daoUtil.getInt( 4 ) );
+                questionanswer.setStatus( daoUtil.getInt( 5 ) );
+                questionanswer.setCreationDate( daoUtil.getTimestamp( 6 ) );
+                questionanswer.setIdOrder( daoUtil.getInt( 7 ) );
+                listQuestionAnswer.add( questionanswer );
+            }
+
+            return listQuestionAnswer;
         }
-
-        daoUtil.free(  );
-
-        return listQuestionAnswer;
     }
 
     /**
@@ -358,20 +359,19 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public int countbySubject( int nIdSubject, Plugin plugin )
     {
-        int count = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_COUNT, plugin );
-
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_COUNT, plugin ) )
         {
-            count = daoUtil.getInt( 1 );
+        	int count = 0;
+        	daoUtil.setInt( 1, nIdSubject );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                count = daoUtil.getInt( 1 );
+            }
+
+            return count;
         }
-
-        daoUtil.free(  );
-
-        return count;
     }
     
     /**
@@ -382,18 +382,18 @@ public final class QuestionAnswerDAO implements IQuestionAnswerDAO
      */
     public int getMaxOrder( int nIdSubject, Plugin plugin )
     {
-        int nMaxOrder = 0;
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin );
-        daoUtil.setInt( 1, nIdSubject );
-        daoUtil.executeQuery(  );
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin ) )
         {
-            nMaxOrder = daoUtil.getInt( 1 );
+        	int nMaxOrder = 0;
+            daoUtil.setInt( 1, nIdSubject );
+            daoUtil.executeQuery(  );
+
+            if ( daoUtil.next(  ) )
+            {
+                nMaxOrder = daoUtil.getInt( 1 );
+            }
+
+            return nMaxOrder;
         }
-
-        daoUtil.free(  );
-
-        return nMaxOrder;
     }
 }

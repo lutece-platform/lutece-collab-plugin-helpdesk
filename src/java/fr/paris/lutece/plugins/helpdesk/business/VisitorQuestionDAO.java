@@ -88,22 +88,22 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public int newPrimaryKey( Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin );
-        daoUtil.executeQuery(  );
-
-        int nKey;
-
-        if ( !daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
         {
-            // if the table is empty
-            nKey = 1;
+        	daoUtil.executeQuery(  );
+
+            int nKey;
+
+            if ( !daoUtil.next(  ) )
+            {
+                // if the table is empty
+                nKey = 1;
+            }
+
+            nKey = daoUtil.getInt( 1 ) + 1;
+
+            return nKey;
         }
-
-        nKey = daoUtil.getInt( 1 ) + 1;
-
-        daoUtil.free(  );
-
-        return nKey;
     }
 
     /**
@@ -114,21 +114,22 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public synchronized void insert( VisitorQuestion visitorQuestion, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin );
-        visitorQuestion.setIdVisitorQuestion( newPrimaryKey( plugin ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        {
+        	visitorQuestion.setIdVisitorQuestion( newPrimaryKey( plugin ) );
 
-        daoUtil.setInt( 1, visitorQuestion.getIdVisitorQuestion(  ) );
-        daoUtil.setString( 2, visitorQuestion.getLastname(  ) );
-        daoUtil.setString( 3, visitorQuestion.getFirstname(  ) );
-        daoUtil.setString( 4, visitorQuestion.getEmail(  ) );
-        daoUtil.setString( 5, visitorQuestion.getQuestion(  ) );
-        daoUtil.setString( 6, visitorQuestion.getAnswer(  ) );
-        daoUtil.setDate( 7, visitorQuestion.getDate(  ) );
-        daoUtil.setInt( 8, visitorQuestion.getIdUser(  ) );
-        daoUtil.setInt( 9, visitorQuestion.getIdTheme(  ) );
+            daoUtil.setInt( 1, visitorQuestion.getIdVisitorQuestion(  ) );
+            daoUtil.setString( 2, visitorQuestion.getLastname(  ) );
+            daoUtil.setString( 3, visitorQuestion.getFirstname(  ) );
+            daoUtil.setString( 4, visitorQuestion.getEmail(  ) );
+            daoUtil.setString( 5, visitorQuestion.getQuestion(  ) );
+            daoUtil.setString( 6, visitorQuestion.getAnswer(  ) );
+            daoUtil.setDate( 7, visitorQuestion.getDate(  ) );
+            daoUtil.setInt( 8, visitorQuestion.getIdUser(  ) );
+            daoUtil.setInt( 9, visitorQuestion.getIdTheme(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -139,11 +140,12 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public void delete( int nIdVisitorQuestion, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin );
-        daoUtil.setInt( 1, nIdVisitorQuestion );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
+        {
+        	daoUtil.setInt( 1, nIdVisitorQuestion );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -155,29 +157,29 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public VisitorQuestion load( int nIdVisitorQuestion, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin );
-        daoUtil.setInt( 1, nIdVisitorQuestion );
-        daoUtil.executeQuery(  );
-
-        VisitorQuestion visitorQuestion = null;
-
-        if ( daoUtil.next(  ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-            visitorQuestion = new VisitorQuestion(  );
-            visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
-            visitorQuestion.setLastname( daoUtil.getString( 2 ) );
-            visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
-            visitorQuestion.setEmail( daoUtil.getString( 4 ) );
-            visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
-            visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
-            visitorQuestion.setDate( daoUtil.getDate( 7 ) );
-            visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
-            visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
+        	daoUtil.setInt( 1, nIdVisitorQuestion );
+            daoUtil.executeQuery(  );
+
+            VisitorQuestion visitorQuestion = null;
+
+            if ( daoUtil.next(  ) )
+            {
+                visitorQuestion = new VisitorQuestion(  );
+                visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
+                visitorQuestion.setLastname( daoUtil.getString( 2 ) );
+                visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
+                visitorQuestion.setEmail( daoUtil.getString( 4 ) );
+                visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
+                visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
+                visitorQuestion.setDate( daoUtil.getDate( 7 ) );
+                visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
+                visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
+            }
+
+            return visitorQuestion;
         }
-
-        daoUtil.free(  );
-
-        return visitorQuestion;
     }
 
     /**
@@ -188,18 +190,19 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public void store( VisitorQuestion visitorQuestion, Plugin plugin )
     {
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin );
-        daoUtil.setInt( 1, visitorQuestion.getIdVisitorQuestion(  ) );
-        daoUtil.setString( 2, visitorQuestion.getLastname(  ) );
-        daoUtil.setString( 3, visitorQuestion.getFirstname(  ) );
-        daoUtil.setString( 4, visitorQuestion.getEmail(  ) );
-        daoUtil.setString( 5, visitorQuestion.getQuestion(  ) );
-        daoUtil.setString( 6, visitorQuestion.getAnswer(  ) );
-        daoUtil.setInt( 7, visitorQuestion.getIdUser(  ) );
-        daoUtil.setInt( 8, visitorQuestion.getIdVisitorQuestion(  ) );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
+        {
+        	daoUtil.setInt( 1, visitorQuestion.getIdVisitorQuestion(  ) );
+            daoUtil.setString( 2, visitorQuestion.getLastname(  ) );
+            daoUtil.setString( 3, visitorQuestion.getFirstname(  ) );
+            daoUtil.setString( 4, visitorQuestion.getEmail(  ) );
+            daoUtil.setString( 5, visitorQuestion.getQuestion(  ) );
+            daoUtil.setString( 6, visitorQuestion.getAnswer(  ) );
+            daoUtil.setInt( 7, visitorQuestion.getIdUser(  ) );
+            daoUtil.setInt( 8, visitorQuestion.getIdVisitorQuestion(  ) );
 
-        daoUtil.executeUpdate(  );
-        daoUtil.free(  );
+            daoUtil.executeUpdate(  );
+        }
     }
 
     /**
@@ -209,28 +212,28 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public Collection<VisitorQuestion> findAll( Plugin plugin )
     {
-        Collection<VisitorQuestion> list = new ArrayList<VisitorQuestion>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        Collection<VisitorQuestion> list = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            VisitorQuestion visitorQuestion = new VisitorQuestion(  );
-            visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
-            visitorQuestion.setLastname( daoUtil.getString( 2 ) );
-            visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
-            visitorQuestion.setEmail( daoUtil.getString( 4 ) );
-            visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
-            visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
-            visitorQuestion.setDate( daoUtil.getDate( 7 ) );
-            visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
-            visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
-            list.add( visitorQuestion );
+        	daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+                visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
+                visitorQuestion.setLastname( daoUtil.getString( 2 ) );
+                visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
+                visitorQuestion.setEmail( daoUtil.getString( 4 ) );
+                visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
+                visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
+                visitorQuestion.setDate( daoUtil.getDate( 7 ) );
+                visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
+                visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
+                list.add( visitorQuestion );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -241,29 +244,29 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public Collection<VisitorQuestion> findByUser( int nIdUser, Plugin plugin )
     {
-        Collection<VisitorQuestion> list = new ArrayList<VisitorQuestion>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_USER, plugin );
-        daoUtil.setInt( 1, nIdUser );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        Collection<VisitorQuestion> list = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_USER, plugin ) )
         {
-            VisitorQuestion visitorQuestion = new VisitorQuestion(  );
-            visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
-            visitorQuestion.setLastname( daoUtil.getString( 2 ) );
-            visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
-            visitorQuestion.setEmail( daoUtil.getString( 4 ) );
-            visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
-            visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
-            visitorQuestion.setDate( daoUtil.getDate( 7 ) );
-            visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
-            visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
-            list.add( visitorQuestion );
+        	daoUtil.setInt( 1, nIdUser );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+                visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
+                visitorQuestion.setLastname( daoUtil.getString( 2 ) );
+                visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
+                visitorQuestion.setEmail( daoUtil.getString( 4 ) );
+                visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
+                visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
+                visitorQuestion.setDate( daoUtil.getDate( 7 ) );
+                visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
+                visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
+                list.add( visitorQuestion );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -274,29 +277,29 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public Collection<VisitorQuestion> findByTheme( int nIdTheme, Plugin plugin )
     {
-        Collection<VisitorQuestion> list = new ArrayList<VisitorQuestion>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_THEME, plugin );
-        daoUtil.setInt( 1, nIdTheme );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        Collection<VisitorQuestion> list = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_THEME, plugin ) )
         {
-            VisitorQuestion visitorQuestion = new VisitorQuestion(  );
-            visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
-            visitorQuestion.setLastname( daoUtil.getString( 2 ) );
-            visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
-            visitorQuestion.setEmail( daoUtil.getString( 4 ) );
-            visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
-            visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
-            visitorQuestion.setDate( daoUtil.getDate( 7 ) );
-            visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
-            visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
-            list.add( visitorQuestion );
+        	daoUtil.setInt( 1, nIdTheme );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+                visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
+                visitorQuestion.setLastname( daoUtil.getString( 2 ) );
+                visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
+                visitorQuestion.setEmail( daoUtil.getString( 4 ) );
+                visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
+                visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
+                visitorQuestion.setDate( daoUtil.getDate( 7 ) );
+                visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
+                visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
+                list.add( visitorQuestion );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 
     /**
@@ -307,29 +310,29 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
      */
     public Collection<VisitorQuestion> findArchivedQuestionsByTheme( int nIdTheme, Plugin plugin )
     {
-        Collection<VisitorQuestion> list = new ArrayList<VisitorQuestion>(  );
-        DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ARHIVED_BY_THEME, plugin );
-        daoUtil.setString( 1, "" ); //answer != "" -> archived question
-        daoUtil.setInt( 2, nIdTheme );
-        daoUtil.executeQuery(  );
-
-        while ( daoUtil.next(  ) )
+        Collection<VisitorQuestion> list = new ArrayList<>(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_ARHIVED_BY_THEME, plugin ) )
         {
-            VisitorQuestion visitorQuestion = new VisitorQuestion(  );
-            visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
-            visitorQuestion.setLastname( daoUtil.getString( 2 ) );
-            visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
-            visitorQuestion.setEmail( daoUtil.getString( 4 ) );
-            visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
-            visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
-            visitorQuestion.setDate( daoUtil.getDate( 7 ) );
-            visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
-            visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
-            list.add( visitorQuestion );
+        	daoUtil.setString( 1, "" ); //answer != "" -> archived question
+            daoUtil.setInt( 2, nIdTheme );
+            daoUtil.executeQuery(  );
+
+            while ( daoUtil.next(  ) )
+            {
+                VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+                visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
+                visitorQuestion.setLastname( daoUtil.getString( 2 ) );
+                visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
+                visitorQuestion.setEmail( daoUtil.getString( 4 ) );
+                visitorQuestion.setQuestion( daoUtil.getString( 5 ) );
+                visitorQuestion.setAnswer( daoUtil.getString( 6 ) );
+                visitorQuestion.setDate( daoUtil.getDate( 7 ) );
+                visitorQuestion.setIdUser( daoUtil.getInt( 8 ) );
+                visitorQuestion.setIdTheme( daoUtil.getInt( 9 ) );
+                list.add( visitorQuestion );
+            }
+
+            return list;
         }
-
-        daoUtil.free(  );
-
-        return list;
     }
 }
