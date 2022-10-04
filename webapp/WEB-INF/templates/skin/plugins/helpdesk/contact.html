@@ -61,13 +61,9 @@
                     </div>
                 </div>	
                 <div class="form-group">
-					<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">	
-						<button class="btn btn-primary btn-sm" type="submit">
-							<i class="glyphicon glyphicon-envelope"></i>&nbsp#i18n{helpdesk.contact.send}
-						</button>
-						<a class="btn btn-default btn-sm" href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}">
-							<i class="glyphicon glyphicon-remove-circle"></i>&nbsp#i18n{helpdesk.contact.back}
-						</a>
+					<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
+						<@button title='#i18n{helpdesk.contact.send}' buttonIcon='envelope' size='sm' type='submit'/>
+						<@aButton href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}' title='#i18n{helpdesk.contact.back}' buttonIcon='remove'/>
 					</div>
                 </div>
              </form>   

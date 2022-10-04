@@ -6,9 +6,7 @@
         <#if typeList != "subject">
             <h4>&nbsp;${subject.text}
             <#if typeList != "subject">
-                <a class="top btn btn-primary btn-sm" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top">
-                    <i class="glyphicon glyphicon-arrow-up"></i>&nbsp;#i18n{helpdesk.question_list_row.top}
-                </a>
+                <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top' title='#i18n{helpdesk.question_list_row.top}' class='top btn btn-primary btn-sm' buttonIcon='chevron-up'/> 
             </#if>
             </h4>
             <a name="${anchor_subject}${subject.id}"></a>
@@ -25,7 +23,7 @@
             </ul>
         <#else>
             <h4>&nbsp;${subject.text}&nbsp;
-              <a class="btn btn-xs btn-primary" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}"><i class="glyphicon glyphicon-tag"></i></a>
+              <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}' size='xs' buttonIcon='tag'/> 
             </h4>
         </#if>
       
@@ -66,9 +64,7 @@
 <#if subject.getParent(plugin)?has_content && subject.idParent != 0>
 <@getParentSubject subject=subject.getParent(plugin) breadcrumb=breadcrumbCopy />
 <#else>
- <a class="top btn btn-primary btn-sm" href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top">
-    <i class="glyphicon glyphicon-arrow-up"></i>&nbsp;#i18n{helpdesk.question_list_row.top}
- </a>
+ <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top' title='#i18n{helpdesk.question_list_row.top}' class='top btn btn-primary btn-sm' buttonIcon='chevron-up'/>
 ${breadcrumbCopy}
 </#if>
 </#if>
@@ -91,12 +87,12 @@ ${breadcrumbCopy}
                         <div class="col-xs-12 col-sm-12 col-md-offset-3 col-md-9 col-lg-offset-3 col-lg-9">
                             <label class="" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} :</label>
 							<div class="input-group">
-							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							<span class="input-group-addon"><@icon style='calendar' /></span>
                             <input type="text" class="form-control input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}">
 							</div>
                             <label class="">#i18n{helpdesk.subject_list.labelDateEnd}</label>
 							<div class="input-group">
-							<span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+							<span class="input-group-addon"><@icon style='calendar' /></span>
                             <input type="text" class="form-control input-sm" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}">
 							</div>
                         </div>
@@ -118,21 +114,17 @@ ${breadcrumbCopy}
                     </div>
                         <input type="hidden" name="page" value="${path_label}">
                         <input type="hidden" value="${faq.id}" name="faq_id">
-                        <button class="btn btn-primary btn-sm" type="submit">
-                            <i class="glyphicon glyphicon-search"></i>&nbsp;#i18n{helpdesk.subject_list.buttonLabelSearch}
-                        </button>
+                        <@button title='#i18n{helpdesk.subject_list.buttonLabelSearch}' buttonIcon='search' size='sm' type='submit'/>
 				</form>
             </fieldset>
-            <a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}" class="btn btn-info btn-sm">
-                <i class="glyphicon glyphicon-list"></i>&nbsp;#i18n{helpdesk.subject_list.labelList}
-            </a>
+            <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}' title='#i18n{helpdesk.subject_list.labelList}' buttonIcon='list'/>
             <form class="form-horizontal" method="post">
                 <fieldset>
                     <legend>#i18n{helpdesk.subject_list.labelNoAnswer}</legend>
                     <input type="hidden" name="page" value="${path_label}">
                     <input type="hidden" name="faq_id" value="${faq.id}">
                     <input type="hidden" name="contact" value="contact">
-                    <button class="btn btn-primary btn-sm" type="submit"><i class="glyphicon glyphicon-envelope"></i>&nbsp;#i18n{helpdesk.subject_list.labelContact}</button>
+                    <@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='edit' size='sm' type='submit'/> 
                 </fieldset>
             </form>
             <#if search_page>
@@ -163,9 +155,7 @@ ${breadcrumbCopy}
                     <input type="hidden" name="page" value="${path_label}">
                     <input type="hidden" name="faq_id" value="${faq.id}">
                     <input type="hidden" name="contact" value="contact">
-                    <button class="btn btn-primary btn-sm" type="submit">
-                        <i class="glyphicon glyphicon-envelope"></i>&nbsp;#i18n{helpdesk.subject_list.labelContact}
-                    </button>
+                    <@button title='#i18n{helpdesk.subject_list.labelContact}' buttonIcon='envelope' size='sm' type='submit'/>
                 </fieldset>
             </form>
         </div>
