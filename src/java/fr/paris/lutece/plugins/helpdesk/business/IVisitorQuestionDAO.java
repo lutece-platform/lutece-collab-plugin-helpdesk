@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.Collection;
 
-
 /**
  *
  * Interface for Visitor DAO
@@ -48,15 +47,18 @@ public interface IVisitorQuestionDAO
      * Delete a record from the table
      *
      *
-     * @param nIdVisitorQuestion The indentifier of the object VisitorQuestion
-     * @param plugin The Plugin using this data access service
+     * @param nIdVisitorQuestion
+     *            The indentifier of the object VisitorQuestion
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void delete( int nIdVisitorQuestion, Plugin plugin );
 
     /**
      * Find all objects
      *
-     * @param plugin The Plugin using this data access service
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A Collection of objects
      */
     Collection<VisitorQuestion> findAll( Plugin plugin );
@@ -65,8 +67,10 @@ public interface IVisitorQuestionDAO
      * Insert a new record in the table.
      *
      *
-     * @param visitorQuestion The Instance of the object VisitorQuestion
-     * @param plugin The Plugin using this data access service
+     * @param visitorQuestion
+     *            The Instance of the object VisitorQuestion
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void insert( VisitorQuestion visitorQuestion, Plugin plugin );
 
@@ -74,50 +78,54 @@ public interface IVisitorQuestionDAO
      * load the data of VisitorQuestion from the table
      *
      *
-     * @param nIdVisitorQuestion The indentifier of the object VisitorQuestion
-     * @param plugin The Plugin using this data access service
+     * @param nIdVisitorQuestion
+     *            The indentifier of the object VisitorQuestion
+     * @param plugin
+     *            The Plugin using this data access service
      * @return The Instance of the object VisitorQuestion
      */
     VisitorQuestion load( int nIdVisitorQuestion, Plugin plugin );
 
     /**
-     * Calculate a new primary key to add a new VisitorQuestion
-     *
-     *
-     * @param plugin The Plugin using this data access service
-     * @return The new key.
-     */
-    int newPrimaryKey( Plugin plugin );
-
-    /**
      * Update the record in the table
      *
      *
-     * @param visitorQuestion The instance of the VisitorQuestion to update
-     * @param plugin The Plugin using this data access service
+     * @param visitorQuestion
+     *            The instance of the VisitorQuestion to update
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void store( VisitorQuestion visitorQuestion, Plugin plugin );
 
     /**
      * Find all objects
-     * @param nIdUser The User ID
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdUser
+     *            The User ID
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A Collection of objects
      */
     Collection<VisitorQuestion> findByUser( int nIdUser, Plugin plugin );
 
     /**
      * Find all objects
-     * @param nIdTheme The Theme id
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdTheme
+     *            The Theme id
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A Collection of objects
      */
     Collection<VisitorQuestion> findByTheme( int nIdTheme, Plugin plugin );
 
     /**
      * Find all archived questions by Theme
-     * @param nIdTheme The Theme id
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdTheme
+     *            The Theme id
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A Collection of objects
      */
     Collection<VisitorQuestion> findArchivedQuestionsByTheme( int nIdTheme, Plugin plugin );

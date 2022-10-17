@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,97 +38,119 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import java.util.Collection;
 import java.util.List;
 
-
 /**
- *  This interface represents the business object of the answer
+ * This interface represents the business object of the answer
  */
 public interface IQuestionAnswerDAO
 {
-    /**
-     * Calculate a new primary key to add a new QuestionAnswer
-     * @param plugin The Plugin using this data access service
-     * @return The new key.
-     */
-    int newPrimaryKey( Plugin plugin );
 
     /**
      * Insert a new record in the table.
-     * @param questionAnswer The Instance of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param questionAnswer
+     *            The Instance of the object QuestionAnswer
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void insert( QuestionAnswer questionAnswer, Plugin plugin );
 
     /**
      * Delete a record from the table
-     * @param nIdQuestionAnswer The indentifier of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdQuestionAnswer
+     *            The indentifier of the object QuestionAnswer
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void delete( int nIdQuestionAnswer, Plugin plugin );
 
     /**
      * Delete all records from the table
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void deleteAll( Plugin plugin );
 
     /**
      * Delete a record from the table
      *
-     * @param nIdSubject The indentifier of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
+     * @param nIdSubject
+     *            The indentifier of the object QuestionAnswer
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void deleteBySubject( int nIdSubject, Plugin plugin );
 
     /**
      * load the data of QuestionAnswer from the table
-     * @param nIdQuestionAnswer The indentifier of the object QuestionAnswer
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdQuestionAnswer
+     *            The indentifier of the object QuestionAnswer
+     * @param plugin
+     *            The Plugin using this data access service
      * @return The Instance of the object QuestionAnswer
      */
     QuestionAnswer load( int nIdQuestionAnswer, Plugin plugin );
 
     /**
      * Update the record in the table
-     * @param questionAnswer The instance of the QuestionAnswer to update
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param questionAnswer
+     *            The instance of the QuestionAnswer to update
+     * @param plugin
+     *            The Plugin using this data access service
      */
     void store( QuestionAnswer questionAnswer, Plugin plugin );
 
     /**
      * Find all objects.
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A List of objects
      */
     List<QuestionAnswer> findAll( Plugin plugin );
 
     /**
      * load the data of QuestionAnswer from the table
-     * @param strKeywords The keywords which are searched in question/answer
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param strKeywords
+     *            The keywords which are searched in question/answer
+     * @param plugin
+     *            The Plugin using this data access service
      * @return The collection of QuestionAnswer object
      */
     List<QuestionAnswer> findByKeywords( String strKeywords, Plugin plugin );
 
     /**
      * Find questions specified by id subject
-     * @param nIdSubject The Id of the subject
-     * @param plugin The current plugin using this method
+     * 
+     * @param nIdSubject
+     *            The Id of the subject
+     * @param plugin
+     *            The current plugin using this method
      * @return A Collection containing the results
      */
     Collection<QuestionAnswer> findByIdSubject( int nIdSubject, Plugin plugin );
 
     /**
      *
-     * @param plugin The Plugin using this data access service
-     * @param nIdSubject The Subject ID
+     * @param plugin
+     *            The Plugin using this data access service
+     * @param nIdSubject
+     *            The Subject ID
      * @return count
      */
     int countbySubject( int nIdSubject, Plugin plugin );
-    
+
     /**
      * Get the max order of a given subject
-     * @param nIdSubject The id of the Subject
-     * @param plugin The {@link Plugin}
+     * 
+     * @param nIdSubject
+     *            The id of the Subject
+     * @param plugin
+     *            The {@link Plugin}
      * @return the max order
      */
     int getMaxOrder( int nIdSubject, Plugin plugin );

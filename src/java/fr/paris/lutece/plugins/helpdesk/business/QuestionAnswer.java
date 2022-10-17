@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.Date;
 
-
 /**
  * This class represents question and answers on the help desk
  */
@@ -56,22 +55,25 @@ public class QuestionAnswer
     /**
      * Creates a new QuestionAnswer object.
      */
-    public QuestionAnswer(  )
+    public QuestionAnswer( )
     {
     }
 
     /**
      * Returns the identifier of the object
+     * 
      * @return The identifier
      */
-    public int getIdQuestionAnswer(  )
+    public int getIdQuestionAnswer( )
     {
         return _nIdQuestionAnswer;
     }
 
     /**
      * Sets the identifier of the object to the specified value
-     * @param nIdQuestionAnswer The new value
+     * 
+     * @param nIdQuestionAnswer
+     *            The new value
      */
     public void setIdQuestionAnswer( int nIdQuestionAnswer )
     {
@@ -80,16 +82,19 @@ public class QuestionAnswer
 
     /**
      * Returns the question associated with this object
+     * 
      * @return A string literal containing the question
      */
-    public String getQuestion(  )
+    public String getQuestion( )
     {
         return _strQuestion;
     }
 
     /**
      * Associates a new question with this object
-     * @param strQuestion The new value
+     * 
+     * @param strQuestion
+     *            The new value
      */
     public void setQuestion( String strQuestion )
     {
@@ -97,17 +102,20 @@ public class QuestionAnswer
     }
 
     /**
-         * Returns the answer associated with this object
-         * @return A string literal containing the answer
+     * Returns the answer associated with this object
+     * 
+     * @return A string literal containing the answer
      */
-    public String getAnswer(  )
+    public String getAnswer( )
     {
         return _strAnswer;
     }
 
     /**
-         * Associates a new answer with this object
-         * @param strAnswer The new value
+     * Associates a new answer with this object
+     * 
+     * @param strAnswer
+     *            The new value
      */
     public void setAnswer( String strAnswer )
     {
@@ -116,26 +124,31 @@ public class QuestionAnswer
 
     /**
      * Returns the identifier of the subject
+     * 
      * @return The identifier
      */
-    public int getIdSubject(  )
+    public int getIdSubject( )
     {
         return _nIdSubject;
     }
 
     /**
      * Return the {@link Subject}
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return The {@link Subject}
      */
     public Subject getSubject( Plugin plugin )
     {
-        return (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( getIdSubject(  ), plugin );
+        return (Subject) SubjectHome.getInstance( ).findByPrimaryKey( getIdSubject( ), plugin );
     }
 
     /**
      * Assigns this QuestionAnswer to a subject
-     * @param nIdSubject The identifier of the subject
+     * 
+     * @param nIdSubject
+     *            The identifier of the subject
      */
     public void setIdSubject( int nIdSubject )
     {
@@ -144,16 +157,19 @@ public class QuestionAnswer
 
     /**
      * Returns the status of the object
+     * 
      * @return true if the object is enabled
      */
-    public boolean isEnabled(  )
+    public boolean isEnabled( )
     {
         return _bIsEnabled;
     }
 
     /**
      * Sets the status of the object
-     * @param status 1 to enable the object, any other value to disable it
+     * 
+     * @param status
+     *            1 to enable the object, any other value to disable it
      */
     public void setStatus( int status )
     {
@@ -170,29 +186,31 @@ public class QuestionAnswer
     /**
      * @return the _dateCreation
      */
-    public Date getCreationDate(  )
+    public Date getCreationDate( )
     {
         return _dateCreation;
     }
 
     /**
-     * @param dateCreationDate the _dateCreation to set
+     * @param dateCreationDate
+     *            the _dateCreation to set
      */
     public void setCreationDate( Date dateCreationDate )
     {
         _dateCreation = dateCreationDate;
     }
-    
+
     /**
      * @return the _nIdOrder
      */
-    public int getIdOrder(  )
+    public int getIdOrder( )
     {
         return _nIdOrder;
     }
 
     /**
-     * @param nIdOrder the _nIdOrder to set
+     * @param nIdOrder
+     *            the _nIdOrder to set
      */
     public void setIdOrder( int nIdOrder )
     {

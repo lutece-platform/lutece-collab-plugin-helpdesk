@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,22 +66,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
-
 /**
  * HelpdeskSearchJspBean
  */
 public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
 {
-	//Templates
-    private static final String TEMPLATE_RESULTS = "admin/plugins/helpdesk/helpdesksearch/search_results.html";  
-   
-    //Properties
+    // Templates
+    private static final String TEMPLATE_RESULTS = "admin/plugins/helpdesk/helpdesksearch/search_results.html";
+
+    // Properties
     private static final String PROPERTY_PAGE_TITLE_SEARCH = "helpdesk.search_results.pageTitle";
     private static final String PROPERTY_SEARCH_PAGE_URL = "helpdesk.healpdesksearch.pageSearch.baseUrl";
     private static final String PROPERTY_RESULTS_PER_PAGE = "helpdesk.healpdesksearch.nb.docs.per.page";
-    
-    
-    //Parameters
+
+    // Parameters
     private static final String PARAMETER_PAGE_INDEX = "page_index";
     private static final String PARAMETER_NB_ITEMS_PER_PAGE = "items_per_page";
     private static final String PARAMETER_QUERY = "query";
@@ -90,8 +88,8 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
     private static final String PARAMETER_FAQ_ID = "faq_id";
     private static final String PARAMETER_SUBJECT_ID = "form_search_subject_id";
     private static final String PARAMETER_SEARCH_SUB_SUBJECTS = "form_search_sub_subjects";
-    
-    //Markers
+
+    // Markers
     private static final String MARK_FILTER_SUBJECT = "filter_subject_id";
     private static final String MARK_RESULTS_LIST = "results_list";
     private static final String MARK_QUERY = "query";
@@ -106,25 +104,26 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
     private static final String MARK_PATH_LABEL = "path_label";
     private static final String MARK_SUBJECT_LIST = "helpdesk_subject_list";
     private static final String MARK_FILTER_SEARCH_SUB_SUBJECT = "filter_search_sub_subject";
-    
-    //Messages
-    private static final String MESSAGE_INVALID_SEARCH_TERMS = "helpdesk.message.invalidSearchTerms";    
+
+    // Messages
+    private static final String MESSAGE_INVALID_SEARCH_TERMS = "helpdesk.message.invalidSearchTerms";
     private static final String MESSAGE_SEARCH_DATE_VALIDITY = "helpdesk.siteMessage.dateValidity";
-    
-    //Default values
+
+    // Default values
     private static final String DEFAULT_RESULTS_PER_PAGE = "10";
     private static final String DEFAULT_PAGE_INDEX = "1";
-    
+
     private static final String CONSTANT_EMPTY_STRING = "";
     private static final String CONSTANT_SEPARATOR = ";";
     private static final String REGEX_ID = "^[\\d]+$";
-    
+
     private Collection<QuestionAnswer> _listResults;
 
     /**
      * Returns search results
      *
-     * @param request The HTTP request.
+     * @param request
+     *            The HTTP request.
      * @return The HTML code of the page.
      */
     public String getSearch( HttpServletRequest request )
@@ -134,8 +133,8 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
         String strQuery = request.getParameter( PARAMETER_QUERY );
         String strSearchPageUrl = AppPropertiesService.getProperty( PROPERTY_SEARCH_PAGE_URL );
         String strError = null;
-        HashMap<String, Object> model = new HashMap<String, Object>(  );
-        Locale locale = getLocale(  );
+        HashMap<String, Object> model = new HashMap<String, Object>( );
+        Locale locale = getLocale( );
 
         // Check XSS characters
         if ( ( strQuery != null ) && ( StringUtil.containsXssCharacters( strQuery ) ) )
@@ -145,56 +144,55 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
         }
 
         String strNbItemPerPage = request.getParameter( PARAMETER_NB_ITEMS_PER_PAGE );
-        String strDefaultNbItemPerPage = AppPropertiesService.getProperty( PROPERTY_RESULTS_PER_PAGE,
-                DEFAULT_RESULTS_PER_PAGE );
+        String strDefaultNbItemPerPage = AppPropertiesService.getProperty( PROPERTY_RESULTS_PER_PAGE, DEFAULT_RESULTS_PER_PAGE );
         strNbItemPerPage = ( strNbItemPerPage != null ) ? strNbItemPerPage : strDefaultNbItemPerPage;
 
         int nNbItemsPerPage = Integer.parseInt( strNbItemPerPage );
         String strCurrentPageIndex = request.getParameter( PARAMETER_PAGE_INDEX );
         strCurrentPageIndex = ( strCurrentPageIndex != null ) ? strCurrentPageIndex : DEFAULT_PAGE_INDEX;
 
-        int nPageIndex = Integer.parseInt( strCurrentPageIndex );       
+        int nPageIndex = Integer.parseInt( strCurrentPageIndex );
         Collection<QuestionAnswer> listResults = null;
 
         UrlItem url = new UrlItem( strSearchPageUrl );
 
         String strIdFaq = request.getParameter( PARAMETER_FAQ_ID );
         int nIdFaq = Integer.parseInt( strIdFaq );
-        
+
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
-        
-        String strDateStartQuery = request.getParameter( PARAMETER_DATE_START_QUERY);
-        String strDateEndQuery = request.getParameter( PARAMETER_DATE_END_QUERY);
+
+        String strDateStartQuery = request.getParameter( PARAMETER_DATE_START_QUERY );
+        String strDateEndQuery = request.getParameter( PARAMETER_DATE_END_QUERY );
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
         String strSearchSubSubjects = request.getParameter( PARAMETER_SEARCH_SUB_SUBJECTS );
-        
-        Subject subject = null;        
+
+        Subject subject = null;
         if ( ( strIdSubject != null ) && ( strIdSubject.matches( REGEX_ID ) ) )
         {
-        	 subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( Integer.parseInt( strIdSubject ), plugin );
+            subject = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( Integer.parseInt( strIdSubject ), plugin );
         }
         strIdSubject = ( strIdSubject == null ) ? CONSTANT_EMPTY_STRING : strIdSubject;
-        
-        Date dateStart = DateUtil.formatDate( strDateStartQuery, request.getLocale(  ) );
-        Date dateEnd = DateUtil.formatDate( strDateEndQuery, request.getLocale(  ) );
-               
+
+        Date dateStart = DateUtil.formatDate( strDateStartQuery, request.getLocale( ) );
+        Date dateEnd = DateUtil.formatDate( strDateEndQuery, request.getLocale( ) );
+
         if ( ( dateStart == null ) ^ ( dateEnd == null ) )
-        {            
-        	strError = I18nService.getLocalizedString( MESSAGE_SEARCH_DATE_VALIDITY, locale );
+        {
+            strError = I18nService.getLocalizedString( MESSAGE_SEARCH_DATE_VALIDITY, locale );
         }
-        
+
         Boolean bSearchSubSubjects = false;
-        if( strSearchSubSubjects != null )
+        if ( strSearchSubSubjects != null )
         {
-        	  bSearchSubSubjects = Boolean.parseBoolean( strSearchSubSubjects );
-        }      
-        
-        if( strError == null )
+            bSearchSubSubjects = Boolean.parseBoolean( strSearchSubSubjects );
+        }
+
+        if ( strError == null )
         {
-        	listResults = HelpdeskSearchService.getInstance(  ).getSearchResults(nIdFaq, strQuery, dateStart
-            		, dateEnd, subject, bSearchSubSubjects, request, plugin );
-        	_listResults = listResults;
-        	url.addParameter( PARAMETER_QUERY, strQuery );
+            listResults = HelpdeskSearchService.getInstance( ).getSearchResults( nIdFaq, strQuery, dateStart, dateEnd, subject, bSearchSubSubjects, request,
+                    plugin );
+            _listResults = listResults;
+            url.addParameter( PARAMETER_QUERY, strQuery );
             url.addParameter( PARAMETER_NB_ITEMS_PER_PAGE, nNbItemsPerPage );
             url.addParameter( PARAMETER_FAQ_ID, nIdFaq );
             url.addParameter( PARAMETER_DATE_START_QUERY, strDateStartQuery );
@@ -202,50 +200,52 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
             url.addParameter( PARAMETER_SEARCH_SUB_SUBJECTS, strSearchSubSubjects );
             url.addParameter( PARAMETER_SUBJECT_ID, strIdSubject );
             url.addParameter( PARAMETER_FAQ_ID, nIdFaq );
-            Paginator paginator = new Paginator( new ArrayList( listResults ), nNbItemsPerPage, url.getUrl(  ), PARAMETER_PAGE_INDEX,
-                    strCurrentPageIndex );
-            model.put( MARK_RESULTS_LIST, paginator.getPageItems(  ) );
+            Paginator paginator = new Paginator( new ArrayList( listResults ), nNbItemsPerPage, url.getUrl( ), PARAMETER_PAGE_INDEX, strCurrentPageIndex );
+            model.put( MARK_RESULTS_LIST, paginator.getPageItems( ) );
             model.put( MARK_PAGINATOR, paginator );
         }
 
-        Collection<Subject> listSubject = (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( nIdFaq, plugin );        
+        Collection<Subject> listSubject = (Collection<Subject>) SubjectHome.getInstance( ).findByIdFaq( nIdFaq, plugin );
 
-        model.put( MARK_SUBJECT_LIST, listSubject );        
+        model.put( MARK_SUBJECT_LIST, listSubject );
         model.put( MARK_QUERY, strQuery );
         model.put( MARK_DATE_START_QUERY, strDateStartQuery );
         model.put( MARK_DATE_END_QUERY, strDateEndQuery );
         model.put( MARK_FILTER_SUBJECT, strIdSubject );
-        model.put( MARK_FILTER_SEARCH_SUB_SUBJECT, bSearchSubSubjects );       
+        model.put( MARK_FILTER_SEARCH_SUB_SUBJECT, bSearchSubSubjects );
         model.put( MARK_NB_ITEMS_PER_PAGE, strNbItemPerPage );
         model.put( MARK_ERROR, strError );
-        model.put( MARK_LOCALE, request.getLocale(  ) );
+        model.put( MARK_LOCALE, request.getLocale( ) );
         model.put( MARK_FAQ_ID, nIdFaq );
         model.put( MARK_PLUGIN, plugin );
         model.put( MARK_PATH_LABEL, HelpdeskPlugin.PLUGIN_NAME );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_RESULTS, locale, model );
 
-        return getAdminPage( template.getHtml(  ) );
+        return getAdminPage( template.getHtml( ) );
     }
-    
+
     /**
      * Return csv file from the selected questions
-     * @param request la requete Http
-     * @param response la reponse
+     * 
+     * @param request
+     *            la requete Http
+     * @param response
+     *            la reponse
      */
     public void doExportQuestionCSV( HttpServletRequest request, HttpServletResponse response )
     {
-        List<String[]> listToCSVWriter = getCSVListFromRequest( request );
+        List<String [ ]> listToCSVWriter = getCSVListFromRequest( request );
 
         if ( listToCSVWriter != null )
         {
             String strCsvSeparator = CONSTANT_SEPARATOR;
-            StringWriter strWriter = new StringWriter(  );
+            StringWriter strWriter = new StringWriter( );
 
-            CSVWriter csvWriter = new CSVWriter( strWriter, strCsvSeparator.toCharArray(  )[0] );
+            CSVWriter csvWriter = new CSVWriter( strWriter, strCsvSeparator.toCharArray( ) [0] );
             csvWriter.writeAll( listToCSVWriter );
 
-            byte[] byteFileOutPut = strWriter.toString(  ).getBytes(  );
+            byte [ ] byteFileOutPut = strWriter.toString( ).getBytes( );
 
             try
             {
@@ -255,14 +255,14 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
                 response.setHeader( "Cache-Control", "must-revalidate,post-check=0,pre-check=0" );
                 response.setContentType( "enctype=multipart/form-data" );
 
-                OutputStream os = response.getOutputStream(  );
+                OutputStream os = response.getOutputStream( );
                 os.write( byteFileOutPut );
-                os.close(  );
+                os.close( );
 
-                csvWriter.close(  );
-                strWriter.close(  );
+                csvWriter.close( );
+                strWriter.close( );
             }
-            catch ( IOException e )
+            catch( IOException e )
             {
                 AppLogService.error( e );
             }
@@ -271,53 +271,59 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
 
     /**
      * Format the selected question to fit the csv format
-     * @param request la requete Http
-     * @param response la reponse
+     * 
+     * @param request
+     *            la requete Http
+     * @param response
+     *            la reponse
      * @return listToCSVWriter the list of formated question
      */
-    private List<String[]> getCSVListFromRequest(HttpServletRequest request) 
+    private List<String [ ]> getCSVListFromRequest( HttpServletRequest request )
     {
-    	Plugin plugin = getPlugin(  );   	
-    	List<String> listField = null;
-    	if ( _listResults != null && _listResults.size( ) > 0)
-    	{    	
-			//on crée les titres des colonnes du CSV
-			List<String[]> listToCSVWriter = new ArrayList<String[]>(  );
-			
-			for ( QuestionAnswer questionAnswer : _listResults )
-			{
-				listField = new ArrayList<String>(  );
-				listField.add(Integer.toString( questionAnswer.getIdSubject( ) ) );
-				listField.add(Integer.toString( questionAnswer.getIdOrder( ) ) );
-				listField.add( questionAnswer.getQuestion( ) );
-				listField.add( questionAnswer.getAnswer( ) );
-				listToCSVWriter.add( transformListToTab( listField ) );
-			}
-			
-			return listToCSVWriter;    		
-    	}
+        Plugin plugin = getPlugin( );
+        List<String> listField = null;
+        if ( _listResults != null && _listResults.size( ) > 0 )
+        {
+            // on crée les titres des colonnes du CSV
+            List<String [ ]> listToCSVWriter = new ArrayList<String [ ]>( );
 
-    	return null;
+            for ( QuestionAnswer questionAnswer : _listResults )
+            {
+                listField = new ArrayList<String>( );
+                listField.add( Integer.toString( questionAnswer.getIdSubject( ) ) );
+                listField.add( Integer.toString( questionAnswer.getIdOrder( ) ) );
+                listField.add( questionAnswer.getQuestion( ) );
+                listField.add( questionAnswer.getAnswer( ) );
+                listToCSVWriter.add( transformListToTab( listField ) );
+            }
+
+            return listToCSVWriter;
+        }
+
+        return null;
     }
+
     /**
      * Transform a String List in String table
-     * @param listField  the String list 
+     * 
+     * @param listField
+     *            the String list
      * @return line the String table
      */
-    private static String[] transformListToTab( List<String> listField )
+    private static String [ ] transformListToTab( List<String> listField )
     {
         int i = 0;
-        String[] line = new String[listField.size(  )];
+        String [ ] line = new String [ listField.size( )];
 
         for ( String strField : listField )
         {
             if ( strField != null )
             {
-                line[i] = strField;
+                line [i] = strField;
             }
             else
             {
-                line[i] = CONSTANT_EMPTY_STRING;
+                line [i] = CONSTANT_EMPTY_STRING;
             }
 
             i++;

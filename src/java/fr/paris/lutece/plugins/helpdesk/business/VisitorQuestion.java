@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
-
 /**
  * This class represents a visitor's question.
  */
@@ -52,22 +51,25 @@ public class VisitorQuestion
     /**
      * Creates a new VisitorQuestion object.
      */
-    public VisitorQuestion(  )
+    public VisitorQuestion( )
     {
     }
 
     /**
      * Returns the identifier of the object
+     * 
      * @return The identifier
      */
-    public int getIdVisitorQuestion(  )
+    public int getIdVisitorQuestion( )
     {
         return _nIdVisitorQuestion;
     }
 
     /**
      * Sets the identifier of the object to the specified value
-     * @param nIdVisitorQuestion The new value
+     * 
+     * @param nIdVisitorQuestion
+     *            The new value
      */
     public void setIdVisitorQuestion( int nIdVisitorQuestion )
     {
@@ -76,16 +78,19 @@ public class VisitorQuestion
 
     /**
      * Returns the last name of the visitor
+     * 
      * @return The last name
      */
-    public String getLastname(  )
+    public String getLastname( )
     {
         return _strLastname;
     }
 
     /**
      * Sets the last name of the visitor to the specified value
-     * @param strLastname The new value
+     * 
+     * @param strLastname
+     *            The new value
      */
     public void setLastname( String strLastname )
     {
@@ -94,16 +99,19 @@ public class VisitorQuestion
 
     /**
      * Returns the first name of the visitor
+     * 
      * @return The first name
      */
-    public String getFirstname(  )
+    public String getFirstname( )
     {
         return _strFirstname;
     }
 
     /**
      * Sets the first name of the visitor to the specified value
-     * @param strFirstname The new value
+     * 
+     * @param strFirstname
+     *            The new value
      */
     public void setFirstname( String strFirstname )
     {
@@ -112,16 +120,19 @@ public class VisitorQuestion
 
     /**
      * Returns the email address of the visitor
+     * 
      * @return The email address
      */
-    public String getEmail(  )
+    public String getEmail( )
     {
         return _strEmail;
     }
 
     /**
      * Sets the email address of the visitor to the specified value
-     * @param strEmail The new value
+     * 
+     * @param strEmail
+     *            The new value
      */
     public void setEmail( String strEmail )
     {
@@ -130,16 +141,19 @@ public class VisitorQuestion
 
     /**
      * Returns the question
+     * 
      * @return A string literal containing the question
      */
-    public String getQuestion(  )
+    public String getQuestion( )
     {
         return _strQuestion;
     }
 
     /**
      * Sets the question to the specified value
-     * @param strQuestion The new value
+     * 
+     * @param strQuestion
+     *            The new value
      */
     public void setQuestion( String strQuestion )
     {
@@ -148,16 +162,19 @@ public class VisitorQuestion
 
     /**
      * Returns the answer
+     * 
      * @return A string literal containing the answer
      */
-    public String getAnswer(  )
+    public String getAnswer( )
     {
         return _strAnswer;
     }
 
     /**
      * Sets the answer to the specified value
-     * @param strAnswer The new value
+     * 
+     * @param strAnswer
+     *            The new value
      */
     public void setAnswer( String strAnswer )
     {
@@ -167,7 +184,8 @@ public class VisitorQuestion
     /**
      * Sets the date of the visitor question
      *
-     * @param dateVQ The date
+     * @param dateVQ
+     *            The date
      */
     public void setDate( java.sql.Date dateVQ )
     {
@@ -179,7 +197,7 @@ public class VisitorQuestion
      *
      * @return The date
      */
-    public java.sql.Date getDate(  )
+    public java.sql.Date getDate( )
     {
         return _dateVQ;
     }
@@ -189,7 +207,7 @@ public class VisitorQuestion
      *
      * @return the HelpdeskUser identifier
      */
-    public int getIdUser(  )
+    public int getIdUser( )
     {
         return _nIdUser;
     }
@@ -197,7 +215,8 @@ public class VisitorQuestion
     /**
      * Sets the identifier of the HelpdeskUser to the specified int.
      *
-     * @param nIdUser the new identifier
+     * @param nIdUser
+     *            the new identifier
      */
     public void setIdUser( int nIdUser )
     {
@@ -206,16 +225,19 @@ public class VisitorQuestion
 
     /**
      * Returns the theme
+     * 
      * @return The theme
      */
-    public int getIdTheme(  )
+    public int getIdTheme( )
     {
         return _nIdTheme;
     }
 
     /**
      * Sets the theme to the specified value
-     * @param nIdTheme The new value
+     * 
+     * @param nIdTheme
+     *            The new value
      */
     public void setIdTheme( int nIdTheme )
     {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -75,20 +75,19 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 
-
 /**
  * This class implements the HelpDesk XPage.
  */
 public class HelpdeskApp implements XPageApplication
 {
-	private static final long serialVersionUID = -1592321991604068308L;
-	
-    //Public constants
+    private static final long serialVersionUID = -1592321991604068308L;
+
+    // Public constants
     public static final String ANCHOR_SUBJECT = "subject_";
     public static final String ANCHOR_QUESTION_ANSWER = "question_answer_";
     public static final String PARAMETER_FAQ_ID = "faq_id";
 
-    //Templates
+    // Templates
     private static final String TEMPLATE_SUBJECT_LIST = "skin/plugins/helpdesk/subject_list.html";
     private static final String TEMPLATE_FAQ_LIST = "skin/plugins/helpdesk/faq_list.html";
     private static final String TEMPLATE_CONTACT_FORM_RESULT = "skin/plugins/helpdesk/contact_result.html";
@@ -96,7 +95,7 @@ public class HelpdeskApp implements XPageApplication
     private static final String TEMPLATE_SEND_VISITOR_QUESTION = "skin/plugins/helpdesk/send_visitor_question.html";
     private static final String TEMPLATE_CONTACT_FORM_ERROR = "skin/plugins/helpdesk/contact_error.html";
 
-    //Parameters
+    // Parameters
     private static final String PARAMETER_KEYWORDS = "form_search_keywords";
     private static final String PARAMETER_DATE_BEGIN = "form_search_date_begin";
     private static final String PARAMETER_DATE_END = "form_search_date_end";
@@ -110,8 +109,8 @@ public class HelpdeskApp implements XPageApplication
     private static final String PARAMETER_FIRST_NAME = "first_name";
     private static final String PARAMETER_EMAIL = "email";
     private static final String PARAMETER_MAIL_SUBJECT = "mail_subject";
-    
-    //Markers
+
+    // Markers
     private static final String MARK_VISITOR_QUESTION = "visitor_question";
     private static final String MARK_PORTAL_URL = "portal_url";
     private static final String MARK_DATE = "date";
@@ -133,7 +132,7 @@ public class HelpdeskApp implements XPageApplication
     private static final String MARK_THEME_LIST = "helpdesk_theme_list";
     private static final String MARK_DEFAULT_VALUE = "default_value";
     private static final String MARK_ANCHOR_SUBJECT = "anchor_subject";
-    private static final String MARK_ANCHOR_QUESTION_ANSWER = "anchor_question_answer";    
+    private static final String MARK_ANCHOR_QUESTION_ANSWER = "anchor_question_answer";
 
     // I18n messages
     private static final String MESSAGE_CONTACT_MANDATORY_FIELDS_ERROR_MESSAGE = "helpdesk.siteMessage.mandatoryFields.errorMessage";
@@ -150,35 +149,38 @@ public class HelpdeskApp implements XPageApplication
     private static final String MESSAGE_SUBJECT_LIST_RESULTS = "helpdesk.pageTitle.subjectList_results";
     private static final String MESSAGE_FAQ_LIST = "helpdesk.faq_list.pageTitle";
     private static final String MESSAGE_PORTAL_NAME = "lutece.name";
-    private static final String MESSAGE_WEBMASTER_EMAIL = "email.webmaster";    
+    private static final String MESSAGE_WEBMASTER_EMAIL = "email.webmaster";
     private static final String REGEX_ID = "^[\\d]+$";
     private static final String CONSTANT_EMPTY_STRING = "";
     private static final String CONSTANT_SPACE = " ";
     private static final String CONSTANT_MINUS = " - ";
-    
-    //properties
+
+    // properties
     private static final String PROPERTY_MAIL_SUBJECT_PREFIX = "mail.helpdesk.subjectPrefix";
 
     /**
      * Creates a new QuizPage object.
      */
-    public HelpdeskApp(  )
+    public HelpdeskApp( )
     {
     }
 
     /**
      * Returns the Helpdesk XPage content depending on the request parameters and the current mode.
      *
-     * @param request The HTTP request.
-     * @param nMode The current mode.
-     * @param plugin The plugin.
+     * @param request
+     *            The HTTP request.
+     * @param nMode
+     *            The current mode.
+     * @param plugin
+     *            The plugin.
      * @return The page content.
-     * @throws SiteMessageException The Site message exception
+     * @throws SiteMessageException
+     *             The Site message exception
      */
-    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin )
-        throws SiteMessageException
+    public XPage getPage( HttpServletRequest request, int nMode, Plugin plugin ) throws SiteMessageException
     {
-        XPage page = new XPage(  );
+        XPage page = new XPage( );
 
         String strContact = request.getParameter( PARAMETER_CONTACT );
         String strIdFaq = request.getParameter( PARAMETER_FAQ_ID );
@@ -202,12 +204,12 @@ public class HelpdeskApp implements XPageApplication
             SiteMessageService.setMessage( request, MESSAGE_ACCESS_DENIED, SiteMessage.TYPE_STOP );
         }
 
-        if ( SecurityService.isAuthenticationEnable(  ) )
+        if ( SecurityService.isAuthenticationEnable( ) )
         {
-            LuteceUser user = SecurityService.getInstance(  ).getRegisteredUser( request );
+            LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
 
-            if ( !faq.getRoleKey(  ).equals( Faq.ROLE_NONE ) &&
-                    ( ( user == null ) || !SecurityService.getInstance(  ).isUserInRole( request, faq.getRoleKey(  ) ) ) )
+            if ( !faq.getRoleKey( ).equals( Faq.ROLE_NONE )
+                    && ( ( user == null ) || !SecurityService.getInstance( ).isUserInRole( request, faq.getRoleKey( ) ) ) )
             {
                 SiteMessageService.setMessage( request, MESSAGE_ACCESS_DENIED, SiteMessage.TYPE_STOP );
             }
@@ -220,52 +222,59 @@ public class HelpdeskApp implements XPageApplication
             page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
             page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, getLocale( request ) ) );
         }
-        else if ( ( strContact != null ) && strContact.equals( PARAMETER_CONTACT_RESULT ) )
-        {
-            page.setContent( getContactFormResult( request, faq ) );
-            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
-            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, getLocale( request ) ) );
-        }
         else
-        {
-            page.setContent( getSubjectListSearch( request, plugin, faq ) );
-            page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
-            page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST_RESULTS, getLocale( request ) ) );
-        }
+            if ( ( strContact != null ) && strContact.equals( PARAMETER_CONTACT_RESULT ) )
+            {
+                page.setContent( getContactFormResult( request, faq ) );
+                page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
+                page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST, getLocale( request ) ) );
+            }
+            else
+            {
+                page.setContent( getSubjectListSearch( request, plugin, faq ) );
+                page.setPathLabel( I18nService.getLocalizedString( MESSAGE_HELPDESK_PATH_LABEL, getLocale( request ) ) );
+                page.setTitle( I18nService.getLocalizedString( MESSAGE_SUBJECT_LIST_RESULTS, getLocale( request ) ) );
+            }
 
         return page;
     }
 
     /**
      * Returns the contact form
-     * @param request The Html request
-     * @param plugin The plugin
-     * @param faq The {@link Faq} concerned by contact form
+     * 
+     * @param request
+     *            The Html request
+     * @param plugin
+     *            The plugin
+     * @param faq
+     *            The {@link Faq} concerned by contact form
      * @return The Html template
      */
     public String getContactForm( HttpServletRequest request, Plugin plugin, Faq faq )
     {
-        Map<String, Object> model = new HashMap<>(  );
-        model.put( MARK_THEME_LIST, (Collection<Theme>) ThemeHome.getInstance(  ).findByIdFaq( faq.getId(  ), plugin ) );
+        Map<String, Object> model = new HashMap<>( );
+        model.put( MARK_THEME_LIST, (Collection<Theme>) ThemeHome.getInstance( ).findByIdFaq( faq.getId( ), plugin ) );
         model.put( MARK_PLUGIN, plugin );
         model.put( MARK_DEFAULT_VALUE, "" );
         model.put( MARK_FAQ, faq );
-        model.put( FULL_URL, request.getRequestURL(  ) );
+        model.put( FULL_URL, request.getRequestURL( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM, getLocale( request ), model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Processes the sending of a question
-     * @param request The Http request
-     * @throws SiteMessageException The Site message exception
+     * 
+     * @param request
+     *            The Http request
+     * @throws SiteMessageException
+     *             The Site message exception
      */
-    public void doSendQuestionMail( HttpServletRequest request )
-        throws SiteMessageException
+    public void doSendQuestionMail( HttpServletRequest request ) throws SiteMessageException
     {
-        HashMap<String, Object> model = new HashMap<>(  );
+        HashMap<String, Object> model = new HashMap<>( );
 
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
 
@@ -278,36 +287,35 @@ public class HelpdeskApp implements XPageApplication
         String strSubject = request.getParameter( PARAMETER_MAIL_SUBJECT );
 
         // Mandatory field
-        if ( ( strVisitorLastName == null ) || ( strVisitorFirstName == null ) ||
-                strQuestion.equals( CONSTANT_EMPTY_STRING ) || ( strVisitorEmail == null ) )
+        if ( ( strVisitorLastName == null ) || ( strVisitorFirstName == null ) || strQuestion.equals( CONSTANT_EMPTY_STRING ) || ( strVisitorEmail == null ) )
         {
-            SiteMessageService.setMessage( request, MESSAGE_CONTACT_MANDATORY_FIELDS_ERROR_MESSAGE,
-                new String[] { CONSTANT_EMPTY_STRING }, MESSAGE_CONTACT_MANDATORY_FIELDS_TITLE_MESSAGE, null,
-                CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
+            SiteMessageService.setMessage( request, MESSAGE_CONTACT_MANDATORY_FIELDS_ERROR_MESSAGE, new String [ ] {
+                    CONSTANT_EMPTY_STRING
+            }, MESSAGE_CONTACT_MANDATORY_FIELDS_TITLE_MESSAGE, null, CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
-        if ( strQuestion.length(  ) < 5 )
+        if ( strQuestion.length( ) < 5 )
         {
-            SiteMessageService.setMessage( request, MESSAGE_CONTACT_UNSUFFICIENT_CARACTERS_ERROR_MESSAGE,
-                new String[] { CONSTANT_EMPTY_STRING }, MESSAGE_CONTACT_UNSUFFICIENT_CARACTERS_TITLE_MESSAGE, null,
-                CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
+            SiteMessageService.setMessage( request, MESSAGE_CONTACT_UNSUFFICIENT_CARACTERS_ERROR_MESSAGE, new String [ ] {
+                    CONSTANT_EMPTY_STRING
+            }, MESSAGE_CONTACT_UNSUFFICIENT_CARACTERS_TITLE_MESSAGE, null, CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
-        //check email
+        // check email
         if ( !StringUtil.checkEmail( strVisitorEmail ) )
         {
-            SiteMessageService.setMessage( request, MESSAGE_CONTACT_INVALID_MAIL_ERROR_MESSAGE,
-                new String[] { CONSTANT_EMPTY_STRING }, MESSAGE_CONTACT_INVALID_MAIL_TITLE_MESSAGE, null,
-                CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
+            SiteMessageService.setMessage( request, MESSAGE_CONTACT_INVALID_MAIL_ERROR_MESSAGE, new String [ ] {
+                    CONSTANT_EMPTY_STRING
+            }, MESSAGE_CONTACT_INVALID_MAIL_TITLE_MESSAGE, null, CONSTANT_EMPTY_STRING, SiteMessage.TYPE_STOP );
         }
 
         String strToday = DateUtil.getCurrentDateString( getLocale( request ) );
         java.sql.Date dateDateVQ = DateUtil.formatDateSql( strToday, getLocale( request ) );
 
         int nIdTheme = Integer.parseInt( strThemeId );
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, plugin );
+        Theme theme = (Theme) ThemeHome.getInstance( ).findByPrimaryKey( nIdTheme, plugin );
 
-        VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+        VisitorQuestion visitorQuestion = new VisitorQuestion( );
         visitorQuestion.setLastname( strVisitorLastName );
         visitorQuestion.setFirstname( strVisitorFirstName );
         visitorQuestion.setEmail( strVisitorEmail );
@@ -325,77 +333,83 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_DATE, dateDateVQ );
         model.put( MARK_PORTAL_URL, strBaseUrl );
         model.put( MARK_PLUGIN_NAME, plugin );
-        model.put( FULL_URL, request.getRequestURL(  ) );
+        model.put( FULL_URL, request.getRequestURL( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_SEND_VISITOR_QUESTION, getLocale( request ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_SEND_VISITOR_QUESTION, getLocale( request ), model );
 
-        String strPortal = AppPropertiesService.getProperty( MESSAGE_PORTAL_NAME );    
+        String strPortal = AppPropertiesService.getProperty( MESSAGE_PORTAL_NAME );
         String strEmailWebmaster = I18nService.getLocalizedString( MESSAGE_WEBMASTER_EMAIL, getLocale( request ) );
-        String strMessage = template.getHtml(  );
-        strSubject = AppPropertiesService.getProperty( PROPERTY_MAIL_SUBJECT_PREFIX )
-    		+ CONSTANT_SPACE + strPortal + CONSTANT_MINUS + strSubject;
+        String strMessage = template.getHtml( );
+        strSubject = AppPropertiesService.getProperty( PROPERTY_MAIL_SUBJECT_PREFIX ) + CONSTANT_SPACE + strPortal + CONSTANT_MINUS + strSubject;
 
-        Collection<Recipient> listRecipientTheme = AdminMailingListService.getRecipients( theme.getIdMailingList(  ) );
+        Collection<Recipient> listRecipientTheme = AdminMailingListService.getRecipients( theme.getIdMailingList( ) );
 
         for ( Recipient recipientUser : listRecipientTheme )
         {
-            strEmailWebmaster = recipientUser.getEmail(  );
-            MailService.sendMailHtml( strEmailWebmaster, strPortal, visitorQuestion.getEmail(  ), strSubject, strMessage );
+            strEmailWebmaster = recipientUser.getEmail( );
+            MailService.sendMailHtml( strEmailWebmaster, strPortal, visitorQuestion.getEmail( ), strSubject, strMessage );
         }
     }
 
     /**
      * Returns the contact form's result page
-     * @param request The Http request
+     * 
+     * @param request
+     *            The Http request
      * @return The Html template
-     * @param faq The {@link Faq} concerned by contact form result
-     * @throws SiteMessageException The Site message exception
+     * @param faq
+     *            The {@link Faq} concerned by contact form result
+     * @throws SiteMessageException
+     *             The Site message exception
      */
-    public String getContactFormResult( HttpServletRequest request, Faq faq )
-        throws SiteMessageException
+    public String getContactFormResult( HttpServletRequest request, Faq faq ) throws SiteMessageException
     {
         doSendQuestionMail( request );
 
-        HashMap<String, Object> model = new HashMap<>(  );
+        HashMap<String, Object> model = new HashMap<>( );
         model.put( MARK_FAQ, faq );
-        model.put( FULL_URL, request.getRequestURL(  ) );
+        model.put( FULL_URL, request.getRequestURL( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_RESULT, getLocale( request ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_RESULT, getLocale( request ), model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Returns the contact form's result page
-     * @param request The Http request
-     * @param faq The {@link Faq} concerned by contact error
+     * 
+     * @param request
+     *            The Http request
+     * @param faq
+     *            The {@link Faq} concerned by contact error
      * @return The Html template
      */
-    public String getContactFormError( HttpServletRequest request, Faq faq ) //Error must be handled by Message Service
+    public String getContactFormError( HttpServletRequest request, Faq faq ) // Error must be handled by Message Service
     {
-        HashMap<String, Object> model = new HashMap<>(  );
+        HashMap<String, Object> model = new HashMap<>( );
         model.put( MARK_FAQ, faq );
-        //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
-        model.put( FULL_URL, request.getRequestURL(  ) );
+        // useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
+        model.put( FULL_URL, request.getRequestURL( ) );
 
-        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_ERROR, getLocale( request ),
-                model );
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_CONTACT_FORM_ERROR, getLocale( request ), model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
 
     /**
      * Returns the list of subjects containing a set of keywords.
-     * @param request The Http request
-     * @param plugin The plugin
-     * @param faq The {@link Faq} concerned by search page
+     * 
+     * @param request
+     *            The Http request
+     * @param plugin
+     *            The plugin
+     * @param faq
+     *            The {@link Faq} concerned by search page
      * @return The Html template
-     * @throws SiteMessageException The Site message exception
+     * @throws SiteMessageException
+     *             The Site message exception
      */
-    private String getSubjectListSearch( HttpServletRequest request, Plugin plugin, Faq faq )
-        throws SiteMessageException
+    private String getSubjectListSearch( HttpServletRequest request, Plugin plugin, Faq faq ) throws SiteMessageException
     {
         String strKeywords = request.getParameter( PARAMETER_KEYWORDS );
         String strDateBegin = request.getParameter( PARAMETER_DATE_BEGIN );
@@ -413,8 +427,8 @@ public class HelpdeskApp implements XPageApplication
         strIdSubject = ( strIdSubject == null ) ? CONSTANT_EMPTY_STRING : strIdSubject;
         strSearchSubSubjects = ( strSearchSubSubjects == null ) ? CONSTANT_EMPTY_STRING : strSearchSubSubjects;
 
-        if ( ( ( strKeywords.equals( CONSTANT_EMPTY_STRING ) ) && ( strDateBegin.equals( CONSTANT_EMPTY_STRING ) ) &&
-                ( strDateEnd.equals( CONSTANT_EMPTY_STRING ) ) && ( strIdSubject.equals( CONSTANT_EMPTY_STRING ) ) ) )
+        if ( ( ( strKeywords.equals( CONSTANT_EMPTY_STRING ) ) && ( strDateBegin.equals( CONSTANT_EMPTY_STRING ) )
+                && ( strDateEnd.equals( CONSTANT_EMPTY_STRING ) ) && ( strIdSubject.equals( CONSTANT_EMPTY_STRING ) ) ) )
         {
             bSearchPage = false;
         }
@@ -435,20 +449,18 @@ public class HelpdeskApp implements XPageApplication
 
             if ( strIdSubject.matches( REGEX_ID ) )
             {
-                subject = (Subject) SubjectHome.getInstance(  )
-                                               .findByPrimaryKey( Integer.parseInt( strIdSubject ), plugin );
+                subject = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( Integer.parseInt( strIdSubject ), plugin );
             }
 
             bSearchSubSubjects = Boolean.parseBoolean( strSearchSubSubjects );
 
-            listQuestionAnswer = HelpdeskSearchService.getInstance(  )
-                                                      .getSearchResults( faq.getId(  ), strKeywords, dateBegin,
-                    dateEnd, subject, bSearchSubSubjects, request, plugin );
+            listQuestionAnswer = HelpdeskSearchService.getInstance( ).getSearchResults( faq.getId( ), strKeywords, dateBegin, dateEnd, subject,
+                    bSearchSubSubjects, request, plugin );
         }
 
-        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( faq.getId(  ), plugin );
+        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance( ).findByIdFaq( faq.getId( ), plugin );
 
-        Map<String, Object> model = new HashMap<>(  );
+        Map<String, Object> model = new HashMap<>( );
 
         model.put( MARK_SEARCH_PAGE, bSearchPage );
         model.put( MARK_QUESTIONANSWER_LIST, listQuestionAnswer );
@@ -464,34 +476,36 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_ANCHOR_SUBJECT, ANCHOR_SUBJECT );
         model.put( MARK_ANCHOR_QUESTION_ANSWER, ANCHOR_QUESTION_ANSWER );
         model.put( MARK_FAQ, faq );
-        //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
-        model.put( FULL_URL, request.getRequestURL(  ) );
+        // useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
+        model.put( FULL_URL, request.getRequestURL( ) );
 
         HtmlTemplate t = AppTemplateService.getTemplate( TEMPLATE_SUBJECT_LIST, getLocale( request ), model );
 
-        return t.getHtml(  );
+        return t.getHtml( );
     }
 
     /**
      * Returns the contact form's result page
-     * @param request The Http request
-     * @param plugin The plugin
+     * 
+     * @param request
+     *            The Http request
+     * @param plugin
+     *            The plugin
      * @return The Html template
-     * @throws SiteMessageException The Site message exception
+     * @throws SiteMessageException
+     *             The Site message exception
      */
-    public String getFaqList( HttpServletRequest request, Plugin plugin )
-        throws SiteMessageException
+    public String getFaqList( HttpServletRequest request, Plugin plugin ) throws SiteMessageException
     {
-    	String strKeywords = request.getParameter( PARAMETER_KEYWORDS );
+        String strKeywords = request.getParameter( PARAMETER_KEYWORDS );
         String strDateBegin = request.getParameter( PARAMETER_DATE_BEGIN );
         String strDateEnd = request.getParameter( PARAMETER_DATE_END );
         boolean bSearchPage = true;
         Collection<QuestionAnswer> listQuestionAnswer = null;
-        
-        if( StringUtils.isBlank( strKeywords ) && StringUtils.isBlank( strDateBegin ) 
-        		&& StringUtils.isBlank( strDateEnd ) )
+
+        if ( StringUtils.isBlank( strKeywords ) && StringUtils.isBlank( strDateBegin ) && StringUtils.isBlank( strDateEnd ) )
         {
-        	bSearchPage = false;
+            bSearchPage = false;
         }
         else
         {
@@ -508,24 +522,21 @@ public class HelpdeskApp implements XPageApplication
                 SiteMessageService.setMessage( request, MESSAGE_SEARCH_DATE_VALIDITY, SiteMessage.TYPE_STOP );
             }
 
-            listQuestionAnswer = HelpdeskSearchService.getInstance(  )
-                                                      .getSearchResults( strKeywords, dateBegin,
-                    dateEnd, request, plugin );
+            listQuestionAnswer = HelpdeskSearchService.getInstance( ).getSearchResults( strKeywords, dateBegin, dateEnd, request, plugin );
         }
 
-    	
-        HashMap<String, Object> model = new HashMap<>(  );
+        HashMap<String, Object> model = new HashMap<>( );
         Collection<Faq> faqList = null;
 
-        if ( SecurityService.isAuthenticationEnable(  ) )
+        if ( SecurityService.isAuthenticationEnable( ) )
         {
-            //filter by role
-            LuteceUser user = SecurityService.getInstance(  ).getRegisteredUser( request );
-            String[] arrayRoleKey = null;
+            // filter by role
+            LuteceUser user = SecurityService.getInstance( ).getRegisteredUser( request );
+            String [ ] arrayRoleKey = null;
 
             if ( user != null )
             {
-                arrayRoleKey = user.getRoles(  );
+                arrayRoleKey = user.getRoles( );
             }
 
             faqList = FaqHome.findAuthorizedFaq( arrayRoleKey, plugin );
@@ -546,14 +557,13 @@ public class HelpdeskApp implements XPageApplication
         model.put( MARK_ANCHOR_SUBJECT, ANCHOR_SUBJECT );
         model.put( MARK_ANCHOR_QUESTION_ANSWER, ANCHOR_QUESTION_ANSWER );
         model.put( MARK_FAQ_LIST, faqList );
-        //useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
-        model.put( FULL_URL, request.getRequestURL(  ) );
+        // useful if you want to work with Portal.jsp and RunStandaloneApp.jsp
+        model.put( FULL_URL, request.getRequestURL( ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_FAQ_LIST, getLocale( request ), model );
 
-        return template.getHtml(  );
+        return template.getHtml( );
     }
-    
 
     /**
      * Default getLocale() implementation. Could be overriden

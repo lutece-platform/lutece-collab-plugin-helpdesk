@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,7 +36,6 @@ package fr.paris.lutece.plugins.helpdesk.service;
 import fr.paris.lutece.plugins.helpdesk.business.Faq;
 import fr.paris.lutece.plugins.helpdesk.business.Theme;
 
-
 /**
  *
  * HelpdeskService
@@ -44,16 +43,16 @@ import fr.paris.lutece.plugins.helpdesk.business.Theme;
  */
 public class HelpdeskService
 {
-    private static HelpdeskService _singleton = new HelpdeskService(  );
+    private static HelpdeskService _singleton = new HelpdeskService( );
 
     /**
-    * Initialize the Helpdesk service
-    *
-    */
-    public void init(  )
+     * Initialize the Helpdesk service
+     *
+     */
+    public void init( )
     {
-        Theme.init(  );
-        Faq.init(  );
+        Theme.init( );
+        Faq.init( );
     }
 
     /**
@@ -61,7 +60,7 @@ public class HelpdeskService
      *
      * @return The instance of the singleton
      */
-    public static HelpdeskService getInstance(  )
+    public static HelpdeskService getInstance( )
     {
         return _singleton;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.List;
 
-
 /**
  *
  * Interface for Subject DAO
@@ -46,16 +45,21 @@ public interface ISubjectDAO extends IAbstractSubjectDAO
 {
     /**
      * Returns all questions on a subject
-     * @param nIdSubject The identifier of the subject
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdSubject
+     *            The identifier of the subject
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of questions
      */
     List<QuestionAnswer> findQuestions( int nIdSubject, Plugin plugin );
 
     /**
      *
-     * @param plugin The current plugin using this method
-     * @param nIdSubject The subject ID
+     * @param plugin
+     *            The current plugin using this method
+     * @param nIdSubject
+     *            The subject ID
      * @return count of announce for Field
      */
     int countQuestion( int nIdSubject, Plugin plugin );

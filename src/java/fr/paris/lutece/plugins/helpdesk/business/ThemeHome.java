@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,10 +41,8 @@ import fr.paris.lutece.util.ReferenceList;
 import java.util.Collection;
 import java.util.Locale;
 
-
 /**
- * This class provides instances management methods (create, find, ...)
- * for Theme objects
+ * This class provides instances management methods (create, find, ...) for Theme objects
  */
 public final class ThemeHome extends AbstractSubjectHome
 {
@@ -59,7 +57,7 @@ public final class ThemeHome extends AbstractSubjectHome
     /**
      * Constructor
      */
-    public ThemeHome(  )
+    public ThemeHome( )
     {
         if ( _singleton == null )
         {
@@ -72,11 +70,11 @@ public final class ThemeHome extends AbstractSubjectHome
      *
      * @return the ThemeHome instance
      */
-    public static ThemeHome getInstance(  )
+    public static ThemeHome getInstance( )
     {
         if ( _singleton == null )
         {
-            _singleton = new ThemeHome(  );
+            _singleton = new ThemeHome( );
         }
 
         return _singleton;
@@ -88,17 +86,18 @@ public final class ThemeHome extends AbstractSubjectHome
     /**
      * Returns Theme list
      *
-     * @param plugin The current plugin using this method
+     * @param plugin
+     *            The current plugin using this method
      * @return the {@link ReferenceList} of the Theme of the database in form of {@link ReferenceList}
      */
     public static ReferenceList findAllReferenceList( Plugin plugin )
     {
-        ReferenceList list = new ReferenceList(  );
+        ReferenceList list = new ReferenceList( );
 
-        for ( AbstractSubject abstractSubject : getInstance(  ).findAll( plugin ) )
+        for ( AbstractSubject abstractSubject : getInstance( ).findAll( plugin ) )
         {
             Theme theme = (Theme) abstractSubject;
-            list.addItem( theme.getId(  ), theme.getText(  ) );
+            list.addItem( theme.getId( ), theme.getText( ) );
         }
 
         return list;
@@ -106,8 +105,11 @@ public final class ThemeHome extends AbstractSubjectHome
 
     /**
      * Returns Question list for Theme
-     * @param plugin The current plugin using this method
-     * @param nIdTheme The Theme ID
+     * 
+     * @param plugin
+     *            The current plugin using this method
+     * @param nIdTheme
+     *            The Theme ID
      * @return the {@link Collection} of the {@link VisitorQuestion} of Theme
      */
     public static Collection<VisitorQuestion> findQuestion( int nIdTheme, Plugin plugin )
@@ -117,12 +119,14 @@ public final class ThemeHome extends AbstractSubjectHome
 
     /**
      * Create the virtual root {@link Theme} to initialize the tree
-     * @param locale The locale
+     * 
+     * @param locale
+     *            The locale
      * @return The virtual root {@link Theme}
      */
     public static Theme getVirtualRootTheme( Locale locale )
     {
-        Theme rootTheme = new Theme(  );
+        Theme rootTheme = new Theme( );
         rootTheme.setId( ROOT_THEME_ID );
         rootTheme.setText( I18nService.getLocalizedString( ROOT_THEME_NAME, locale ) );
         rootTheme.setIdParent( ROOT_THEME_ID );
@@ -132,9 +136,10 @@ public final class ThemeHome extends AbstractSubjectHome
 
     /**
      * Return the used DAO
+     * 
      * @return the used DAO
      */
-    public IAbstractSubjectDAO getDAO(  )
+    public IAbstractSubjectDAO getDAO( )
     {
         return _dao;
     }

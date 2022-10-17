@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,16 +37,15 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-
 
 /**
  * This class provides Data Access methods for Faq objects
  */
 public final class FaqDAO implements IFaqDAO
 {
-    private static final String SQL_QUERY_NEW_PK = " SELECT max( id_faq ) FROM helpdesk_faq";
     private static final String SQL_QUERY_SELECT = " SELECT id_faq, name, description, role_key, workgroup_key FROM helpdesk_faq WHERE id_faq = ?";
     private static final String SQL_QUERY_SELECT_BY_SUBJECT = " SELECT hlfs.id_faq, hf.role_key FROM helpdesk_ln_faq_subject hlfs, helpdesk_faq hf WHERE hlfs.id_subject = ? AND hlfs.id_faq=hf.id_faq";
     private static final String SQL_QUERY_INSERT = " INSERT INTO helpdesk_faq ( id_faq, name, description, role_key, workgroup_key ) VALUES ( ?, ?, ?, ?, ? )";
@@ -60,91 +59,68 @@ public final class FaqDAO implements IFaqDAO
     private static final String SQL_QUERY_SELECT_AUTHORIZED_ORDER_BY = " ORDER BY name ";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
-
-    /**
-     * Calculate a new primary key to add a new Faq
-     *
-     * @param plugin The Plugin using this data access service
-     * @return The new key.
-     */
-    public int newPrimaryKey( Plugin plugin )
-    {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
-        {
-        	daoUtil.executeQuery(  );
-
-            int nKey;
-
-            if ( !daoUtil.next(  ) )
-            {
-                // if the table is empty
-                nKey = 1;
-            }
-
-            nKey = daoUtil.getInt( 1 ) + 1;
-
-            return nKey;
-        }
-    }
+    // Access methods to data
 
     /**
      * Insert a new record in the table.
      *
-     * @param faq The Instance of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param faq
+     *            The Instance of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public synchronized void insert( Faq faq, Plugin plugin )
     {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
-        	faq.setId( newPrimaryKey( plugin ) );
+            daoUtil.setString( 2, faq.getName( ) );
+            daoUtil.setString( 3, faq.getDescription( ) );
+            daoUtil.setString( 4, faq.getRoleKey( ) );
+            daoUtil.setString( 5, faq.getWorkgroup( ) );
 
-            daoUtil.setInt( 1, faq.getId(  ) );
-            daoUtil.setString( 2, faq.getName(  ) );
-            daoUtil.setString( 3, faq.getDescription(  ) );
-            daoUtil.setString( 4, faq.getRoleKey(  ) );
-            daoUtil.setString( 5, faq.getWorkgroup(  ) );
-
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * Delete a record from the table
      *
-     * @param nIdFaq The indentifier of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param nIdFaq
+     *            The indentifier of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public void delete( int nIdFaq, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.setInt( 1, nIdFaq );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * load the data of Faq from the table
      *
-     * @param nIdFaq The indentifier of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param nIdFaq
+     *            The indentifier of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      * @return The Instance of the object Faq
      */
     public Faq load( int nIdFaq, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdFaq );
-            daoUtil.executeQuery(  );
+            daoUtil.setInt( 1, nIdFaq );
+            daoUtil.executeQuery( );
 
             Faq faq = null;
 
-            if ( daoUtil.next(  ) )
+            if ( daoUtil.next( ) )
             {
-                faq = new Faq(  );
+                faq = new Faq( );
                 faq.setId( daoUtil.getInt( 1 ) );
                 faq.setName( daoUtil.getString( 2 ) );
                 faq.setDescription( daoUtil.getString( 3 ) );
@@ -152,44 +128,48 @@ public final class FaqDAO implements IFaqDAO
                 faq.setWorkgroup( daoUtil.getString( 5 ) );
             }
             return faq;
-        }        
+        }
     }
 
     /**
      * Update the record in the table
      *
-     * @param faq The instance of the Faq to update
-     * @param plugin The Plugin using this data access service
+     * @param faq
+     *            The instance of the Faq to update
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public void store( Faq faq, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
-        	daoUtil.setString( 1, faq.getName(  ) );
-            daoUtil.setString( 2, faq.getDescription(  ) );
-            daoUtil.setString( 3, faq.getRoleKey(  ) );
-            daoUtil.setString( 4, faq.getWorkgroup(  ) );
-            daoUtil.setInt( 5, faq.getId(  ) );
+            daoUtil.setString( 1, faq.getName( ) );
+            daoUtil.setString( 2, faq.getDescription( ) );
+            daoUtil.setString( 3, faq.getRoleKey( ) );
+            daoUtil.setString( 4, faq.getWorkgroup( ) );
+            daoUtil.setInt( 5, faq.getId( ) );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
     public Collection<Faq> findAll( Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-        	Collection<Faq> list = new ArrayList<>(  );
-        	daoUtil.executeQuery(  );
+            Collection<Faq> list = new ArrayList<>( );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
-                Faq faq = new Faq(  );
+                Faq faq = new Faq( );
                 faq.setId( daoUtil.getInt( 1 ) );
                 faq.setName( daoUtil.getString( 2 ) );
                 faq.setDescription( daoUtil.getString( 3 ) );
@@ -198,62 +178,74 @@ public final class FaqDAO implements IFaqDAO
                 list.add( faq );
             }
             return list;
-        }        
+        }
     }
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A {@link ReferenceList}
      */
     public ReferenceList findReferenceList( Plugin plugin )
     {
-    	try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
-    	{
-            ReferenceList list = new ReferenceList(  );
-            daoUtil.executeQuery(  );
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
+        {
+            ReferenceList list = new ReferenceList( );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
                 list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
             }
 
             return list;
-    	}
+        }
     }
 
     /**
      * Finds all authorized objects of this type specified by roleKey (front office)
-     * @param plugin The Plugin using this data access service
-     * @param arrayRoleKey The role key array
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
+     * @param arrayRoleKey
+     *            The role key array
      * @return A collection of objects
      */
-    public Collection<Faq> findAuthorizedFaq( String[] arrayRoleKey, Plugin plugin )
+    public Collection<Faq> findAuthorizedFaq( String [ ] arrayRoleKey, Plugin plugin )
     {
         return findByKey( arrayRoleKey, false, plugin );
     }
 
     /**
      * Finds all objects of this type
-     * @param strWorkgroupKey The workgroup key
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param strWorkgroupKey
+     *            The workgroup key
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
-    public Collection<Faq> findByWorkgroup( String[] strWorkgroupKey, Plugin plugin )
+    public Collection<Faq> findByWorkgroup( String [ ] strWorkgroupKey, Plugin plugin )
     {
         return findByKey( strWorkgroupKey, true, plugin );
     }
 
     /**
      * Finds all objects for a specified key
-     * @param arrayKeys The key to filter
-     * @param bAdminWorkgroup true = filter by workgroup, false = filter by role key
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param arrayKeys
+     *            The key to filter
+     * @param bAdminWorkgroup
+     *            true = filter by workgroup, false = filter by role key
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
-    private Collection<Faq> findByKey( String[] arrayKeys, boolean bAdminWorkgroup, Plugin plugin )
+    private Collection<Faq> findByKey( String [ ] arrayKeys, boolean bAdminWorkgroup, Plugin plugin )
     {
-        Collection<Faq> list = new ArrayList<>(  );
+        Collection<Faq> list = new ArrayList<>( );
         StringBuilder sB = new StringBuilder( );
         sB.append( SQL_QUERY_SELECT_AUTHORIZED_SELECT );
 
@@ -285,18 +277,18 @@ public final class FaqDAO implements IFaqDAO
 
         try ( DAOUtil daoUtil = new DAOUtil( sB.toString( ), plugin ) )
         {
-        	i = 1;
+            i = 1;
 
             for ( String strKey : arrayKeys )
             {
                 daoUtil.setString( i++, strKey );
             }
 
-            daoUtil.executeQuery(  );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
-                Faq faq = new Faq(  );
+                Faq faq = new Faq( );
                 faq.setId( daoUtil.getInt( 1 ) );
                 faq.setName( daoUtil.getString( 2 ) );
                 faq.setDescription( daoUtil.getString( 3 ) );
@@ -310,19 +302,22 @@ public final class FaqDAO implements IFaqDAO
 
     /**
      * Find a faq containing the subject
-     * @param nSubjectId subject id
-     * @param plugin the plugin
+     * 
+     * @param nSubjectId
+     *            subject id
+     * @param plugin
+     *            the plugin
      * @return the faq
      */
     public Faq findBySubjectId( int nSubjectId, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_SUBJECT, plugin ) )
         {
-            Faq faq = new Faq(  );
-        	daoUtil.setInt( 1, nSubjectId );
-            daoUtil.executeQuery(  );
+            Faq faq = new Faq( );
+            daoUtil.setInt( 1, nSubjectId );
+            daoUtil.executeQuery( );
 
-            if ( daoUtil.next(  ) )
+            if ( daoUtil.next( ) )
             {
                 faq.setId( daoUtil.getInt( 1 ) );
                 faq.setRoleKey( daoUtil.getString( 2 ) );
@@ -333,17 +328,19 @@ public final class FaqDAO implements IFaqDAO
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
     public ReferenceList findListFaq( Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-            ReferenceList list = new ReferenceList(  );
-        	daoUtil.executeQuery(  );
+            ReferenceList list = new ReferenceList( );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
                 list.addItem( daoUtil.getInt( 1 ), daoUtil.getString( 2 ) );
             }

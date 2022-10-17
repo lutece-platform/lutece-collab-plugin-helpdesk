@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -45,10 +45,8 @@ import fr.paris.lutece.util.ReferenceList;
 
 import java.util.Collection;
 
-
 /**
- * This class provides instances management methods (create, find, ...)
- * for Subject objects
+ * This class provides instances management methods (create, find, ...) for Subject objects
  */
 public final class FaqHome
 {
@@ -57,8 +55,11 @@ public final class FaqHome
 
     /**
      * Insert a new record in the table.
-     * @param faq The Instance of the object Faq
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param faq
+     *            The Instance of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public static void insert( Faq faq, Plugin plugin )
     {
@@ -68,8 +69,10 @@ public final class FaqHome
     /**
      * Delete a record from the table
      *
-     * @param nId The indentifier of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param nId
+     *            The indentifier of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public static void delete( int nId, Plugin plugin )
     {
@@ -79,8 +82,10 @@ public final class FaqHome
     /**
      * load the data of Faq from the table
      *
-     * @param nId The indentifier of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param nId
+     *            The indentifier of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      * @return The Instance of the object Faq
      */
     public static Faq load( int nId, Plugin plugin )
@@ -90,16 +95,20 @@ public final class FaqHome
 
     /**
      * Recursive method for reindexing all sub-subject
-     * @param subject the subject to reindex
-     * @param plugin the plugin
+     * 
+     * @param subject
+     *            the subject to reindex
+     * @param plugin
+     *            the plugin
      */
     private static void reindexSubject( Subject subject, Plugin plugin )
     {
-        IndexationService.addIndexerAction( Integer.toString( subject.getId(  ) ),
-            AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
-        
-        HelpdeskIndexerUtils.addIndexerAction( Integer.toString( subject.getId(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
-        
+        IndexationService.addIndexerAction( Integer.toString( subject.getId( ) ), AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ),
+                IndexerAction.TASK_MODIFY );
+
+        HelpdeskIndexerUtils.addIndexerAction( Integer.toString( subject.getId( ) ), IndexerAction.TASK_MODIFY,
+                HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
+
         for ( Subject subjectChild : subject.getChilds( plugin ) )
         {
             reindexSubject( subjectChild, plugin );
@@ -108,25 +117,28 @@ public final class FaqHome
 
     /**
      * Update the record in the table
-     * @param faq The instance of the Faq to update
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param faq
+     *            The instance of the Faq to update
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public static void store( Faq faq, Plugin plugin )
     {
-        Faq oldFaq = load( faq.getId(  ), plugin );
+        Faq oldFaq = load( faq.getId( ), plugin );
 
         if ( oldFaq != null )
         {
-            if ( !oldFaq.getRoleKey(  ).equals( faq.getRoleKey(  ) ) )
+            if ( !oldFaq.getRoleKey( ).equals( faq.getRoleKey( ) ) )
             {
                 for ( Subject subject : faq.getSubjectsList( plugin ) )
                 {
-                    IndexationService.addIndexerAction( Integer.toString( subject.getId(  ) ),
-                        AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ),
-                        IndexerAction.TASK_MODIFY );
-                    
-                    HelpdeskIndexerUtils.addIndexerAction( Integer.toString( subject.getId(  ) ), IndexerAction.TASK_MODIFY, HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
-                    
+                    IndexationService.addIndexerAction( Integer.toString( subject.getId( ) ),
+                            AppPropertiesService.getProperty( HelpdeskIndexer.PROPERTY_INDEXER_NAME ), IndexerAction.TASK_MODIFY );
+
+                    HelpdeskIndexerUtils.addIndexerAction( Integer.toString( subject.getId( ) ), IndexerAction.TASK_MODIFY,
+                            HelpdeskIndexerUtils.CONSTANT_SUBJECT_TYPE_RESOURCE );
+
                     for ( Subject subjectChild : subject.getChilds( plugin ) )
                     {
                         reindexSubject( subjectChild, plugin );
@@ -140,7 +152,9 @@ public final class FaqHome
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
     public static Collection<Faq> findAll( Plugin plugin )
@@ -150,7 +164,9 @@ public final class FaqHome
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A {@link ReferenceList}
      */
     public static ReferenceList findReferenceList( Plugin plugin )
@@ -159,14 +175,15 @@ public final class FaqHome
     }
 
     /**
-     * Finds all authorized objects of this type specified by roleKey. Faq with
-     * role "none" will be ignored.
+     * Finds all authorized objects of this type specified by roleKey. Faq with role "none" will be ignored.
      * 
-     * @param arrayRoleKey The role key array
-     * @param plugin The Plugin using this data access service
+     * @param arrayRoleKey
+     *            The role key array
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
-    public static Collection<Faq> findAuthorizedFaqWhitoutNoneRole( String[] arrayRoleKey, Plugin plugin )
+    public static Collection<Faq> findAuthorizedFaqWhitoutNoneRole( String [ ] arrayRoleKey, Plugin plugin )
     {
         return _dao.findAuthorizedFaq( arrayRoleKey, plugin );
     }
@@ -174,27 +191,31 @@ public final class FaqHome
     /**
      * Finds all authorized objects of this type specified by roleKey
      * 
-     * @param arrayRoleKey The role key array
-     * @param plugin The Plugin using this data access service
+     * @param arrayRoleKey
+     *            The role key array
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
-    public static Collection<Faq> findAuthorizedFaq( String[] arrayRoleKey, Plugin plugin )
+    public static Collection<Faq> findAuthorizedFaq( String [ ] arrayRoleKey, Plugin plugin )
     {
-        String[] arrayRoleKeyLocal = arrayRoleKey;
+        String [ ] arrayRoleKeyLocal = arrayRoleKey;
 
         if ( ( arrayRoleKeyLocal == null ) || ( arrayRoleKeyLocal.length == 0 ) )
         {
-            arrayRoleKeyLocal = new String[] { Faq.ROLE_NONE };
+            arrayRoleKeyLocal = new String [ ] {
+                    Faq.ROLE_NONE
+            };
         }
         else
         {
-        	//add the role "none"
-        	arrayRoleKeyLocal = new String[ arrayRoleKey.length + 1 ];
-        	for(int i = 0; i < arrayRoleKey.length; i++)
-        	{
-        		arrayRoleKeyLocal[i] = arrayRoleKey[i];
-        	}
-        	arrayRoleKeyLocal[arrayRoleKey.length] = Faq.ROLE_NONE;
+            // add the role "none"
+            arrayRoleKeyLocal = new String [ arrayRoleKey.length + 1];
+            for ( int i = 0; i < arrayRoleKey.length; i++ )
+            {
+                arrayRoleKeyLocal [i] = arrayRoleKey [i];
+            }
+            arrayRoleKeyLocal [arrayRoleKey.length] = Faq.ROLE_NONE;
         }
 
         return _dao.findAuthorizedFaq( arrayRoleKeyLocal, plugin );
@@ -202,17 +223,22 @@ public final class FaqHome
 
     /**
      * Finds all objects of this type
-     * @param strWorkgroupKey The workgroup key
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param strWorkgroupKey
+     *            The workgroup key
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
-    public static Collection<Faq> findByWorkgroup( String[] strWorkgroupKey, Plugin plugin )
+    public static Collection<Faq> findByWorkgroup( String [ ] strWorkgroupKey, Plugin plugin )
     {
-        String[] strWorkgroupKeyLocal = strWorkgroupKey;
+        String [ ] strWorkgroupKeyLocal = strWorkgroupKey;
 
         if ( ( strWorkgroupKeyLocal == null ) || ( strWorkgroupKeyLocal.length == 0 ) )
         {
-            strWorkgroupKeyLocal = new String[] { AdminWorkgroupService.ALL_GROUPS };
+            strWorkgroupKeyLocal = new String [ ] {
+                    AdminWorkgroupService.ALL_GROUPS
+            };
         }
 
         return _dao.findByWorkgroup( strWorkgroupKeyLocal, plugin );
@@ -220,8 +246,11 @@ public final class FaqHome
 
     /**
      * Find a faq containing the subject
-     * @param nSubjectId subject id
-     * @param plugin the plugin
+     * 
+     * @param nSubjectId
+     *            subject id
+     * @param plugin
+     *            the plugin
      * @return the faq
      */
     public static Faq findBySubjectId( int nSubjectId, Plugin plugin )
@@ -231,7 +260,9 @@ public final class FaqHome
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
     public static ReferenceList findListFaq( Plugin plugin )

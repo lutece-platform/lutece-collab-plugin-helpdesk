@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * Interface for Helpdesk search engine
  */
@@ -49,15 +48,23 @@ public interface HelpdeskSearchEngine
 {
     /**
      * Return search results
-     * @param nIdFaq The id Faq
-     * @param strQuery The search query
-     * @param dateBegin The date begin
-     * @param dateEnd The date end
-     * @param subject The {@link Subject}
-     * @param bSearchSubSubjects true if the query must include sub-subjects
-     * @param request The {@link HttpServletRequest}
+     * 
+     * @param nIdFaq
+     *            The id Faq
+     * @param strQuery
+     *            The search query
+     * @param dateBegin
+     *            The date begin
+     * @param dateEnd
+     *            The date end
+     * @param subject
+     *            The {@link Subject}
+     * @param bSearchSubSubjects
+     *            true if the query must include sub-subjects
+     * @param request
+     *            The {@link HttpServletRequest}
      * @return Results as a collection of SearchResult
      */
-    List<SearchResult> getSearchResults( int nIdFaq, String strQuery, Date dateBegin, Date dateEnd, Subject subject,
-        boolean bSearchSubSubjects, HttpServletRequest request );
+    List<SearchResult> getSearchResults( int nIdFaq, String strQuery, Date dateBegin, Date dateEnd, Subject subject, boolean bSearchSubSubjects,
+            HttpServletRequest request );
 }

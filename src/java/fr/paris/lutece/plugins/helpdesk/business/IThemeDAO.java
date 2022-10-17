@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.Collection;
 
-
 /**
  *
  * Interface for Theme DAO
@@ -46,8 +45,11 @@ public interface IThemeDAO extends IAbstractSubjectDAO
 {
     /**
      * Returns all questions on a Theme
-     * @param nIdTheme The identifier of the Theme
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdTheme
+     *            The identifier of the Theme
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of questions
      */
     Collection<VisitorQuestion> findQuestions( int nIdTheme, Plugin plugin );

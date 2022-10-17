@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,7 +38,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 import java.util.Collection;
 import java.util.List;
 
-
 /**
  * This class represents a Subject object.
  */
@@ -49,22 +48,25 @@ public class Subject extends AbstractSubject
     /**
      * Creates a new Subject object.
      */
-    public Subject(  )
+    public Subject( )
     {
     }
 
     /**
      * Returns the questions associated with the subject
+     * 
      * @return A List of QuestionAnswer objects.
      */
-    public List getQuestions(  )
+    public List getQuestions( )
     {
         return _questions;
     }
 
     /**
      * Assigns the specified set of questions to the subject
-     * @param questions The new List
+     * 
+     * @param questions
+     *            The new List
      */
     public void setQuestions( List questions )
     {
@@ -73,41 +75,47 @@ public class Subject extends AbstractSubject
 
     /**
      * Get the parent subject
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return The parent Subject
      */
     public Subject getParent( Plugin plugin )
     {
-        return (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( getIdParent(  ), plugin );
+        return (Subject) SubjectHome.getInstance( ).findByPrimaryKey( getIdParent( ), plugin );
     }
 
     /**
      * Get the child subjects
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return A {@link Collection} of child {@link Subject}
      */
     public Collection<Subject> getChilds( Plugin plugin )
     {
-        return (Collection<Subject>) SubjectHome.getInstance(  ).findByIdParent( getId(  ), plugin );
+        return (Collection<Subject>) SubjectHome.getInstance( ).findByIdParent( getId( ), plugin );
     }
-    
+
     /**
      * Gets the owning Faq
-     * @param plugin The plugin
+     * 
+     * @param plugin
+     *            The plugin
      * @return The owning Faq
      */
     public Faq getFaq( Plugin plugin )
     {
-    	if( getIdParent(  ) == 0 )
-    	{
-    		return FaqHome.load( FaqHome.findBySubjectId( getId(  ), plugin ).getId(  ), plugin );
-    	}
-    	else
-    	{
-    		Subject parent = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( getIdParent(  ), plugin );
-    		return parent.getFaq( plugin );
-    	}
-    	
+        if ( getIdParent( ) == 0 )
+        {
+            return FaqHome.load( FaqHome.findBySubjectId( getId( ), plugin ).getId( ), plugin );
+        }
+        else
+        {
+            Subject parent = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( getIdParent( ), plugin );
+            return parent.getFaq( plugin );
+        }
+
     }
-    
+
 }

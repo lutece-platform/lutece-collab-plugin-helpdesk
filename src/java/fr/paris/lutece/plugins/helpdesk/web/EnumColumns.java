@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,13 +33,13 @@
  */
 package fr.paris.lutece.plugins.helpdesk.web;
 
-
 /**
  * Specify the list of mandatory columns in CSV file
  *
  */
 public enum EnumColumns
-{SUBJECT_ID( "subject_id" ),
+{
+    SUBJECT_ID( "subject_id" ),
     QUESTION( "question" ),
     ANSWER( "answer" ),
     ORDER_ID( "id_order" );
@@ -49,7 +49,8 @@ public enum EnumColumns
     /**
      * Constructor
      *
-     * @param strName The column name
+     * @param strName
+     *            The column name
      */
     EnumColumns( String strName )
     {
@@ -58,23 +59,26 @@ public enum EnumColumns
 
     /**
      * Get the Column name
+     * 
      * @return The column name
      */
-    public String getName(  )
+    public String getName( )
     {
         return this._strName;
     }
 
     /**
      * Get the {@link EnumColumns} by name
-     * @param strName The column name
+     * 
+     * @param strName
+     *            The column name
      * @return The {@link EnumColumns}
      */
     public static EnumColumns getByName( String strName )
     {
-        for ( EnumColumns e : EnumColumns.values(  ) )
+        for ( EnumColumns e : EnumColumns.values( ) )
         {
-            if ( e.getName(  ).equals( strName ) )
+            if ( e.getName( ).equals( strName ) )
             {
                 return e;
             }

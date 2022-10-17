@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -33,7 +33,6 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
-
 /**
  * This interface provides the signature of methods to implement by classes which implements it
  */
@@ -44,5 +43,5 @@ public interface AbstractSubjectHomeInterface
      *
      * @return the instance of the {@link AbstractSubject} DAO
      */
-    IAbstractSubjectDAO getDAO(  );
+    IAbstractSubjectDAO getDAO( );
 }

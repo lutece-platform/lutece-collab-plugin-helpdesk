@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,8 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.List;
 
-
 /**
- * This class provides instances management methods (create, find, ...)
- * for Subject objects
+ * This class provides instances management methods (create, find, ...) for Subject objects
  */
 public final class SubjectHome extends AbstractSubjectHome
 {
@@ -54,7 +52,7 @@ public final class SubjectHome extends AbstractSubjectHome
     /**
      * Constructor
      */
-    public SubjectHome(  )
+    public SubjectHome( )
     {
         if ( _singleton == null )
         {
@@ -67,11 +65,11 @@ public final class SubjectHome extends AbstractSubjectHome
      *
      * @return the SubjectHome instance
      */
-    public static SubjectHome getInstance(  )
+    public static SubjectHome getInstance( )
     {
         if ( _singleton == null )
         {
-            _singleton = new SubjectHome(  );
+            _singleton = new SubjectHome( );
         }
 
         return _singleton;
@@ -79,8 +77,11 @@ public final class SubjectHome extends AbstractSubjectHome
 
     /**
      * Returns Question list for Subject
-     * @param plugin The current plugin using this method
-     * @param nIdSubject The Subject ID
+     * 
+     * @param plugin
+     *            The current plugin using this method
+     * @param nIdSubject
+     *            The Subject ID
      * @return the list of the Question of subject
      */
     public static List<QuestionAnswer> findQuestion( int nIdSubject, Plugin plugin )
@@ -90,8 +91,11 @@ public final class SubjectHome extends AbstractSubjectHome
 
     /**
      * return the count of all announce for Field
-     * @param plugin The current plugin using this method
-     * @param nIdSubject The subject ID
+     * 
+     * @param plugin
+     *            The current plugin using this method
+     * @param nIdSubject
+     *            The subject ID
      * @return count of announce for Field
      */
     public static int countQuestionSubject( int nIdSubject, Plugin plugin )
@@ -101,9 +105,10 @@ public final class SubjectHome extends AbstractSubjectHome
 
     /**
      * Return the used dao
+     * 
      * @return The used DAO
      */
-    public IAbstractSubjectDAO getDAO(  )
+    public IAbstractSubjectDAO getDAO( )
     {
         return _dao;
     }

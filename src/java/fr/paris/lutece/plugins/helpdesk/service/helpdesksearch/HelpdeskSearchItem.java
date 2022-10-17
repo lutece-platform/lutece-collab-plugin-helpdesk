@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.search.SearchItem;
 
 import org.apache.lucene.document.Document;
 
-
 /**
  * HelpdeskSearchItem
  */
@@ -52,7 +51,8 @@ public class HelpdeskSearchItem extends SearchItem
     /**
      * Constructor
      *
-     * @param document The Lucene {@link Document}
+     * @param document
+     *            The Lucene {@link Document}
      */
     public HelpdeskSearchItem( Document document )
     {
@@ -63,13 +63,14 @@ public class HelpdeskSearchItem extends SearchItem
     /**
      * @return the _strSubjectId
      */
-    public String getSubjectId(  )
+    public String getSubjectId( )
     {
         return _strSubjectId;
     }
 
     /**
-     * @param subjectId the _strSubjectId to set
+     * @param subjectId
+     *            the _strSubjectId to set
      */
     public void setSubjectId( String subjectId )
     {

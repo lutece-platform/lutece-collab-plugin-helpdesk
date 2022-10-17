@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.BytesRef;
 
-
 /**
  * LuceneSearchEngine
  */
@@ -85,24 +84,32 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
     /**
      * Return search results
-     * @param nIdFaq The id Faq
-     * @param strContent The search query
-     * @param dateBegin The date begin
-     * @param dateEnd The date end
-     * @param subject The {@link Subject}
-     * @param bSearchSubSubjects true if the query must include sub-subjects
-     * @param request The {@link HttpServletRequest}
+     * 
+     * @param nIdFaq
+     *            The id Faq
+     * @param strContent
+     *            The search query
+     * @param dateBegin
+     *            The date begin
+     * @param dateEnd
+     *            The date end
+     * @param subject
+     *            The {@link Subject}
+     * @param bSearchSubSubjects
+     *            true if the query must include sub-subjects
+     * @param request
+     *            The {@link HttpServletRequest}
      * @return Results as a collection of SearchResult
      */
-    public List<SearchResult> getSearchResults( int nIdFaq, String strContent, Date dateBegin, Date dateEnd,
-            Subject subject, boolean bSearchSubSubjects, HttpServletRequest request )
+    public List<SearchResult> getSearchResults( int nIdFaq, String strContent, Date dateBegin, Date dateEnd, Subject subject, boolean bSearchSubSubjects,
+            HttpServletRequest request )
     {
         ArrayList<SearchItem> listResults = new ArrayList<SearchItem>( );
         IndexSearcher searcher = null;
 
         Query filterRole = getFilterRoles( request );
 
-        try( Directory directory = IndexationService.getDirectoryIndex( ) ; IndexReader ir = DirectoryReader.open( directory ) ; )
+        try ( Directory directory = IndexationService.getDirectoryIndex( ) ; IndexReader ir = DirectoryReader.open( directory ) ; )
         {
             searcher = new IndexSearcher( ir );
 
@@ -110,7 +117,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             Collection<String> fields = new ArrayList<String>( );
             Collection<BooleanClause.Occur> flags = new ArrayList<BooleanClause.Occur>( );
 
-            //Faq Id
+            // Faq Id
             if ( nIdFaq != -1 )
             {
                 Query queryFaqId = new TermQuery( new Term( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ) ) );
@@ -119,7 +126,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
                 flags.add( BooleanClause.Occur.MUST );
             }
 
-            //Type (=helpdesk)
+            // Type (=helpdesk)
             PhraseQuery.Builder queryTypeBuilder = new PhraseQuery.Builder( );
             queryTypeBuilder.add( new Term( HelpdeskSearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME ) );
             PhraseQuery queryType = queryTypeBuilder.build( );
@@ -127,7 +134,7 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             fields.add( HelpdeskSearchItem.FIELD_TYPE );
             flags.add( BooleanClause.Occur.MUST );
 
-            //Content
+            // Content
             if ( ( strContent != null ) && !strContent.equals( EMPTY_STRING ) )
             {
                 Query queryContent = new TermQuery( new Term( HelpdeskSearchItem.FIELD_CONTENTS, strContent ) );
@@ -136,19 +143,18 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
                 flags.add( BooleanClause.Occur.MUST );
             }
 
-            //Dates
+            // Dates
             if ( ( dateBegin != null ) && ( dateEnd != null ) )
             {
                 BytesRef strDateBegin = new BytesRef( DateTools.dateToString( dateBegin, DateTools.Resolution.DAY ) );
                 BytesRef strDateEnd = new BytesRef( DateTools.dateToString( dateEnd, DateTools.Resolution.DAY ) );
-                Query queryDate = new TermRangeQuery( HelpdeskSearchItem.FIELD_DATE, strDateBegin, strDateEnd, true,
-                        true );
+                Query queryDate = new TermRangeQuery( HelpdeskSearchItem.FIELD_DATE, strDateBegin, strDateEnd, true, true );
                 queries.add( queryDate.toString( ) );
                 fields.add( HelpdeskSearchItem.FIELD_DATE );
                 flags.add( BooleanClause.Occur.MUST );
             }
 
-            //Subjects
+            // Subjects
             if ( ( bSearchSubSubjects ) && ( subject != null ) )
             {
                 Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
@@ -172,19 +178,16 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             {
                 if ( ( subject != null ) )
                 {
-                    Query querySubject = new TermQuery( new Term( HelpdeskSearchItem.FIELD_SUBJECT,
-                            String.valueOf( subject.getId( ) ) ) );
+                    Query querySubject = new TermQuery( new Term( HelpdeskSearchItem.FIELD_SUBJECT, String.valueOf( subject.getId( ) ) ) );
                     queries.add( querySubject.toString( ) );
                     fields.add( HelpdeskSearchItem.FIELD_SUBJECT );
                     flags.add( BooleanClause.Occur.MUST );
                 }
             }
 
-            Query queryMulti = MultiFieldQueryParser.parse(
-                    (String[]) queries.toArray( new String[queries.size( )] ),
-                    (String[]) fields.toArray( new String[fields.size( )] ),
-                    (BooleanClause.Occur[]) flags.toArray( new BooleanClause.Occur[flags.size( )] ),
-                    IndexationService.getAnalyser( ) );
+            Query queryMulti = MultiFieldQueryParser.parse( (String [ ]) queries.toArray( new String [ queries.size( )] ),
+                    (String [ ]) fields.toArray( new String [ fields.size( )] ),
+                    (BooleanClause.Occur [ ]) flags.toArray( new BooleanClause.Occur [ flags.size( )] ), IndexationService.getAnalyser( ) );
 
             BooleanQuery.Builder bQueryMultiBuilder = new BooleanQuery.Builder( );
             bQueryMultiBuilder.add( queryMulti, BooleanClause.Occur.MUST );
@@ -195,17 +198,17 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
             TopDocs topDocs = searcher.search( bQueryMultiBuilder.build( ), LuceneSearchEngine.MAX_RESPONSES );
 
-            ScoreDoc[] hits = topDocs.scoreDocs;
+            ScoreDoc [ ] hits = topDocs.scoreDocs;
 
             for ( int i = 0; i < hits.length; i++ )
             {
-                int docId = hits[i].doc;
+                int docId = hits [i].doc;
                 Document document = searcher.doc( docId );
                 SearchItem si = new SearchItem( document );
                 listResults.add( si );
             }
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
             AppLogService.error( e.getMessage( ), e );
         }
@@ -215,7 +218,9 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
     /**
      * Generate the Lutece role filter if necessary
-     * @param request The {@link HttpServletRequest}
+     * 
+     * @param request
+     *            The {@link HttpServletRequest}
      * @return The {@link Query} by Lutece Role
      */
     private Query getFilterRoles( HttpServletRequest request )
@@ -228,20 +233,20 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
         {
             user = SecurityService.getInstance( ).getRegisteredUser( request );
 
-            Query[] filtersRole = null;
+            Query [ ] filtersRole = null;
 
             if ( user != null )
             {
-                String[] userRoles = SecurityService.getInstance( ).getRolesByUser( user );
+                String [ ] userRoles = SecurityService.getInstance( ).getRolesByUser( user );
 
                 if ( userRoles != null )
                 {
-                    filtersRole = new Query[userRoles.length + 1];
+                    filtersRole = new Query [ userRoles.length + 1];
 
                     for ( int i = 0; i < userRoles.length; i++ )
                     {
-                        Query queryRole = new TermQuery( new Term( SearchItem.FIELD_ROLE, userRoles[i] ) );
-                        filtersRole[i] = queryRole;
+                        Query queryRole = new TermQuery( new Term( SearchItem.FIELD_ROLE, userRoles [i] ) );
+                        filtersRole [i] = queryRole;
                     }
                 }
                 else
@@ -251,17 +256,18 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             }
             else
             {
-                filtersRole = new Query[1];
+                filtersRole = new Query [ 1];
             }
 
             if ( !bFilterResult )
             {
                 Query queryRole = new TermQuery( new Term( SearchItem.FIELD_ROLE, Page.ROLE_NONE ) );
-                filtersRole[filtersRole.length - 1] = queryRole;
+                filtersRole [filtersRole.length - 1] = queryRole;
 
                 BooleanQuery.Builder bQueryBuilder = new BooleanQuery.Builder( );
-                for (Query queryFilterRole : filtersRole) {
-                    bQueryBuilder.add(queryFilterRole, BooleanClause.Occur.SHOULD );
+                for ( Query queryFilterRole : filtersRole )
+                {
+                    bQueryBuilder.add( queryFilterRole, BooleanClause.Occur.SHOULD );
                 }
                 filterRole = bQueryBuilder.build( );
             }
@@ -272,7 +278,9 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
     /**
      * Convert the SearchItem list on SearchResult list
-     * @param listSource The source list
+     * 
+     * @param listSource
+     *            The source list
      * @return The result list
      */
     private List<SearchResult> convertList( List<SearchItem> listSource )
@@ -288,10 +296,9 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             {
                 result.setDate( DateTools.stringToDate( item.getDate( ) ) );
             }
-            catch ( ParseException e )
+            catch( ParseException e )
             {
-                AppLogService.error( "Bad Date Format for indexed item \"" + item.getTitle( ) + "\" : "
-                        + e.getMessage( ) );
+                AppLogService.error( "Bad Date Format for indexed item \"" + item.getTitle( ) + "\" : " + e.getMessage( ) );
             }
 
             result.setUrl( item.getUrl( ) );
@@ -306,9 +313,13 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 
     /**
      * Generate the list of terms with the subjects and sub-subjects
-     * @param listTerms The list of terms
-     * @param subject The parent subject
-     * @param plugin The plugin
+     * 
+     * @param listTerms
+     *            The list of terms
+     * @param subject
+     *            The parent subject
+     * @param plugin
+     *            The plugin
      */
     private void getListSubjects( Collection<Term> listTerms, Subject subject, Plugin plugin )
     {
