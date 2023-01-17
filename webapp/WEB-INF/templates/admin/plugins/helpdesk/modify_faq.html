@@ -1,40 +1,28 @@
 <#include "macro_helpdesk.html" />
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<fieldset>
-	<legend>#i18n{helpdesk.modify_faq.adminTitle}</legend>
-	<form class="form-horizontal" method="post" name="modify_faq" action="jsp/admin/plugins/helpdesk/DoModifyFaq.jsp">
-	<input type="hidden" value="${faq.id}" name="faq_id" />
-    <div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="name">#i18n{helpdesk.modify_faq.LabelName} *</label>
-		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<input type="text" class="form-control input-sm" name="name" id="name" tabindex="1" value="${faq.name}" maxlength="50"/>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="description">#i18n{helpdesk.modify_faq.LabelDescription} *</label>
-		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<input type="text" class="form-control input-sm" name="description" id="description"  value="${faq.description}" tabindex="2" maxlength="50"/>
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="role_key">#i18n{helpdesk.modify_faq.LabelRoleKey}</label>
-		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<@comboWithParams name="role_key" default_value="${faq.roleKey}"  items=role_key_list additionalParameters="tabindex=\"3\" class='form-control input-sm'" />
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="workgroup_key">#i18n{helpdesk.modify_faq.LabelWorkgroupKey}</label>
-		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<@comboWithParams name="workgroup_key" default_value="${faq.workgroup}"  items=workgroup_key_list additionalParameters="tabindex=\"4\" class='form-control input-sm'" />
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
-		<@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='check' size='sm' type='submit'/>
-		</div>
-	</div>
-	</form>
-	</fieldset>
-	</div>
-</div>
+<@row>
+	<@columns offsetMd=2 md=6>
+        <@box color='primary' >
+			<@boxHeader title='#i18n{helpdesk.modify_faq.adminTitle}' skipHeader=true />
+            <@boxBody>
+				<@tform name="modify_faq" action="jsp/admin/plugins/helpdesk/DoModifyFaq.jsp">
+					<@input type='hidden' value='${faq.id}' name='faq_id' />
+					<@formGroup labelFor='name' labelKey='#i18n{helpdesk.modify_faq.LabelName}' mandatory=true >
+						<@input type='text' id='name' name='name' value=faq.name maxlength=50 />
+					</@formGroup>
+					<@formGroup labelFor='description' labelKey='#i18n{helpdesk.modify_faq.LabelDescription}' mandatory=true >
+						<@input type='text' id='description' name='description' value=faq.description maxlength=50 />
+					</@formGroup>
+					<@formGroup labelFor='role_key' labelKey='#i18n{helpdesk.modify_faq.LabelRoleKey}'>
+						<@select id='role_key' name='role_key' default_value=roleKey items=role_key_list />
+					</@formGroup>
+					<@formGroup labelFor='workgroup_key' labelKey='#i18n{helpdesk.modify_faq.LabelRoleKey}'>
+						<@select id='workgroup_key' name='workgroup_key' default_value=workgroup items=workgroup_key_list />
+					</@formGroup>
+					<@formField>
+						<@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='check' size='sm' type='submit' />
+					</@formField>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

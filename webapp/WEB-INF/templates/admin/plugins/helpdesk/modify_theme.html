@@ -1,44 +1,37 @@
 <#include "macro_helpdesk.html" />
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<fieldset>        
-	<legend>#i18n{helpdesk.modify_theme.adminTitle}</legend>
-		<form class="form-horizontal" name="modify_theme" action="jsp/admin/plugins/helpdesk/DoModifyTheme.jsp" method="post">
-		<input type="hidden" value="${faq_id}" name="faq_id" />
-		<input type="hidden" name="theme_id" value="${theme.id}" />
-		<div class="form-group">
-			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="theme"> #i18n{helpdesk.modify_theme.LabelTheme} *</label>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<input type="text" name="theme" id="theme" value="${theme.text!}" class="form-control input-sm" maxlength="50" />
-			</div>
-		</div>
-		<div class="form-group">
-			<#if mailing_list?has_content>
-			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="mailinglists">#i18n{helpdesk.modify_theme.LabelMailingList} *</label>
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<@comboWithParams name="mailinglists" default_value="${theme.idMailingList}" items=mailing_list additionalParameters="class='form-control input-sm'" />
-				</div>
-			<#else>
-				<div class="label label-warning">#i18n{helpdesk.create_theme.messageNotificationListNotExist}</div>
-			</#if>
-		</div>
-		<div class="form-group">
-			<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="parent_id">#i18n{helpdesk.modify_theme.LabelParent} *</label> 
-			<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<select id="parent_id" name="parent_id" class="form-control input-sm">
-					<option <#if theme.idParent==0>selected="selected"</#if> value="0">
-						#i18n{helpdesk.commonList.rootAbstractSubjectName}
-					</option>
-					<@themesList items=helpdesk_theme_list default_value="${theme.idParent}" exclude_value="${theme.id}" depth=0 />
-				</select>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
-				<@button title='#i18n{helpdesk.modify_theme.buttonLabelModify}' buttonIcon='check' size='sm' type='submit'/>
-			</div>
-		</div>
-		</form> 
-	</fieldset>
-	</div>
-</div>
+<@row>
+	<@columns offsetMd=1 md=8>
+        <@box color='primary' >
+			<@boxHeader title='#i18n{helpdesk.modify_theme.boxTitle}' skipHeader=true />
+            <@boxBody>
+				<@tform name="do_modify_theme" action="jsp/admin/plugins/helpdesk/DoModifyTheme.jsp">
+					<@input type="hidden" value="${faq_id}" name="faq_id" />
+					<@input type="hidden" value="${theme.id}" name="theme_id" />
+					<@formGroup labelFor='theme' labelKey='#i18n{helpdesk.modify_theme.LabelTheme}' mandatory=true >
+						<@input type='text' id='theme' name='theme' value='${theme.text!}' maxlength=50 />
+					</@formGroup>
+					<@formGroup labelFor='mailinglists' labelKey='#i18n{helpdesk.modify_theme.LabelMailingList}' mandatory=true >
+						<#if mailing_list?has_content>
+							<@select id='mailinglists' name='mailinglists' default_value=theme.idMailingList?string items=mailing_list />
+						<#else>
+							<@formHelp>#i18n{helpdesk.modify_theme.messageNotificationListNotExist}</@formHelp>
+						</#if>
+					</@formGroup>
+					<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.create_subject.LabelParent}' mandatory=true >
+						<@select id='parent_id' name='parent_id' default_value='' items=''>
+							<#assign isSelected><#if theme.idParent==0>true<#else>false</#if></#assign>
+							<@option value='0' label='#i18n{helpdesk.commonList.rootAbstractSubjectName}' selected=isSelected?boolean />
+							<@themesList items=helpdesk_theme_list default_value='${theme.idParent}' exclude_value='${theme.id}' depth=0 />
+						</@select>
+					</@formGroup>
+					<@formField>
+						<@columns offsetSm=3>
+							<@button title='#i18n{helpdesk.modify_theme.buttonLabelModify}' buttonIcon='check' size='sm' type='submit' />
+							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='undo' size='sm' />
+						</@columns>
+					</@formField>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

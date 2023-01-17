@@ -1,31 +1,26 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<fieldset>
-    <legend>#i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}</legend>
-	<form class="form-horizontal" method="post" enctype="multipart/form-data" action="jsp/admin/plugins/helpdesk/DoImportQuestionAnswerList.jsp">
-	<input type="hidden" value="${faq.id}" name="faq_id" />
-	<div class="form-group">
-	    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<label for="csv_file">#i18n{helpdesk.import_question_answer_list.importLabel} * </label>
-			<input type="file" name="csv_file" id="csv_file" />
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<div class="checkbox">
-				<label for="delete_list">
-					<input type="checkbox" name="delete_list" id="delete_list" checked="checked">
-					#i18n{helpdesk.import_question_answer_list.deleteListLabel}
-				</label>
-			</div>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<@button title='#i18n{helpdesk.import_question_answer_list.buttonLabelImport}' buttonIcon='upload' type='submit' size='sm'/>
-		</div>
-	</div>
-	</form>
-	</fieldset>
-	</div>
-</div>
+<@row>
+	<@columns>
+        <@box color='primary'>
+			<@boxHeader title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' />
+            <@boxBody>
+				<@tform action='jsp/admin/plugins/helpdesk/DoImportQuestionAnswerList.jsp' enctype='multipart/form-data'>
+					<@input type="hidden" value="${faq.id!}" name="faq_id" />
+					<@formGroup labelFor='csv_file' labelKey='#i18n{helpdesk.import_question_answer_list.importLabel}'  mandatory=true >
+						<@input type='file' id='csv_file' name='csv_file' />
+					</@formGroup>
+					<@formField>
+						<@columns offsetSm=3>
+							<@checkBox name='delete_list' id='delete_list' labelKey='#i18n{helpdesk.import_question_answer_list.deleteListLabel}' checked=true />
+						</@columns>
+					</@formField>
+					<@formField>
+						<@columns offsetSm=3>
+							<@button title='#i18n{helpdesk.import_question_answer_list.buttonLabelImport}' buttonIcon='upload' size='sm' type='submit' />
+							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='undo' size='sm' />
+						</@columns>
+					</@formField>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

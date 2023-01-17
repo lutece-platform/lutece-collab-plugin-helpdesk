@@ -1,22 +1,21 @@
 <#include "macro_helpdesk.html" />
-
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<fieldset>
-    <legend>#i18n{helpdesk.subjects.adminTitle} - ${faq.name}
-	<form class="form-inline pull-right" action="jsp/admin/plugins/helpdesk/CreateSubject.jsp">
-    <input type="hidden" value="${faq.id}" name="faq_id" />
-    <@button title='#i18n{helpdesk.subjects.buttonLabelCreate}' buttonIcon='plus' size='sm' type='submit'/>
-	</form>
-	</legend>
-	<@paginationAdmin paginator=paginator combo=1 />
-    <table class="table table-striped table-condensed">
-    	<tr>
-    		<th>#i18n{helpdesk.subjects.title.questions}</th>
-    		<th>#i18n{helpdesk.subjects.title.actions}</th>
-    	</tr>
-    	<@commonListTable items=helpdesk_subject_list depth=0 jspRef="Subject" paramId="subject_id" />
-    </table>
-	</fieldset>
-	</div>
-</div>
+<@row>
+	<@columns>
+        <@box color='primary' >
+			<@boxHeader title='${faq.name} - #i18n{helpdesk.subjects.adminTitle} ' boxTools=true >
+				<@aButton href='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.subjects.buttonLabelCreate}' hideTitle=['xs'] />
+			</@boxHeader>
+            <@boxBody>
+				<@table>
+					<@tr>
+						<@th>#i18n{helpdesk.subjects.title.questions}</@th>
+						<@th>#i18n{helpdesk.subjects.title.actions}</@th>
+					</@tr>
+					<@tableHeadBodySeparator />
+					<@commonListTable items=helpdesk_subject_list depth=0 jspRef="Subject" paramId="subject_id" />
+				</@table>
+				<@paginationAdmin paginator=paginator combo=1 />
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>

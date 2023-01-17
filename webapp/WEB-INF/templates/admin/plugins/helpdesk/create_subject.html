@@ -1,31 +1,28 @@
 <#include "macro_helpdesk.html" />
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-	<fieldset>
-	<legend>#i18n{helpdesk.create_subject.adminTitle}</legend>
-	<form class="form-horizontal" method="post" name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateSubject.jsp">
-	<input type="hidden" value="${faq_id}" name="faq_id" />
-    <div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="subject">#i18n{helpdesk.create_subject.LabelSubject} *</label>
-		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-			<input type="text" name="subject" id="subject" tabindex="1" size="50" maxlength="50" class="form-control input-sm">
-		</div>
-	</div>
-	<div class="form-group">
-		<label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="parent_id">#i18n{helpdesk.create_subject.LabelParent} *</label>
-        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-            <select id="parent_id" name="parent_id" class="form-control input-sm">
-            	<option value="0">#i18n{helpdesk.commonList.rootAbstractSubjectName}</option>
-				<@subjectsList items=helpdesk_subject_list default_value="${default_value}" exclude_value="" depth=0 />
-			</select>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
-			<@button title='#i18n{helpdesk.create_subject.buttonLabelCreate}' buttonIcon='check' size='sm' type='submit'/>
-		</div>
-	</div>
-	</form>
-	</fieldset>
-	</div>
-</div>
+<@row>
+	<@columns offsetMd=2 md=6>
+        <@box color='primary' >
+			<@boxHeader title='#i18n{helpdesk.create_subject.adminTitle}' skipHeader=true />
+            <@boxBody>
+				<@tform name="create_subject" action="jsp/admin/plugins/helpdesk/DoCreateSubject.jsp">
+					<@input type="hidden" value="${faq_id}" name="faq_id" />
+					<@formGroup labelFor='subject' labelKey='#i18n{helpdesk.create_subject.LabelSubject}' mandatory=true >
+						<@input type='text' id='subject' name='subject' maxlength=50 />
+					</@formGroup>
+					<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.create_subject.LabelParent}' mandatory=true >
+						<@select id='parent_id' name='parent_id' default_value='' items=''>
+							<@option value='0' label='#i18n{helpdesk.commonList.rootAbstractSubjectName}' />
+							<@subjectsList items=helpdesk_subject_list default_value=default_value?string exclude_value='' depth=0 />
+						</@select>
+					</@formGroup>
+					<@formField>
+						<@columns offsetSm=3>
+							<@button title='#i18n{helpdesk.create_subject.buttonLabelCreate}' buttonIcon='check' size='sm' type='submit' />
+							<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='undo' size='sm' />
+						</@columns>
+					</@formField>
+				</@tform>
+			</@boxBody>
+		</@box>
+	</@columns>
+</@row>
