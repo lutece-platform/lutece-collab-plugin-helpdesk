@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -36,17 +36,16 @@ package fr.paris.lutece.plugins.helpdesk.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 
 /**
  * This class provides Data Access methods for Theme objects
  */
 public final class ThemeDAO implements IThemeDAO
 {
-    private static final String SQL_QUERY_NEW_PK = " SELECT max( id_theme ) FROM helpdesk_theme";
     private static final String SQL_QUERY_SELECT = " SELECT theme, id_mailing_list, id_parent, id_order FROM helpdesk_theme WHERE id_theme = ?";
     private static final String SQL_QUERY_INSERT = " INSERT INTO helpdesk_theme ( id_theme, theme, id_mailing_list, id_parent, id_order ) VALUES ( ?, ?, ?, ?, ? )";
     private static final String SQL_QUERY_DELETE = " DELETE FROM helpdesk_theme WHERE id_theme = ?";
@@ -65,92 +64,69 @@ public final class ThemeDAO implements IThemeDAO
     private static final String SQL_QUERY_DELETE_ALL_LN_FAQ = " DELETE FROM helpdesk_ln_faq_theme WHERE id_theme = ? ";
 
     ///////////////////////////////////////////////////////////////////////////////////////
-    //Access methods to data
-
-    /**
-     * Calculate a new primary key to add a new Theme
-     *
-     * @param plugin The Plugin using this data access service
-     * @return The new key.
-     */
-    public int newPrimaryKey( Plugin plugin )
-    {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_NEW_PK, plugin ) )
-        {
-        	daoUtil.executeQuery(  );
-
-            int nKey;
-
-            if ( !daoUtil.next(  ) )
-            {
-                // if the table is empty
-                nKey = 1;
-            }
-
-            nKey = daoUtil.getInt( 1 ) + 1;
-
-            return nKey;
-        }
-    }
+    // Access methods to data
 
     /**
      * Insert a new record in the table.
      *
-     * @param abstractSubject The Instance of the object theme
-     * @param plugin The Plugin using this data access service
+     * @param abstractSubject
+     *            The Instance of the object theme
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public synchronized void insert( AbstractSubject abstractSubject, Plugin plugin )
     {
-        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, plugin ) )
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT, Statement.RETURN_GENERATED_KEYS, plugin ) )
         {
-        	Theme theme = (Theme) abstractSubject;
-        	theme.setId( newPrimaryKey( plugin ) );
+            Theme theme = (Theme) abstractSubject;
+            daoUtil.setString( 2, theme.getText( ) );
+            daoUtil.setInt( 3, theme.getIdMailingList( ) );
+            daoUtil.setInt( 4, theme.getIdParent( ) );
+            daoUtil.setInt( 5, theme.getIdOrder( ) );
 
-            daoUtil.setInt( 1, theme.getId(  ) );
-            daoUtil.setString( 2, theme.getText(  ) );
-            daoUtil.setInt( 3, theme.getIdMailingList(  ) );
-            daoUtil.setInt( 4, theme.getIdParent(  ) );
-            daoUtil.setInt( 5, theme.getIdOrder(  ) );
-
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * Delete a record from the table
      *
-     * @param nIdTheme The indentifier of the object Theme
-     * @param plugin The Plugin using this data access service
+     * @param nIdTheme
+     *            The indentifier of the object Theme
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public void delete( int nIdTheme, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdTheme );
+            daoUtil.setInt( 1, nIdTheme );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * load the data of Theme from the table
      *
-     * @param nIdTheme The indentifier of the object Theme
-     * @param plugin The Plugin using this data access service
+     * @param nIdTheme
+     *            The indentifier of the object Theme
+     * @param plugin
+     *            The Plugin using this data access service
      * @return The Instance of the object Theme
      */
     public Theme load( int nIdTheme, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdTheme );
-            daoUtil.executeQuery(  );
+            daoUtil.setInt( 1, nIdTheme );
+            daoUtil.executeQuery( );
 
             Theme theme = null;
 
-            if ( daoUtil.next(  ) )
+            if ( daoUtil.next( ) )
             {
-                theme = new Theme(  );
+                theme = new Theme( );
                 theme.setId( nIdTheme );
                 theme.setText( daoUtil.getString( 1 ) );
                 theme.setIdMailingList( daoUtil.getInt( 2 ) );
@@ -167,39 +143,43 @@ public final class ThemeDAO implements IThemeDAO
     /**
      * Update the record in the table
      *
-     * @param abstractSubject The instance of the Theme to update
-     * @param plugin The Plugin using this data access service
+     * @param abstractSubject
+     *            The instance of the Theme to update
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public void store( AbstractSubject abstractSubject, Plugin plugin )
     {
         Theme theme = (Theme) abstractSubject;
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_UPDATE, plugin ) )
         {
-        	daoUtil.setString( 1, theme.getText(  ) );
-            daoUtil.setInt( 2, theme.getIdMailingList(  ) );
-            daoUtil.setInt( 3, theme.getIdParent(  ) );
-            daoUtil.setInt( 4, theme.getIdOrder(  ) );
-            daoUtil.setInt( 5, theme.getId(  ) );
+            daoUtil.setString( 1, theme.getText( ) );
+            daoUtil.setInt( 2, theme.getIdMailingList( ) );
+            daoUtil.setInt( 3, theme.getIdParent( ) );
+            daoUtil.setInt( 4, theme.getIdOrder( ) );
+            daoUtil.setInt( 5, theme.getId( ) );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * Finds all objects of this type
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of objects
      */
-    public List<?extends AbstractSubject> findAll( Plugin plugin )
+    public List<? extends AbstractSubject> findAll( Plugin plugin )
     {
-        List<Theme> list = new ArrayList<>(  );
+        List<Theme> list = new ArrayList<>( );
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECTALL, plugin ) )
         {
-        	daoUtil.executeQuery(  );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
-                Theme theme = new Theme(  );
+                Theme theme = new Theme( );
                 theme.setId( daoUtil.getInt( 1 ) );
                 theme.setText( daoUtil.getString( 2 ) );
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
@@ -215,21 +195,24 @@ public final class ThemeDAO implements IThemeDAO
 
     /**
      * Finds all {@link Theme} specified by the parent id
-     * @param nIdParent The parent Theme id
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdParent
+     *            The parent Theme id
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of {@link Theme}
      */
-    public Collection<?extends AbstractSubject> findByIdParent( int nIdParent, Plugin plugin )
+    public Collection<? extends AbstractSubject> findByIdParent( int nIdParent, Plugin plugin )
     {
-        Collection<Theme> listThemes = new ArrayList<>(  );
+        Collection<Theme> listThemes = new ArrayList<>( );
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_PARENT_ID, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdParent );
-            daoUtil.executeQuery(  );
+            daoUtil.setInt( 1, nIdParent );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
-                Theme theme = new Theme(  );
+                Theme theme = new Theme( );
                 theme.setId( daoUtil.getInt( 1 ) );
                 theme.setText( daoUtil.getString( 2 ) );
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
@@ -241,26 +224,29 @@ public final class ThemeDAO implements IThemeDAO
 
             return listThemes;
         }
-        
+
     }
 
     /**
      * Finds all {@link Theme} specified by the Faq id
-     * @param nIdFaq The faq id
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdFaq
+     *            The faq id
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of {@link Theme}
      */
-    public Collection<?extends AbstractSubject> findByIdFaq( int nIdFaq, Plugin plugin )
+    public Collection<? extends AbstractSubject> findByIdFaq( int nIdFaq, Plugin plugin )
     {
-        Collection<Theme> listThemes = new ArrayList<>(  );
+        Collection<Theme> listThemes = new ArrayList<>( );
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ID, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdFaq );
-            daoUtil.executeQuery(  );
+            daoUtil.setInt( 1, nIdFaq );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
-                Theme theme = new Theme(  );
+                Theme theme = new Theme( );
                 theme.setId( daoUtil.getInt( 1 ) );
                 theme.setText( daoUtil.getString( 2 ) );
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
@@ -276,22 +262,25 @@ public final class ThemeDAO implements IThemeDAO
 
     /**
      * Returns all questions on a Theme
-     * @param nIdTheme The identifier of the Theme
-     * @param plugin The Plugin using this data access service
+     * 
+     * @param nIdTheme
+     *            The identifier of the Theme
+     * @param plugin
+     *            The Plugin using this data access service
      * @return A collection of questions
      */
     public Collection<VisitorQuestion> findQuestions( int nIdTheme, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_QUESTION, plugin ) )
         {
-        	Collection<VisitorQuestion> listVisitorQuestion = new ArrayList<>(  );
-        	daoUtil.setString( 1, "" ); // answer == "" -> not archived question
+            Collection<VisitorQuestion> listVisitorQuestion = new ArrayList<>( );
+            daoUtil.setString( 1, "" ); // answer == "" -> not archived question
             daoUtil.setInt( 2, nIdTheme );
-            daoUtil.executeQuery(  );
+            daoUtil.executeQuery( );
 
-            while ( daoUtil.next(  ) )
+            while ( daoUtil.next( ) )
             {
-                VisitorQuestion visitorQuestion = new VisitorQuestion(  );
+                VisitorQuestion visitorQuestion = new VisitorQuestion( );
                 visitorQuestion.setIdVisitorQuestion( daoUtil.getInt( 1 ) );
                 visitorQuestion.setLastname( daoUtil.getString( 2 ) );
                 visitorQuestion.setFirstname( daoUtil.getString( 3 ) );
@@ -310,19 +299,22 @@ public final class ThemeDAO implements IThemeDAO
 
     /**
      * Get the max order of a parent theme
-     * @param nIdParent The id of the parent theme
-     * @param plugin The {@link Plugin}
+     * 
+     * @param nIdParent
+     *            The id of the parent theme
+     * @param plugin
+     *            The {@link Plugin}
      * @return the max order
      */
     public int getMaxOrder( int nIdParent, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_MAX_ORDER, plugin ) )
         {
-        	int nMaxOrder = 0;
-        	daoUtil.setInt( 1, nIdParent );
-            daoUtil.executeQuery(  );
+            int nMaxOrder = 0;
+            daoUtil.setInt( 1, nIdParent );
+            daoUtil.executeQuery( );
 
-            if ( daoUtil.next(  ) )
+            if ( daoUtil.next( ) )
             {
                 nMaxOrder = daoUtil.getInt( 1 );
             }
@@ -333,24 +325,28 @@ public final class ThemeDAO implements IThemeDAO
 
     /**
      * Find a theme with the parent id and the order.
-     * @param nIdParent The parent Id
-     * @param nOrder The order
-     * @param plugin The {@link Plugin}
+     * 
+     * @param nIdParent
+     *            The parent Id
+     * @param nOrder
+     *            The order
+     * @param plugin
+     *            The {@link Plugin}
      * @return the {@link Theme}
      */
     public Theme findByOrder( int nIdParent, int nOrder, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_ORDER_ID, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdParent );
+            daoUtil.setInt( 1, nIdParent );
             daoUtil.setInt( 2, nOrder );
-            daoUtil.executeQuery(  );
+            daoUtil.executeQuery( );
 
             Theme theme = null;
 
-            if ( daoUtil.next(  ) )
+            if ( daoUtil.next( ) )
             {
-                theme = new Theme(  );
+                theme = new Theme( );
                 theme.setId( daoUtil.getInt( 1 ) );
                 theme.setText( daoUtil.getString( 2 ) );
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
@@ -364,24 +360,28 @@ public final class ThemeDAO implements IThemeDAO
 
     /**
      * Find a theme with the faq id and the order.
-     * @param nIdFaq The faq Id
-     * @param nOrder The order
-     * @param plugin The {@link Plugin}
+     * 
+     * @param nIdFaq
+     *            The faq Id
+     * @param nOrder
+     *            The order
+     * @param plugin
+     *            The {@link Plugin}
      * @return the {@link Theme}
      */
     public Theme findByFaqOrder( int nIdFaq, int nOrder, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_SELECT_BY_FAQ_ORDER_ID, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdFaq );
+            daoUtil.setInt( 1, nIdFaq );
             daoUtil.setInt( 2, nOrder );
-            daoUtil.executeQuery(  );
+            daoUtil.executeQuery( );
 
             Theme theme = null;
 
-            if ( daoUtil.next(  ) )
+            if ( daoUtil.next( ) )
             {
-                theme = new Theme(  );
+                theme = new Theme( );
                 theme.setId( daoUtil.getInt( 1 ) );
                 theme.setText( daoUtil.getString( 2 ) );
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
@@ -396,52 +396,60 @@ public final class ThemeDAO implements IThemeDAO
     /**
      * Insert a new record in the table.
      *
-     * @param nIdAbstractSubject The id of the object Theme
-     * @param nIdFaq The parent id of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param nIdAbstractSubject
+     *            The id of the object Theme
+     * @param nIdFaq
+     *            The parent id of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public synchronized void insertLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_INSERT_LN_FAQ, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 1, nIdAbstractSubject );
             daoUtil.setInt( 2, nIdFaq );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * delete a record in the table.
      *
-     * @param nIdAbstractSubject The id of the object Theme
-     * @param nIdFaq The parent id of the object Faq
-     * @param plugin The Plugin using this data access service
+     * @param nIdAbstractSubject
+     *            The id of the object Theme
+     * @param nIdFaq
+     *            The parent id of the object Faq
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public synchronized void deleteLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_LN_FAQ, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 1, nIdAbstractSubject );
             daoUtil.setInt( 2, nIdFaq );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 
     /**
      * delete a record in the table.
      *
-     * @param nIdAbstractSubject The id of the object Theme
-     * @param plugin The Plugin using this data access service
+     * @param nIdAbstractSubject
+     *            The id of the object Theme
+     * @param plugin
+     *            The Plugin using this data access service
      */
     public synchronized void deleteAllLinksToFaq( int nIdAbstractSubject, Plugin plugin )
     {
         try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_DELETE_ALL_LN_FAQ, plugin ) )
         {
-        	daoUtil.setInt( 1, nIdAbstractSubject );
+            daoUtil.setInt( 1, nIdAbstractSubject );
 
-            daoUtil.executeUpdate(  );
+            daoUtil.executeUpdate( );
         }
     }
 }

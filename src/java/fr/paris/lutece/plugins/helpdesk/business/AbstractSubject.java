@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@ import fr.paris.lutece.portal.service.plugin.Plugin;
 
 import java.util.Collection;
 
-
 /**
  * This class represent a generic helpdesk subject
  *
@@ -51,16 +50,19 @@ public abstract class AbstractSubject
 
     /**
      * Returns the identifier of the abstract subject
+     * 
      * @return The identifier of the abstract subject
      */
-    public int getId(  )
+    public int getId( )
     {
         return _nId;
     }
 
     /**
      * Sets the identifier of the abstract subject to the specified value
-     * @param nId The new value
+     * 
+     * @param nId
+     *            The new value
      */
     public void setId( int nId )
     {
@@ -69,16 +71,19 @@ public abstract class AbstractSubject
 
     /**
      * Returns the abstract subject string
+     * 
      * @return The abstract subject string
      */
-    public String getText(  )
+    public String getText( )
     {
         return _strText;
     }
 
     /**
      * Sets the abstract subject string to the specified value
-     * @param strText The new value
+     * 
+     * @param strText
+     *            The new value
      */
     public void setText( String strText )
     {
@@ -88,13 +93,14 @@ public abstract class AbstractSubject
     /**
      * @return the _nIdParent
      */
-    public int getIdParent(  )
+    public int getIdParent( )
     {
         return _nIdParent;
     }
 
     /**
-     * @param nIdParent the _nIdParent to set
+     * @param nIdParent
+     *            the _nIdParent to set
      */
     public void setIdParent( int nIdParent )
     {
@@ -103,28 +109,33 @@ public abstract class AbstractSubject
 
     /**
      * Get the parent abstract subject
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return The parent abstract subject
      */
     public abstract AbstractSubject getParent( Plugin plugin );
 
     /**
      * Get the child abstract subject list
-     * @param plugin The Plugin
+     * 
+     * @param plugin
+     *            The Plugin
      * @return A {@link Collection} of childs
      */
-    public abstract Collection<?extends AbstractSubject> getChilds( Plugin plugin );
+    public abstract Collection<? extends AbstractSubject> getChilds( Plugin plugin );
 
     /**
      * @return the _nIdOrder
      */
-    public int getIdOrder(  )
+    public int getIdOrder( )
     {
         return _nIdOrder;
     }
 
     /**
-     * @param nIdOrder the _nIdOrder to set
+     * @param nIdOrder
+     *            the _nIdOrder to set
      */
     public void setIdOrder( int nIdOrder )
     {

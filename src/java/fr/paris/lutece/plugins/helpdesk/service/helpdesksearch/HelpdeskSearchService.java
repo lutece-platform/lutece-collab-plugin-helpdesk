@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -48,15 +48,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  * DocumentSearchService
  */
 public class HelpdeskSearchService
 {
     private static final String BEAN_SEARCH_ENGINE = "helpdeskSearchEngine";
-    private static final String REGEX_ID = "^[\\d]+_(" + HelpdeskIndexer.SHORT_NAME_SUBJECT + "|" +
-        HelpdeskIndexer.SHORT_NAME_QUESTION_ANSWER + ")$";
+    private static final String REGEX_ID = "^[\\d]+_(" + HelpdeskIndexer.SHORT_NAME_SUBJECT + "|" + HelpdeskIndexer.SHORT_NAME_QUESTION_ANSWER + ")$";
     private static final String UNDERSCORE = "_";
 
     // Constants corresponding to the variables defined in the lutece.properties file
@@ -67,11 +65,11 @@ public class HelpdeskSearchService
      *
      * @return The {@link HelpdeskSearchService}
      */
-    public static HelpdeskSearchService getInstance(  )
+    public static HelpdeskSearchService getInstance( )
     {
         if ( _singleton == null )
         {
-            _singleton = new HelpdeskSearchService(  );
+            _singleton = new HelpdeskSearchService( );
         }
 
         return _singleton;
@@ -80,57 +78,68 @@ public class HelpdeskSearchService
     /**
      * Return search results
      *
-     * @param nIdFaq The Id Faq
-     * @param strQuery The search query
-     * @param dateBegin The date begin
-     * @param dateEnd The date end
-     * @param subject The {@link Subject}
-     * @param bSearchSubSubjects true if research must be done in sub-subjects
-     * @param request The {@link HttpServletRequest}
-     * @param plugin The plugin
+     * @param nIdFaq
+     *            The Id Faq
+     * @param strQuery
+     *            The search query
+     * @param dateBegin
+     *            The date begin
+     * @param dateEnd
+     *            The date end
+     * @param subject
+     *            The {@link Subject}
+     * @param bSearchSubSubjects
+     *            true if research must be done in sub-subjects
+     * @param request
+     *            The {@link HttpServletRequest}
+     * @param plugin
+     *            The plugin
      * @return Results as a collection of {@link QuestionAnswer}
      */
-    public Collection<QuestionAnswer> getSearchResults( int nIdFaq, String strQuery, Date dateBegin, Date dateEnd,
-        Subject subject, boolean bSearchSubSubjects, HttpServletRequest request, Plugin plugin )
+    public Collection<QuestionAnswer> getSearchResults( int nIdFaq, String strQuery, Date dateBegin, Date dateEnd, Subject subject, boolean bSearchSubSubjects,
+            HttpServletRequest request, Plugin plugin )
     {
-        Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<QuestionAnswer>(  );
-        HelpdeskSearchEngine engine = (HelpdeskSearchEngine) SpringContextService.getPluginBean( plugin.getName(  ),
-                BEAN_SEARCH_ENGINE );
-        List<SearchResult> listResults = engine.getSearchResults( nIdFaq, strQuery, dateBegin, dateEnd, subject,
-                bSearchSubSubjects, request );
+        Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<QuestionAnswer>( );
+        HelpdeskSearchEngine engine = (HelpdeskSearchEngine) SpringContextService.getPluginBean( plugin.getName( ), BEAN_SEARCH_ENGINE );
+        List<SearchResult> listResults = engine.getSearchResults( nIdFaq, strQuery, dateBegin, dateEnd, subject, bSearchSubSubjects, request );
 
         for ( SearchResult searchResult : listResults )
         {
-            if ( ( searchResult.getId(  ) != null ) && searchResult.getId(  ).matches( REGEX_ID ) )
+            if ( ( searchResult.getId( ) != null ) && searchResult.getId( ).matches( REGEX_ID ) )
             {
-                QuestionAnswer questionAnswer = QuestionAnswerHome.findByPrimaryKey( Integer.parseInt( 
-                            searchResult.getId(  ).substring( 0, searchResult.getId(  ).indexOf( UNDERSCORE ) ) ),
-                        plugin );
-                if( questionAnswer != null )
+                QuestionAnswer questionAnswer = QuestionAnswerHome
+                        .findByPrimaryKey( Integer.parseInt( searchResult.getId( ).substring( 0, searchResult.getId( ).indexOf( UNDERSCORE ) ) ), plugin );
+                if ( questionAnswer != null )
                 {
-                	listQuestionAnswer.add( questionAnswer );
-                }                
+                    listQuestionAnswer.add( questionAnswer );
+                }
             }
         }
 
         return listQuestionAnswer;
     }
-    
+
     /**
      * Return search results
      *
-     * @param strQuery The search query
-     * @param dateBegin The date begin
-     * @param dateEnd The date end
-     * @param subject The {@link Subject}
-     * @param bSearchSubSubjects true if research must be done in sub-subjects
-     * @param request The {@link HttpServletRequest}
-     * @param plugin The plugin
+     * @param strQuery
+     *            The search query
+     * @param dateBegin
+     *            The date begin
+     * @param dateEnd
+     *            The date end
+     * @param subject
+     *            The {@link Subject}
+     * @param bSearchSubSubjects
+     *            true if research must be done in sub-subjects
+     * @param request
+     *            The {@link HttpServletRequest}
+     * @param plugin
+     *            The plugin
      * @return Results as a collection of {@link QuestionAnswer}
      */
-    public Collection<QuestionAnswer> getSearchResults( String strQuery, Date dateBegin, Date dateEnd,
-    		HttpServletRequest request, Plugin plugin )
+    public Collection<QuestionAnswer> getSearchResults( String strQuery, Date dateBegin, Date dateEnd, HttpServletRequest request, Plugin plugin )
     {
-    	return getSearchResults( -1, strQuery, dateBegin, dateEnd, null, false, request, plugin );
+        return getSearchResults( -1, strQuery, dateBegin, dateEnd, null, false, request, plugin );
     }
 }

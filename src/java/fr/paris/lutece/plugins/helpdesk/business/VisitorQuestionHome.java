@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -38,29 +38,28 @@ import fr.paris.lutece.portal.service.spring.SpringContextService;
 
 import java.util.Collection;
 
-
 /**
- * This class provides instances management methods (create, find, ...)
- * for VisitorQuestion objects
+ * This class provides instances management methods (create, find, ...) for VisitorQuestion objects
  */
 public final class VisitorQuestionHome
 {
     // Static variable pointed at the DAO instance
-    private static IVisitorQuestionDAO _dao = (IVisitorQuestionDAO) SpringContextService.getPluginBean( "helpdesk",
-            "visitorQuestionDAO" );
+    private static IVisitorQuestionDAO _dao = (IVisitorQuestionDAO) SpringContextService.getPluginBean( "helpdesk", "visitorQuestionDAO" );
 
     /**
      * Private constructor - this class need not be instantiated.
      */
-    private VisitorQuestionHome(  )
+    private VisitorQuestionHome( )
     {
     }
 
     /**
      * Creation of an instance of an article VisitorQuestion
      *
-     * @param visitorQuestion An instance of the VisitorQuestion which contains the informations to store
-     * @param plugin The current plugin using this method
+     * @param visitorQuestion
+     *            An instance of the VisitorQuestion which contains the informations to store
+     * @param plugin
+     *            The current plugin using this method
      * @return The instance of the VisitorQuestion which has been created
      */
     public static VisitorQuestion create( VisitorQuestion visitorQuestion, Plugin plugin )
@@ -73,8 +72,10 @@ public final class VisitorQuestionHome
     /**
      * Updates of the VisitorQuestion instance specified in parameter
      *
-     * @param visitorQuestion An instance of the VisitorQuestion which contains the informations to store
-     * @param plugin The current plugin using this method
+     * @param visitorQuestion
+     *            An instance of the VisitorQuestion which contains the informations to store
+     * @param plugin
+     *            The current plugin using this method
      * @return The instance of the VisitorQuestion which has been updated.
      */
     public static VisitorQuestion update( VisitorQuestion visitorQuestion, Plugin plugin )
@@ -87,8 +88,10 @@ public final class VisitorQuestionHome
     /**
      * Deletes the VisitorQuestion instance whose identifier is specified in parameter
      *
-     * @param nIdVisitorQuestion The identifier of the article VisitorQuestion to delete in the database
-     * @param plugin The current plugin using this method
+     * @param nIdVisitorQuestion
+     *            The identifier of the article VisitorQuestion to delete in the database
+     * @param plugin
+     *            The current plugin using this method
      */
     public static void remove( int nIdVisitorQuestion, Plugin plugin )
     {
@@ -101,8 +104,10 @@ public final class VisitorQuestionHome
     /**
      * Returns an instance of the article VisitorQuestion whose identifier is specified in parameter
      *
-     * @param nKey The primary key of the article to find in the database
-     * @param plugin The current plugin using this method
+     * @param nKey
+     *            The primary key of the article to find in the database
+     * @param plugin
+     *            The current plugin using this method
      * @return An instance of the VisitorQuestion which corresponds to the key
      */
     public static VisitorQuestion findByPrimaryKey( int nKey, Plugin plugin )
@@ -113,7 +118,8 @@ public final class VisitorQuestionHome
     /**
      * Returns VisitorQuestion list
      *
-     * @param plugin The current plugin using this method
+     * @param plugin
+     *            The current plugin using this method
      * @return the list of the VisitorQuestion of the database in form of a VisitorQuestion Collection object
      */
     public static Collection<VisitorQuestion> findAll( Plugin plugin )
@@ -123,8 +129,11 @@ public final class VisitorQuestionHome
 
     /**
      * Returns VisitorQuestion list
-     * @param nIdUser The User ID
-     * @param plugin The current plugin using this method
+     * 
+     * @param nIdUser
+     *            The User ID
+     * @param plugin
+     *            The current plugin using this method
      * @return the list of the VisitorQuestion of the database in form of a VisitorQuestion Collection object
      */
     public static Collection<VisitorQuestion> findByUser( int nIdUser, Plugin plugin )
@@ -134,8 +143,11 @@ public final class VisitorQuestionHome
 
     /**
      * Returns VisitorQuestion list
-     * @param nIdTheme The Theme ID
-     * @param plugin The current plugin using this method
+     * 
+     * @param nIdTheme
+     *            The Theme ID
+     * @param plugin
+     *            The current plugin using this method
      * @return the list of the VisitorQuestion of the database in form of a VisitorQuestion Collection object
      */
     public static Collection<VisitorQuestion> findByTheme( int nIdTheme, Plugin plugin )
@@ -145,8 +157,11 @@ public final class VisitorQuestionHome
 
     /**
      * Returns VisitorQuestion list
-     * @param nIdTheme The Theme ID
-     * @param plugin The current plugin using this method
+     * 
+     * @param nIdTheme
+     *            The Theme ID
+     * @param plugin
+     *            The current plugin using this method
      * @return the list of the VisitorQuestion of the database in form of a VisitorQuestion Collection object
      */
     public static Collection<VisitorQuestion> findArchivedQuestionsByTheme( int nIdTheme, Plugin plugin )

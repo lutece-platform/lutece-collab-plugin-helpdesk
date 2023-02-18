@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -41,7 +41,6 @@ import fr.paris.lutece.portal.service.util.RemovalListener;
 import java.util.Collection;
 import java.util.Locale;
 
-
 /**
  * MailingList Removal Listener
  */
@@ -50,10 +49,12 @@ public class ThemeMailingListRemovalListener implements RemovalListener
     private static final String PROPERTY_MAILING_LIST_CANNOT_BE_REMOVED = "helpdesk.message.mailinglistCannotBeRemoved";
 
     /**
-    * Check if the object can be safely removed
-    * @param id The object id
-    * @return true if the object can be removed otherwise false
-    */
+     * Check if the object can be safely removed
+     * 
+     * @param id
+     *            The object id
+     * @return true if the object can be removed otherwise false
+     */
     public boolean canBeRemoved( String id )
     {
         if ( id == null )
@@ -61,14 +62,12 @@ public class ThemeMailingListRemovalListener implements RemovalListener
             return true;
         }
 
-        //Get list of themes
-        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance(  )
-                                                                    .findAll( PluginService.getPlugin( 
-                    HelpdeskPlugin.PLUGIN_NAME ) );
+        // Get list of themes
+        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance( ).findAll( PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME ) );
 
         for ( Theme theme : listThemes )
         {
-            int nMailingListId = theme.getIdMailingList(  );
+            int nMailingListId = theme.getIdMailingList( );
 
             if ( ( nMailingListId == Integer.parseInt( id ) ) )
             {
@@ -81,8 +80,11 @@ public class ThemeMailingListRemovalListener implements RemovalListener
 
     /**
      * Gives a message explaining why the object can't be removed
-     * @param id The object id
-     * @param locale The current locale
+     * 
+     * @param id
+     *            The object id
+     * @param locale
+     *            The current locale
      * @return The message
      */
     public String getRemovalRefusedMessage( String id, Locale locale )

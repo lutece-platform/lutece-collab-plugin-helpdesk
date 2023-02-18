@@ -32,7 +32,7 @@
         <search-indexer>
             <search-indexer-class>
                 fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer
-			</search-indexer-class>
+            </search-indexer-class>
         </search-indexer>
     </search-indexers>
 

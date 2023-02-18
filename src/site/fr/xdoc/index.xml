@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document>
-	<properties>
-		<title>Plugin helpdesk</title>
-	</properties>
-	<body>
-		<section name="Plugin helpdesk">
-			<subsection name="Introduction">
-				<p>
+    <properties>
+        <title>Plugin helpdesk</title>
+    </properties>
+    <body>
+        <section name="Plugin helpdesk">
+            <subsection name="Introduction">
+                <p>
                     Le plugin vise à permettre de mettre en place des FAQ (questions/réponses).
                 </p> 
-				<p>
+                <p>
                     Il dispose d'une interface en backoffice permettant de répondre aux questions des internautes.
                     Les couples de question/réponse ainsi créés sont modifiables et publiables dans une rubrique sur le front-office.
-				</p>
-				<p>
+                </p>
+                <p>
                     Les questions posées par les internautes sont ventilées dans des "thèmes".
                     Les couples questions/réponses sont publiables dans des "sujets".
                     Cette manière de faire offre beaucoup de souplesse pour les collectivités notamment.
                     On peut associer les thèmes à des services d'une collectivité et
                     publier les questions/réponses dans des sujets thématiques.
-				</p>
-				<p>
+                </p>
+                <p>
                     On peut envoyer un courriel à une liste d'utilisateurs backoffice à chaque réception d'une nouvelle question.
                     Pour cela il faut associer différents utilisateurs du backoffice à une liste de diffusion  via un rôle ou un workgroup
                     (dans "Gestionnaires>Listes de diffusion"). On peut ensuite associer une liste diffusion à un thème. 
-				</p> 
-			</subsection>
-		</section>
-	</body>
+                </p> 
+            </subsection>
+        </section>
+    </body>
 </document>

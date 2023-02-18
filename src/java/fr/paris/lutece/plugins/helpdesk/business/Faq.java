@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,6 @@ import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
 
 import java.util.Collection;
 
-
 /**
  * This class represents a Faq object.
  */
@@ -59,26 +58,26 @@ public class Faq implements AdminWorkgroupResource
     /**
      * Creates a new Faq object.
      */
-    public Faq(  )
+    public Faq( )
     {
     }
 
     /**
      * Initialize the Faq
      */
-    public static void init(  )
+    public static void init( )
     {
         // Create removal listeners and register them
         if ( _listenerWorkgroup == null )
         {
-            _listenerWorkgroup = new FaqWorkgroupRemovalListener(  );
-            WorkgroupRemovalListenerService.getService(  ).registerListener( _listenerWorkgroup );
+            _listenerWorkgroup = new FaqWorkgroupRemovalListener( );
+            WorkgroupRemovalListenerService.getService( ).registerListener( _listenerWorkgroup );
         }
 
         if ( _listenerRole == null )
         {
-            _listenerRole = new FaqRoleRemovalListener(  );
-            RoleRemovalListenerService.getService(  ).registerListener( _listenerRole );
+            _listenerRole = new FaqRoleRemovalListener( );
+            RoleRemovalListenerService.getService( ).registerListener( _listenerRole );
         }
     }
 
@@ -87,7 +86,7 @@ public class Faq implements AdminWorkgroupResource
      *
      * @return the _nId
      */
-    public int getId(  )
+    public int getId( )
     {
         return _nId;
     }
@@ -95,7 +94,8 @@ public class Faq implements AdminWorkgroupResource
     /**
      * Set the Id
      *
-     * @param nId the _nId to set
+     * @param nId
+     *            the _nId to set
      */
     public void setId( int nId )
     {
@@ -107,7 +107,7 @@ public class Faq implements AdminWorkgroupResource
      *
      * @return the _strName
      */
-    public String getName(  )
+    public String getName( )
     {
         return _strName;
     }
@@ -115,7 +115,8 @@ public class Faq implements AdminWorkgroupResource
     /**
      * Set the name
      *
-     * @param strName the _strName to set
+     * @param strName
+     *            the _strName to set
      */
     public void setName( String strName )
     {
@@ -127,7 +128,7 @@ public class Faq implements AdminWorkgroupResource
      *
      * @return the _strDescription
      */
-    public String getDescription(  )
+    public String getDescription( )
     {
         return _strDescription;
     }
@@ -135,7 +136,8 @@ public class Faq implements AdminWorkgroupResource
     /**
      * Set the Description
      *
-     * @param strDescription the _strDescription to set
+     * @param strDescription
+     *            the _strDescription to set
      */
     public void setDescription( String strDescription )
     {
@@ -147,7 +149,7 @@ public class Faq implements AdminWorkgroupResource
      *
      * @return the _strRoleKey
      */
-    public String getRoleKey(  )
+    public String getRoleKey( )
     {
         return _strRoleKey;
     }
@@ -155,7 +157,8 @@ public class Faq implements AdminWorkgroupResource
     /**
      * Set the Lutece role key
      *
-     * @param strRoleKey the _strRoleKey to set
+     * @param strRoleKey
+     *            the _strRoleKey to set
      */
     public void setRoleKey( String strRoleKey )
     {
@@ -164,29 +167,33 @@ public class Faq implements AdminWorkgroupResource
 
     /**
      * Get the list of subjects <strong>directly</strong> linked to {@link Faq} (not sub-subjects)
-     * @param plugin The {@link Plugin}
+     * 
+     * @param plugin
+     *            The {@link Plugin}
      * @return The collection of {@link Subject}
      */
     public Collection<Subject> getSubjectsList( Plugin plugin )
     {
-        return (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( getId(  ), plugin );
+        return (Collection<Subject>) SubjectHome.getInstance( ).findByIdFaq( getId( ), plugin );
     }
 
     /**
      * Get the list of themes <strong>directly</strong> linked to {@link Faq} (not sub-themes)
      *
-     * @param plugin The {@link Plugin}
+     * @param plugin
+     *            The {@link Plugin}
      * @return The collection of {@link Theme}
      */
     public Collection<Theme> getThemesList( Plugin plugin )
     {
-        return (Collection<Theme>) ThemeHome.getInstance(  ).findByIdFaq( getId(  ), plugin );
+        return (Collection<Theme>) ThemeHome.getInstance( ).findByIdFaq( getId( ), plugin );
     }
 
     /**
      * Set the workgroup key for {@link Faq}
      *
-     * @param strWorkgroupKey the _strWorkgroupKey to set
+     * @param strWorkgroupKey
+     *            the _strWorkgroupKey to set
      */
     public void setWorkgroup( String strWorkgroupKey )
     {
@@ -198,7 +205,7 @@ public class Faq implements AdminWorkgroupResource
      *
      * @return the _strWorkgroupKey
      */
-    public String getWorkgroup(  )
+    public String getWorkgroup( )
     {
         return _strWorkgroupKey;
     }

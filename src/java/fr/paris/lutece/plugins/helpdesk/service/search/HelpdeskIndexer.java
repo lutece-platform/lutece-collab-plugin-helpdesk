@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2014, Mairie de Paris
+ * Copyright (c) 2002-2022, City of Paris
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -74,7 +74,6 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 
-
 /**
  * Helpdesk Indexer
  * 
@@ -94,6 +93,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
     /**
      * Returns the indexer service description
+     * 
      * @return The indexer service description
      */
     public String getDescription( )
@@ -104,9 +104,12 @@ public class HelpdeskIndexer implements SearchIndexer
     /**
      * Index all documents
      * 
-     * @throws IOException the exception
-     * @throws InterruptedException the exception
-     * @throws SiteMessageException the exception
+     * @throws IOException
+     *             the exception
+     * @throws InterruptedException
+     *             the exception
+     * @throws SiteMessageException
+     *             the exception
      */
     public void indexDocuments( ) throws IOException, InterruptedException, SiteMessageException
     {
@@ -124,10 +127,14 @@ public class HelpdeskIndexer implements SearchIndexer
     /**
      * Recursive method for indexing a subject and his children
      * 
-     * @param faq the faq linked to the subject
-     * @param subject the subject
-     * @throws IOException I/O Exception
-     * @throws InterruptedException interruptedException
+     * @param faq
+     *            the faq linked to the subject
+     * @param subject
+     *            the subject
+     * @throws IOException
+     *             I/O Exception
+     * @throws InterruptedException
+     *             interruptedException
      */
     public void indexSubject( Faq faq, Subject subject ) throws IOException, InterruptedException
     {
@@ -135,8 +142,7 @@ public class HelpdeskIndexer implements SearchIndexer
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
 
         UrlItem urlSubject = new UrlItem( strPortalUrl );
-        urlSubject.addParameter( XPageAppService.PARAM_XPAGE_APP,
-                AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); //FIXME
+        urlSubject.addParameter( XPageAppService.PARAM_XPAGE_APP, AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); // FIXME
         urlSubject.addParameter( HelpdeskApp.PARAMETER_FAQ_ID, faq.getId( ) );
         urlSubject.setAnchor( HelpdeskApp.ANCHOR_SUBJECT + subject.getId( ) );
 
@@ -145,7 +151,7 @@ public class HelpdeskIndexer implements SearchIndexer
         {
             docSubject = getDocument( subject, faq.getRoleKey( ), urlSubject.getUrl( ), plugin );
         }
-        catch ( Exception e )
+        catch( Exception e )
         {
             String strMessage = "FAQ ID : " + faq.getId( ) + " - Subject ID : " + subject.getId( );
             IndexationService.error( this, e, strMessage );
@@ -160,22 +166,19 @@ public class HelpdeskIndexer implements SearchIndexer
             if ( questionAnswer.isEnabled( ) )
             {
                 UrlItem urlQuestionAnswer = new UrlItem( strPortalUrl );
-                urlQuestionAnswer.addParameter( XPageAppService.PARAM_XPAGE_APP,
-                        AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); //FIXME
+                urlQuestionAnswer.addParameter( XPageAppService.PARAM_XPAGE_APP, AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); // FIXME
                 urlQuestionAnswer.addParameter( HelpdeskApp.PARAMETER_FAQ_ID, faq.getId( ) );
-                urlQuestionAnswer
-                        .setAnchor( HelpdeskApp.ANCHOR_QUESTION_ANSWER + questionAnswer.getIdQuestionAnswer( ) );
+                urlQuestionAnswer.setAnchor( HelpdeskApp.ANCHOR_QUESTION_ANSWER + questionAnswer.getIdQuestionAnswer( ) );
 
                 org.apache.lucene.document.Document docQuestionAnswer = null;
                 try
                 {
-                    docQuestionAnswer = getDocument( faq.getId( ), questionAnswer, urlQuestionAnswer.getUrl( ),
-                            faq.getRoleKey( ), plugin );
+                    docQuestionAnswer = getDocument( faq.getId( ), questionAnswer, urlQuestionAnswer.getUrl( ), faq.getRoleKey( ), plugin );
                 }
-                catch ( Exception e )
+                catch( Exception e )
                 {
-                    String strMessage = "FAQ ID : " + faq.getId( ) + " - Subject ID : " + subject.getId( )
-                            + " - QuestionAnswer ID :" + questionAnswer.getIdQuestionAnswer( );
+                    String strMessage = "FAQ ID : " + faq.getId( ) + " - Subject ID : " + subject.getId( ) + " - QuestionAnswer ID :"
+                            + questionAnswer.getIdQuestionAnswer( );
                     IndexationService.error( this, e, strMessage );
                 }
                 if ( docQuestionAnswer != null )
@@ -195,29 +198,31 @@ public class HelpdeskIndexer implements SearchIndexer
 
     /**
      * Get the subject document
-     * @param strDocument id of the subject to index
+     * 
+     * @param strDocument
+     *            id of the subject to index
      * @return The list of lucene documents
-     * @throws IOException the exception
-     * @throws InterruptedException the exception
-     * @throws SiteMessageException the exception
+     * @throws IOException
+     *             the exception
+     * @throws InterruptedException
+     *             the exception
+     * @throws SiteMessageException
+     *             the exception
      */
-    public List<Document> getDocuments( String strDocument ) throws IOException, InterruptedException,
-            SiteMessageException
+    public List<Document> getDocuments( String strDocument ) throws IOException, InterruptedException, SiteMessageException
     {
         List<org.apache.lucene.document.Document> listDocs = new ArrayList<org.apache.lucene.document.Document>( );
         String strPortalUrl = AppPathService.getPortalUrl( );
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
 
-        Subject subject = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( Integer.parseInt( strDocument ),
-                plugin );
+        Subject subject = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( Integer.parseInt( strDocument ), plugin );
 
         if ( subject != null )
         {
             UrlItem urlSubject = new UrlItem( strPortalUrl );
-            urlSubject.addParameter( XPageAppService.PARAM_XPAGE_APP,
-                    AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); //FIXME
+            urlSubject.addParameter( XPageAppService.PARAM_XPAGE_APP, AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); // FIXME
 
-            //if it's a sub-subject, we need to get the first parent to have the faq
+            // if it's a sub-subject, we need to get the first parent to have the faq
             int nIdParent = subject.getIdParent( );
             Subject parentSubject = subject;
 
@@ -234,8 +239,7 @@ public class HelpdeskIndexer implements SearchIndexer
                 urlSubject.addParameter( HelpdeskApp.PARAMETER_FAQ_ID, faq.getId( ) );
                 urlSubject.setAnchor( HelpdeskApp.ANCHOR_SUBJECT + subject.getId( ) );
 
-                org.apache.lucene.document.Document docSubject = getDocument( subject, faq.getRoleKey( ),
-                        urlSubject.getUrl( ), plugin );
+                org.apache.lucene.document.Document docSubject = getDocument( subject, faq.getRoleKey( ), urlSubject.getUrl( ), plugin );
                 listDocs.add( docSubject );
 
                 for ( QuestionAnswer questionAnswer : (List<QuestionAnswer>) subject.getQuestions( ) )
@@ -243,14 +247,12 @@ public class HelpdeskIndexer implements SearchIndexer
                     if ( questionAnswer.isEnabled( ) )
                     {
                         UrlItem urlQuestionAnswer = new UrlItem( strPortalUrl );
-                        urlQuestionAnswer.addParameter( XPageAppService.PARAM_XPAGE_APP,
-                                AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); //FIXME
+                        urlQuestionAnswer.addParameter( XPageAppService.PARAM_XPAGE_APP, AppPropertiesService.getProperty( PROPERTY_PAGE_PATH_LABEL ) ); // FIXME
                         urlQuestionAnswer.addParameter( HelpdeskApp.PARAMETER_FAQ_ID, faq.getId( ) );
-                        urlQuestionAnswer.setAnchor( HelpdeskApp.ANCHOR_QUESTION_ANSWER
-                                + questionAnswer.getIdQuestionAnswer( ) );
+                        urlQuestionAnswer.setAnchor( HelpdeskApp.ANCHOR_QUESTION_ANSWER + questionAnswer.getIdQuestionAnswer( ) );
 
-                        org.apache.lucene.document.Document docQuestionAnswer = getDocument( faq.getId( ),
-                                questionAnswer, urlQuestionAnswer.getUrl( ), faq.getRoleKey( ), plugin );
+                        org.apache.lucene.document.Document docQuestionAnswer = getDocument( faq.getId( ), questionAnswer, urlQuestionAnswer.getUrl( ),
+                                faq.getRoleKey( ), plugin );
                         listDocs.add( docQuestionAnswer );
                     }
                 }
@@ -261,20 +263,26 @@ public class HelpdeskIndexer implements SearchIndexer
     }
 
     /**
-     * Builds a document which will be used by Lucene during the indexing of the
-     * question/answer list
+     * Builds a document which will be used by Lucene during the indexing of the question/answer list
      * 
-     * @param nIdFaq The {@link Faq} Id
-     * @param questionAnswer the {@link QuestionAnswer} to index
-     * @param strUrl the url of the subject
-     * @param strRoleKey The role key
-     * @param plugin The {@link Plugin}
+     * @param nIdFaq
+     *            The {@link Faq} Id
+     * @param questionAnswer
+     *            the {@link QuestionAnswer} to index
+     * @param strUrl
+     *            the url of the subject
+     * @param strRoleKey
+     *            The role key
+     * @param plugin
+     *            The {@link Plugin}
      * @return A Lucene {@link Document} containing QuestionAnswer Data
-     * @throws IOException The IO Exception
-     * @throws InterruptedException The InterruptedException
+     * @throws IOException
+     *             The IO Exception
+     * @throws InterruptedException
+     *             The InterruptedException
      */
-    public static org.apache.lucene.document.Document getDocument( int nIdFaq, QuestionAnswer questionAnswer,
-            String strUrl, String strRoleKey, Plugin plugin ) throws IOException, InterruptedException
+    public static org.apache.lucene.document.Document getDocument( int nIdFaq, QuestionAnswer questionAnswer, String strUrl, String strRoleKey, Plugin plugin )
+            throws IOException, InterruptedException
     {
         // make a new, empty document
         org.apache.lucene.document.Document doc = new org.apache.lucene.document.Document( );
@@ -287,7 +295,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_ROLE, strRoleKey, ft ) );
 
-        // Add the url as a field named "url".  Use an UnIndexed field, so
+        // Add the url as a field named "url". Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
         doc.add( new Field( HelpdeskSearchItem.FIELD_URL, strUrl, ft ) );
 
@@ -310,20 +318,19 @@ public class HelpdeskIndexer implements SearchIndexer
         Metadata metadata = new Metadata( );
         try
         {
-            new HtmlParser( ).parse( new ByteArrayInputStream( strContentToIndex.getBytes( ) ), handler, metadata,
-                    new ParseContext( ) );
+            new HtmlParser( ).parse( new ByteArrayInputStream( strContentToIndex.getBytes( ) ), handler, metadata, new ParseContext( ) );
         }
-        catch ( SAXException e )
+        catch( SAXException e )
         {
             throw new AppException( "Error during page parsing." );
         }
-        catch ( TikaException e )
+        catch( TikaException e )
         {
             throw new AppException( "Error during page parsing." );
         }
 
-        //the content of the article is recovered in the parser because this one
-        //had replaced the encoded caracters (as &eacute;) by the corresponding special caracter (as ?)
+        // the content of the article is recovered in the parser because this one
+        // had replaced the encoded caracters (as &eacute;) by the corresponding special caracter (as ?)
         StringBuilder sb = new StringBuilder( handler.toString( ) );
 
         // Add the tag-stripped contents as a Reader-valued Text field so it will
@@ -341,19 +348,24 @@ public class HelpdeskIndexer implements SearchIndexer
     }
 
     /**
-     * Builds a document which will be used by Lucene during the indexing of the
-     * subject list
+     * Builds a document which will be used by Lucene during the indexing of the subject list
      * 
-     * @param subject the {@link Subject} to index
-     * @param strUrl the url of the subject
-     * @param strRoleKey The role key
-     * @param plugin The {@link Plugin}
+     * @param subject
+     *            the {@link Subject} to index
+     * @param strUrl
+     *            the url of the subject
+     * @param strRoleKey
+     *            The role key
+     * @param plugin
+     *            The {@link Plugin}
      * @return The Lucene {@link Document} containing Subject data
-     * @throws IOException The IO Exception
-     * @throws InterruptedException The InterruptedException
+     * @throws IOException
+     *             The IO Exception
+     * @throws InterruptedException
+     *             The InterruptedException
      */
-    public static org.apache.lucene.document.Document getDocument( Subject subject, String strRoleKey, String strUrl,
-            Plugin plugin ) throws IOException, InterruptedException
+    public static org.apache.lucene.document.Document getDocument( Subject subject, String strRoleKey, String strUrl, Plugin plugin )
+            throws IOException, InterruptedException
     {
         // make a new, empty document
         org.apache.lucene.document.Document doc = new org.apache.lucene.document.Document( );
@@ -366,7 +378,7 @@ public class HelpdeskIndexer implements SearchIndexer
         ftNotStored.setOmitNorms( false );
         ftNotStored.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
 
-        // Add the url as a field named "url".  Use an UnIndexed field, so
+        // Add the url as a field named "url". Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
         doc.add( new Field( SearchItem.FIELD_URL, strUrl, ft ) );
 
@@ -392,14 +404,17 @@ public class HelpdeskIndexer implements SearchIndexer
 
     /**
      * Set the Content to index (Question and Answer)
-     * @param questionAnswer The {@link QuestionAnswer} to index
-     * @param plugin The {@link Plugin}
+     * 
+     * @param questionAnswer
+     *            The {@link QuestionAnswer} to index
+     * @param plugin
+     *            The {@link Plugin}
      * @return The content to index
      */
     private static String getContentToIndex( QuestionAnswer questionAnswer, Plugin plugin )
     {
         StringBuffer sbContentToIndex = new StringBuffer( );
-        //Do not index question here
+        // Do not index question here
         sbContentToIndex.append( questionAnswer.getQuestion( ) );
         sbContentToIndex.append( CONSTANT_SPACE );
         sbContentToIndex.append( questionAnswer.getAnswer( ) );
@@ -409,6 +424,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
     /**
      * Get the name of the indexer.
+     * 
      * @return The name
      */
     public String getName( )
@@ -418,6 +434,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
     /**
      * Get the version of the indexer
+     * 
      * @return The version number
      */
     public String getVersion( )
@@ -427,6 +444,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
     /**
      * Get the state of indexer
+     * 
      * @return Return true if the indexer is enabled, false else.
      */
     public boolean isEnable( )
@@ -434,8 +452,7 @@ public class HelpdeskIndexer implements SearchIndexer
         boolean bReturn = false;
         String strEnable = AppPropertiesService.getProperty( PROPERTY_INDEXER_ENABLE );
 
-        if ( ( strEnable != null )
-                && ( strEnable.equalsIgnoreCase( Boolean.TRUE.toString( ) ) || strEnable.equals( ENABLE_VALUE_TRUE ) )
+        if ( ( strEnable != null ) && ( strEnable.equalsIgnoreCase( Boolean.TRUE.toString( ) ) || strEnable.equals( ENABLE_VALUE_TRUE ) )
                 && PluginService.isPluginEnable( HelpdeskPlugin.PLUGIN_NAME ) )
         {
             bReturn = true;
