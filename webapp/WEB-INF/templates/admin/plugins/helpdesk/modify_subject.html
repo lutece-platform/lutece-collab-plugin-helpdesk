@@ -1,30 +1,24 @@
 <#include "macro_helpdesk.html" />
-<@row>
-	<@columns offsetMd=2 md=6>
-        <@box color='primary' >
-			<@boxHeader title='#i18n{helpdesk.modify_subject.adminTitle}' skipHeader=true />
-            <@boxBody>
-				<@tform name="modify_subject" action="jsp/admin/plugins/helpdesk/DoModifySubject.jsp">
-					<@input type="hidden" value="${faq_id}" name="faq_id" />
-					<@input type="hidden" value="${subject.id}" name="subject_id" />
-					<@formGroup labelFor='subject' labelKey='#i18n{helpdesk.modify_subject.LabelSubject}' mandatory=true >
-						<@input type='text' id='subject' name='subject' maxlength=50 value='${subject.text}' />
-					</@formGroup>
-					<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.modify_subject.LabelParent}' mandatory=true >
-						<@select id='parent_id' name='parent_id' default_value='' items=''>
-							<#assign isSelected><#if subject.idParent = 0>true<#else>false</#if></#assign>
-							<@option value='0' label='#i18n{helpdesk.commonList.rootAbstractSubjectName}' selected=isSelected?boolean />
-							<@subjectsList items=helpdesk_subject_list default_value='${subject.idParent}' exclude_value='${subject.id}' depth=0 />
-						</@select>
-					</@formGroup>
-					<@formField>
-						<@columns offsetSm=3>
-							<@button title='#i18n{helpdesk.create_subject.buttonLabelCreate}' buttonIcon='check' size='sm' type='submit' />
-							<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='undo' size='sm' />
-						</@columns>
-					</@formField>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='#i18n{helpdesk.modify_faq.adminTitle}' />
+		<@tform name='modify_subject' action='jsp/admin/plugins/helpdesk/DoModifySubject.jsp' id='edit_topic_page' boxed=true>
+			<@input type="hidden" value="${faq_id}" name="faq_id" />
+			<@input type="hidden" value="${subject.id}" name="subject_id" />
+			<@formGroup labelFor='subject' labelKey='#i18n{helpdesk.modify_subject.LabelSubject}' mandatory=true >
+				<@input type='text' id='subject' name='subject' maxlength=50 value='${subject.text}' />
+			</@formGroup>
+			<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.modify_subject.LabelParent}' mandatory=true >
+				<@select id='parent_id' name='parent_id' default_value='' items=''>
+					<#assign isSelected><#if subject.idParent = 0>true<#else>false</#if></#assign>
+					<@option value='0' label='#i18n{helpdesk.commonList.rootAbstractSubjectName}' selected=isSelected?boolean />
+					<@subjectsList items=helpdesk_subject_list default_value='${subject.idParent}' exclude_value='${subject.id}' depth=0 />
+				</@select>
+			</@formGroup>
+			<@formGroup>
+				<@button title='#i18n{helpdesk.create_subject.buttonLabelCreate}' buttonIcon='device-floppy' size='sm' type='submit' />
+				<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='sm' />
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>

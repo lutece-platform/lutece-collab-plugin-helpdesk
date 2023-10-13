@@ -1,21 +1,21 @@
-<#include "macro_helpdesk.html" />
-<@row>
-	<@columns>
-        <@box color='primary' >
-			<@boxHeader title=' ${faq.name} : #i18n{helpdesk.themes.adminTitle}' boxTools=true >
-				<@aButton href='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.themes.themeAdd}' hideTitle=['xs'] />
-			</@boxHeader>
-            <@boxBody>
-				<@table>
-					<@tr>
-						<@th>#i18n{helpdesk.themes.title}</@th>
-						<@th>#i18n{helpdesk.themes.title.actions}</@th>
-					</@tr>
-					<@tableHeadBodySeparator />
-					<@commonListTable items=helpdesk_theme_list depth=0 jspRef='Theme' paramId='theme_id' />
-				</@table>
-				<@paginationAdmin paginator=paginator combo=1 />
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<#include 'macro_helpdesk.html' />
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='${faq.name} : #i18n{helpdesk.themes.adminTitle}'>
+			<#-- <@aButton href='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.themes.themeAdd}' hideTitle=['xs','sm'] /> -->			
+			<#-- btnTitle='#i18n{helpdesk.themes.themeAdd}' -->
+			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' targetElement='#create_theme_page' id='theme-create' title='#i18n{helpdesk.create_theme.boxTitle}' btnTitle='#i18n{helpdesk.themes.themeAdd}' btnIcon='plus' btnSize='sm' position='end' />
+			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' buttonIcon='messages' size='sm' hideTitle=['xs','sm'] />
+		</@pageHeader>
+		<@table>
+			<@tr>
+				<@th>#i18n{helpdesk.themes.title}</@th>
+				<@th>#i18n{helpdesk.themes.title.actions}</@th>
+			</@tr>
+			<@tableHeadBodySeparator />
+			<@commonListTable items=helpdesk_theme_list depth=0 jspRef='Theme' paramId='theme_id' />
+		</@table>
+		<@paginationAdmin paginator=paginator combo=1 />
+	</@pageColumn>
+</@pageContainer>
+		

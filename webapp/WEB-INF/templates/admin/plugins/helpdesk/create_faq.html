@@ -1,30 +1,24 @@
 <#include "macro_helpdesk.html" />
-<@row>
-	<@columns offsetMd=2 md=6>
-        <@box color='primary' >
-			<@boxHeader title='#i18n{helpdesk.create_faq.adminTitle}' skipHeader=true />
-            <@boxBody>
-				<@tform name="create_faq" action="jsp/admin/plugins/helpdesk/DoCreateFaq.jsp">
-					<@formGroup labelFor='name' labelKey='#i18n{helpdesk.create_faq.LabelName}' mandatory=true >
-						<@input type='text' id='name' name='name' maxlength=50 />
-					</@formGroup>
-					<@formGroup labelFor='description' labelKey='#i18n{helpdesk.create_faq.LabelDescription}' mandatory=true >
-						<@input type='text' id='description' name='description' maxlength=50 />
-					</@formGroup>
-					<@formGroup labelFor='role_key' labelKey='#i18n{helpdesk.create_faq.LabelRoleKey}'>
-						<@select id='role_key' name='role_key' default_value=role_key_default_value items=role_key_list />
-					</@formGroup>
-					<@formGroup labelFor='workgroup_key' labelKey='#i18n{helpdesk.create_faq.LabelRoleKey}'>
-						<@select id='workgroup_key' name='workgroup_key' default_value=workgroup_key_default_value items=workgroup_key_list />
-					</@formGroup>
-					<@formField>
-						<@columns offsetSm=3>
-							<@button title='#i18n{helpdesk.create_faq.buttonLabelCreate}' buttonIcon='check' size='sm' type='submit' />
-							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='undo' size='sm' />
-						</@columns>
-					</@formField>
-				</@tform>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='#i18n{helpdesk.create_faq.adminTitle}' />
+		<@tform name='create_faq' action='jsp/admin/plugins/helpdesk/DoCreateFaq.jsp' id='create_faq_page' boxed=true>
+			<@formGroup labelFor='name' labelKey='#i18n{helpdesk.create_faq.LabelName}' mandatory=true >
+				<@input type='text' id='name' name='name' maxlength=50 />
+			</@formGroup>
+			<@formGroup labelFor='description' labelKey='#i18n{helpdesk.create_faq.LabelDescription}' mandatory=true >
+				<@input type='text' id='description' name='description' maxlength=50 />
+			</@formGroup>
+			<@formGroup labelFor='role_key' labelKey='#i18n{helpdesk.create_faq.LabelRoleKey}'>
+				<@select id='role_key' name='role_key' default_value=role_key_default_value items=role_key_list />
+			</@formGroup>
+			<@formGroup labelFor='workgroup_key' labelKey='#i18n{helpdesk.create_faq.LabelRoleKey}'>
+				<@select id='workgroup_key' name='workgroup_key' default_value=workgroup_key_default_value items=workgroup_key_list />
+			</@formGroup>
+			<@formGroup>
+				<@button title='#i18n{helpdesk.create_faq.buttonLabelCreate}' buttonIcon='device-floppy' size='sm' type='submit' />
+				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='sm' />
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>
