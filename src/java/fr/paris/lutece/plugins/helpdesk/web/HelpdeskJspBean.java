@@ -250,6 +250,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
     private static final Object MARK_DEFAULT_VALUE_WORKGROUP_KEY = "workgroup_key_default_value";
     private static final Object MARK_WORKGROUP_KEY_LIST = "workgroup_key_list";
     private static final String MARK_FAQ_ID = "faq_id";
+    private static final String MARK_FAQ_NAME = "faq_name";
 
     //Default values
     private static final String DEFAULT_CSV_FILE_EXTENSION = "csv";
@@ -821,6 +822,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
         model.put( MARK_FAQ_ID, faq.getId(  ) );
+        model.put( MARK_FAQ_NAME, faq.getName(  ) );
         model.put( MARK_THEME_ID, strIdTheme);
 
         if ( strIdQuestion == null )
@@ -948,6 +950,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
         model.put( MARK_HTML_CONTENT, questionAnswer.getAnswer(  ) );
         model.put( MARK_FAQ_ID, faq.getId(  ) );
+        model.put( MARK_FAQ_ID, faq.getName(  ) );
         model.put( MARK_SUBJECT_LIST,
             (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( faq.getId(  ), getPlugin(  ) ) );
         model.put( MARK_PLUGIN, getPlugin(  ) );
