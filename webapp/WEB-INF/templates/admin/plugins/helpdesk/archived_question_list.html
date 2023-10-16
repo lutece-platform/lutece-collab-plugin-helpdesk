@@ -23,62 +23,67 @@
 <#if depth==0></div></#if>
 </#if>
 </#macro>
-<@row>
-	<@columns sm=3>
-        <@box color='primary' >
-			<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleLeft}' />
-            <@boxBody>
-				<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
-			</@boxBody>
-        </@box>
-    </@columns>
-    <@columns sm=9>
-        <@box color='primary' >
-			<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleRight}' boxTools=true >
-				<@tform type='inline' action='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp'>
-				<#if theme?has_content><@input type='hidden' value=theme.id name='theme_id' /></#if>
-				<@input type='hidden' name='faq_id' value=faq.id />
-				<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' type='submit' size='sm'/>
-				</@tform>
-			</@boxHeader>	
-			<@boxBody>
-				<#if theme?has_content>	
-					<#if helpdesk_archived_question_list?has_content>
-						<@table headBody=true >
-							<@tr>
-								<@th>#i18n{helpdesk.archived_question_list.titleQuestion}</@th>
-								<@th>#i18n{helpdesk.archived_question_list.titleVisitor}</@th>
-								<@th>#i18n{helpdesk.archived_question_list.titleDate}</@th>
-								<@th>#i18n{helpdesk.archived_question_list.titleActions}</@th>
-							</@tr>
-							<@tableHeadBodySeparator />
-							<#list helpdesk_archived_question_list as visitor_question>
-								<#assign truncated_value=125 />
-								<@tr>
-									<@td>
-									<#if visitor_question.question?length gt truncated_value>
-										${visitor_question.question?substring(0,truncated_value-3)}...
-									<#else>
-										${visitor_question.question}
-									</#if>
-									</@td>
-									<@td>${visitor_question.firstname} ${visitor_question.lastname}</@td>
-									<@td>${visitor_question.date}</@td>
-									<@td>
-										<@aButton href='jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}' buttonIcon='edit' />
-										<@aButton class='btn-danger' href='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}' title='#i18n{helpdesk.archived_question_list.buttonLabelRemove}' hideTitle=['all'] buttonIcon='trash' />
-									</@td>
-								</@tr>
-							</#list>
-						</@table>
-					<#else>
-						<@empty title='#i18n{helpdesk.archived_question_list.noQuestion}' />
-					</#if>
-				</#if>
-			</@boxBody>
-		</@box>
-	</@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+		<@row>
+			<@columns sm=3>
+				<@box color='primary' >
+					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleLeft}' />
+					<@boxBody>
+						<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
+					</@boxBody>
+				</@box>
+			</@columns>
+			<@columns sm=9>
+				<@box color='primary' >
+					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleRight}' boxTools=true >
+						<@tform type='inline' action='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp'>
+						<#if theme?has_content><@input type='hidden' value=theme.id name='theme_id' /></#if>
+						<@input type='hidden' name='faq_id' value=faq.id />
+						<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' type='submit' size='sm'/>
+						</@tform>
+					</@boxHeader>	
+					<@boxBody>
+						<#if theme?has_content>	
+							<#if helpdesk_archived_question_list?has_content>
+								<@table headBody=true >
+									<@tr>
+										<@th>#i18n{helpdesk.archived_question_list.titleQuestion}</@th>
+										<@th>#i18n{helpdesk.archived_question_list.titleVisitor}</@th>
+										<@th>#i18n{helpdesk.archived_question_list.titleDate}</@th>
+										<@th>#i18n{helpdesk.archived_question_list.titleActions}</@th>
+									</@tr>
+									<@tableHeadBodySeparator />
+									<#list helpdesk_archived_question_list as visitor_question>
+										<#assign truncated_value=125 />
+										<@tr>
+											<@td>
+											<#if visitor_question.question?length gt truncated_value>
+												${visitor_question.question?substring(0,truncated_value-3)}...
+											<#else>
+												${visitor_question.question}
+											</#if>
+											</@td>
+											<@td>${visitor_question.firstname} ${visitor_question.lastname}</@td>
+											<@td>${visitor_question.date}</@td>
+											<@td>
+												<@aButton href='jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}' buttonIcon='edit' />
+												<@aButton class='btn-danger' href='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}' title='#i18n{helpdesk.archived_question_list.buttonLabelRemove}' hideTitle=['all'] buttonIcon='trash' />
+											</@td>
+										</@tr>
+									</#list>
+								</@table>
+							<#else>
+								<@empty title='#i18n{helpdesk.archived_question_list.noQuestion}' />
+							</#if>
+						</#if>
+					</@boxBody>
+				</@box>
+			</@columns>
+		</@row>
+	</@pageColumn>
+</@pageContainer>
+	
 <script src="js/admin/jquery/plugins/ui/jstree/jquery.jstree.js"></script>
 <script src="js/admin/jquery/plugins/ui/jstree/jquery.cookie.js"></script>
 <script>

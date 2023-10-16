@@ -2,43 +2,35 @@
 <#include "macro_helpdesk.html" />
 <#include "/admin/util/editor/editor.html" />
 <#include "macro_helpdesk.html" />
-<@row>
-	<@columns offsetMd=1 md=8>
-        <@box color='primary' >
-			<@boxHeader title='${faq.name} - #i18n{helpdesk.create_question_answer.adminTitle}' skipHeader=true />
-            <@boxBody>
-                <@tform name="create_subject" action="jsp/admin/plugins/helpdesk/DoModifyQuestionAnswer.jsp">
-					<@input type="hidden" value="${faq_id}" name="faq_id" />
-                    <@input type="hidden" name="question_id" value="${question_answer.idQuestionAnswer}" />
-					<@formGroup labelFor='subject_id' labelKey='#i18n{helpdesk.create_question_answer.LabelSubject}' mandatory=true >
-                        <@select id='subject_id' name='subject_id'>
-                            <@subjectsList items=helpdesk_subject_list default_value="${question_answer.idSubject}" exclude_value="" depth=0 />
-                        </@select>
-					</@formGroup>
-					<@formGroup labelFor='question' labelKey=' #i18n{helpdesk.create_question_answer.LabelQuestion}' mandatory=true >
-                        <@input type='textarea' id='question' name='question' richtext=true value='${question_answer.question}' />
-					</@formGroup>
-					<@formGroup labelFor='html_content' labelKey=' #i18n{helpdesk.create_question_answer.LabelAnswer}' mandatory=true >
-                        <@input type='textarea' id='html_content' name='html_content' richtext=true value='${html_content}' />
-					</@formGroup>
-                    <@formField>
-                        <@columns offsetSm=3>
-							<#assign isChecked><#if checked='checked'>true<#else>false</#if></#assign>
-                            <@checkBox name='status' id='status' labelKey='#i18n{helpdesk.create_question_answer.LabelStatus}' orientation='switch' value='1' checked=isChecked?boolean />
-                        </@columns>
-                    </@formField>
-					<@formField>
-                        <@columns offsetSm=3>
-							<@button title='#i18n{helpdesk.modify_question_answer.buttonLabelModify}' buttonIcon='check' size='sm' type='submit' />
-							<@aButton href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='undo' size='sm' />
-							<@aButton class='btn-danger' href='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp' title='#i18n{helpdesk.modify_question_answer.buttonLabelDelete}' buttonIcon='trash' size='sm'/>
-						</@columns>
-					</@formField>
-                </@tform>
-            </@boxBody>
-        </@box>
-    </@columns>
-</@row>
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='${faq_name} - #i18n{helpdesk.create_question_answer.adminTitle}' />
+		<@tform name='create_subject' action='jsp/admin/plugins/helpdesk/DoModifyQuestionAnswer.jsp' boxed=true id='create_edit_question_answer_page'>
+			<@input type='hidden' value='${faq_id}' name='faq_id' />
+			<@input type='hidden' name='question_id' value='${question_answer.idQuestionAnswer}' />
+			<@formGroup labelFor='subject_id' labelKey='#i18n{helpdesk.create_question_answer.LabelSubject}' mandatory=true >
+				<@select id='subject_id' name='subject_id'>
+					<@subjectsList items=helpdesk_subject_list default_value="${question_answer.idSubject}" exclude_value="" depth=0 />
+				</@select>
+			</@formGroup>
+			<@formGroup labelFor='question' labelKey=' #i18n{helpdesk.create_question_answer.LabelQuestion}' mandatory=true >
+				<@input type='textarea' id='question' name='question' richtext=true value='${question_answer.question}' />
+			</@formGroup>
+			<@formGroup labelFor='html_content' labelKey=' #i18n{helpdesk.create_question_answer.LabelAnswer}' mandatory=true >
+				<@input type='textarea' id='html_content' name='html_content' richtext=true value='${html_content}' />
+			</@formGroup>
+			<@formGroup>
+				<#assign isChecked><#if checked='checked'>true<#else>false</#if></#assign>
+				<@checkBox name='status' id='status' labelKey='#i18n{helpdesk.create_question_answer.LabelStatus}' orientation='switch' value='1' checked=isChecked?boolean />
+			</@formGroup>
+			<@formGroup>
+				<@button title='#i18n{helpdesk.modify_question_answer.buttonLabelModify}' buttonIcon='device-floppy' size='sm' type='submit' />
+				<@aButton href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='sm' />
+				<@aButton class='btn-danger' href='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp' title='#i18n{helpdesk.modify_question_answer.buttonLabelDelete}' buttonIcon='trash' size='sm'/>
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>
 <@initEditor />
 <#--
 <div class="row">
