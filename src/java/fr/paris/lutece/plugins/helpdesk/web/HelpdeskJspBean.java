@@ -950,7 +950,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         model.put( MARK_LOCALE, AdminUserService.getLocale( request ).getLanguage(  ) );
         model.put( MARK_HTML_CONTENT, questionAnswer.getAnswer(  ) );
         model.put( MARK_FAQ_ID, faq.getId(  ) );
-        model.put( MARK_FAQ_ID, faq.getName(  ) );
+        model.put( MARK_FAQ_NAME, faq.getName(  ) );
         model.put( MARK_SUBJECT_LIST,
             (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( faq.getId(  ), getPlugin(  ) ) );
         model.put( MARK_PLUGIN, getPlugin(  ) );
