@@ -4,7 +4,7 @@
 <#include "macro_helpdesk.html" />
 <@pageContainer>
     <@pageColumn>
-		<@pageHeader title='${faq_name} - #i18n{helpdesk.create_question_answer.adminTitle}' />
+		<@pageHeader title='${faq_name} - #i18n{helpdesk.modify_question_answer.adminTitle}' />
 		<@tform name='create_subject' action='jsp/admin/plugins/helpdesk/DoModifyQuestionAnswer.jsp' boxed=true id='create_edit_question_answer_page'>
 			<@input type='hidden' value='${faq_id}' name='faq_id' />
 			<@input type='hidden' name='question_id' value='${question_answer.idQuestionAnswer}' />
