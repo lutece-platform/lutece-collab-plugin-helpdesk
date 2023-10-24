@@ -1,27 +1,24 @@
 <#macro subjectsList items typeList depth>
 <#if items?has_content>
-    <#if depth==0><div id="tree" class="jstree-default overflow-hidden"></#if>  
-    <@ul>
-    <#list items as item>
-        <li id="node-${item.id}">
-            <#assign subjectId = 0 />
-            <#if subject?has_content><#assign subjectId = subject.id /></#if>
-            <a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&subject_id=${item.id}" title="${item.text}">
-                <#if subjectId==item.id>
-                    <strong>${item.text}</strong>
-                <#else>
-                    ${item.text}
-                </#if>
-            </a>
-            <#assign child_subjects_list = item.getChilds(plugin) />
-            <#if child_subjects_list?has_content>
-            <@ul>
-                <@subjectsList items=child_subjects_list typeList=typeList depth=depth+1 />
-            </@ul>    
-            </#if>
-        </li>
-    </#list>
-    </@ul>
+    <#if depth==0><div id="tree" class="lutece-tree"></#if>
+		<@ul>
+		<#list items as item>
+			<li class="lutece-tree-node" id="node-${item.id}">
+				<#assign subjectId = 0 />
+				<#if subject?has_content><#assign subjectId = subject.id /></#if>
+				${item.text}
+				<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&subject_id=${item.id}" title="${item.text}">
+					<@icon style='link' />
+				</a>
+				<#assign child_subjects_list = item.getChilds(plugin) />
+				<#if child_subjects_list?has_content>
+				<@ul>
+					<@subjectsList items=child_subjects_list typeList=typeList depth=depth+1 />
+				</@ul>    
+				</#if>
+			</li>
+		</#list>
+		</@ul>
     <#if depth==0></div></#if>
 </#if>
 </#macro>
@@ -43,7 +40,7 @@
     <@pageColumn>
 		<@pageHeader title='${faq.name} - #i18n{helpdesk.question_answer_list.adminTitleRight}' />
 		<@row>
-			<@columns sm=3>
+			<@columns xl=3>
 				<@box color='primary' >
 					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleLeft}' />
 					<@boxBody>
@@ -84,96 +81,88 @@
 								<#-- Number of documents per page selector -->
 								<@NbItemsPerPageSelectorCombo nb_items_per_page />
 							</@formGroup>
-							<@formGroup rows=2 >
+							<@formGroup rows=2>
 								<@button buttonIcon='search' title='#i18n{helpdesk.search_results.buttonSearch}' type='submit' size='sm' />
 							</@formGroup>
 						</@tform>
 					</@boxBody>
 				</@box> 
 			</@columns>
-			<@columns sm=9>
+			<@columns xl=9>
 				<@box color='primary' >
-					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleRight}' boxTools=true >
-						<@tform action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
-						<@input type='hidden' value=faq.id name='faq_id' />
-						<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if>
-							<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' size='sm' />
-						</@tform>
+					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleRight}' boxTools=true>
+						<@div class='d-inline-flex'>
+							<@tform action='jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp'>
+								<@input type='hidden' value=faq.id name='faq_id' />
+								<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if>
+								<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' size='sm' hideTitle=['xs','sm','md'] />
+							</@tform>
+							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' buttonIcon='messages' size='sm' hideTitle=['xs','sm','md'] />
+						</@div>
 					</@boxHeader>
 					<@boxBody>
 					<#if subject?has_content>  
 						<#if subject.questions?has_content>
 							<@tform id='question_form' name='question_form' action='jsp/admin/plugins/helpdesk/DoActionSelectionQuestionAnswer.jsp'>
-							<@input type='hidden' value=faq.id name='faq_id' />
-							<@table>
-								<@tr>
-									<@th>
-										<@checkBox id='select_all' name='select_all' labelKey='#i18n{helpdesk.question_answer_list.selectAll}' value='' params='onclick="toggle_checkboxes();"' />
-										<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if> 
-									</@th>
-									<@th>
-										<@row>
-											<@columns sm=3>
-												#i18n{helpdesk.question_answer_list.titleSubject}
-											</@columns>
-											<@columns sm=6>
-												<@div id='applySelection'>
-													<@div class='d-flex'>
-														<@div class='form-floating w-50' >
-															<@select id='selection' name='selection'>
-																<@option value='publish' label='#i18n{helpdesk.question_answer_list.publish}' />
-																<@option value='unpublish' label='#i18n{helpdesk.question_answer_list.unpublish}' />
-																<@option value='remove' label='#i18n{helpdesk.question_answer_list.remove}' />
-															</@select>
-															<@formLabel class='' labelFor='selection'  labelKey='#i18n{helpdesk.question_answer_list.applySelection}' mandatory=false />
-														</@div> 
-														<@div class='d-flex align-items-end'>
-															<@button buttonIcon='check' type='submit' size='' />
-														</@div> 
-													</@div> 
-												</@div> 
-											</@columns>
-										</@row>
-									</@th>
-									<@th>#i18n{helpdesk.question_answer_list.titleState}</@th>
-									<@th>#i18n{helpdesk.question_answer_list.titleActions}</@th>
-								</@tr>
-								<@tableHeadBodySeparator />
-									<#list subject.questions as question_answer>
-									<#assign truncated_value = 125 />
+								<@input type='hidden' value=faq.id name='faq_id' />
+								<@formGroup labelFor='selection' labelKey='#i18n{helpdesk.question_answer_list.applySelection}' id='applySelection'>
+									<@inputGroup>
+										<@select id='selection' name='selection'>
+											<@option value='publish' label='#i18n{helpdesk.question_answer_list.publish}' />
+											<@option value='unpublish' label='#i18n{helpdesk.question_answer_list.unpublish}' />
+											<@option value='remove' label='#i18n{helpdesk.question_answer_list.remove}' />
+										</@select>
+										<@inputGroupItem type='btn'>
+											<@button buttonIcon='check' type='submit' size='' />
+										</@inputGroupItem>
+									</@inputGroup>
+								</@formGroup>
+								<@table>
 									<@tr>
-										<@td><@checkBox id='question_selection' name='question_selection' labelKey='' value='${question_answer.idQuestionAnswer}' params='aria-label="${question_answer.idQuestionAnswer} "' /></@td>
-										<@td class='w-75'>
-											${question_answer.question}<br>${question_answer.answer}</@td>
-										<@td>
-											<#if question_answer.enabled>
-												<@icon style='check' title='#i18n{helpdesk.question_answer_list.published}' class='label label-success'/>
-											<#else>
-												<@icon style='close' title='#i18n{helpdesk.question_answer_list.unpublished}' class='label label-important'/>
-											</#if>
-										</@td>
-										<@td>
-											<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='edit'/>
-											<#if question_answer.idOrder gt 0>
-												<@aButton href='jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-up' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all']/>
-											<#else>
-												<@aButton href='javascript:void;' buttonIcon='chevron-up' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all']/>
-											</#if>  
-											<#if subject.questions?seq_index_of(question_answer) != subject.questions?size-1>
-												<@aButton href='jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-down' class="btn-light" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all']/>
-											<#else>
-												<@aButton href='javascript:void;' buttonIcon='chevron-down' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all']/>
-											</#if>   
-											<#if question_answer.enabled>
-												<@aButton href='jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye-slash' class="btn-light" title='#i18n{helpdesk.question_answer_list.unpublish}' hideTitle=['all']/>
-											<#else>
-												<@aButton href='jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye' class="btn-light" title='#i18n{helpdesk.question_answer_list.publish}' hideTitle=['all']/>
-											</#if>
-											<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] buttonIcon='trash' class="btn-danger"/>
-										</@td>
+										<@th>
+											<@checkBox id='select_all' name='select_all' labelKey='#i18n{helpdesk.question_answer_list.selectAll}' value='' params='onclick="toggle_checkboxes();"' />
+											<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if> 
+										</@th>
+										<@th>#i18n{helpdesk.question_answer_list.titleSubject}</@th>
+										<@th>#i18n{helpdesk.question_answer_list.titleState}</@th>
+										<@th lg=3>#i18n{helpdesk.question_answer_list.titleActions}</@th>
 									</@tr>
-									</#list>
-								</@table>         
+									<@tableHeadBodySeparator />
+										<#list subject.questions as question_answer>
+										<#assign truncated_value = 125 />
+										<@tr>
+											<@td><@checkBox id='question_selection' name='question_selection' labelKey='' value='${question_answer.idQuestionAnswer}' params='aria-label="${question_answer.idQuestionAnswer} "' /></@td>
+											<@td>
+												${question_answer.question}<br>${question_answer.answer}</@td>
+											<@td>
+												<#if question_answer.enabled>
+													<@icon style='check' title='#i18n{helpdesk.question_answer_list.published}' class='text-success'/>
+												<#else>
+													<@icon style='x' title='#i18n{helpdesk.question_answer_list.unpublished}' class='text-danger'/>
+												</#if>
+											</@td>
+											<@td>
+												<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='edit'/>
+												<#if question_answer.idOrder gt 0>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-up' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all']/>
+												<#else>
+													<@aButton href='javascript:void;' buttonIcon='chevron-up' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all']/>
+												</#if>  
+												<#if subject.questions?seq_index_of(question_answer) != subject.questions?size-1>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-down' class="btn-light" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all']/>
+												<#else>
+													<@aButton href='javascript:void;' buttonIcon='chevron-down' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all']/>
+												</#if>   
+												<#if question_answer.enabled>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye-slash' class="btn-light" title='#i18n{helpdesk.question_answer_list.unpublish}' hideTitle=['all']/>
+												<#else>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye' class="btn-light" title='#i18n{helpdesk.question_answer_list.publish}' hideTitle=['all']/>
+												</#if>
+												<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] buttonIcon='trash' class="btn-danger"/>
+											</@td>
+										</@tr>
+										</#list>
+									</@table>
 								</@tform>
 							<#else>
 								<@empty title='#i18n{helpdesk.question_answer_list.noQuestion}' subtitle='' iconName='mood-empty' />
@@ -185,45 +174,42 @@
 		</@row>
 	</@pageColumn>
 </@pageContainer>
-<script src="js/admin/jquery/plugins/ui/jstree/jquery.jstree.js"></script>
-<script src="js/admin/jquery/plugins/ui/jstree/jquery.cookie.js"></script>
-<script> 
-function toggle_checkboxes() {
-    if (!document.getElementById){ return; }
-    if (!document.getElementsByTagName){ return; }
-    var inputs = document.getElementById("question_form").getElementsByTagName("input");
-    for(var x=0; x < inputs.length; x++) {
-        if ( (inputs[x].type == 'checkbox') && (inputs[x].name != "select_all" ) ) {
-            inputs[x].checked = !inputs[x].checked;
-        }
-    }
-} 
-$(function(){
-    $('#applySelection').hide();
-    $('#question_form input[type="checkbox"]').on( 'click', function(){
-        let hasChecked = $('#question_form input[type="checkbox"]:checked').length > 0 ? true : false;
-        if( hasChecked){
-            $('#applySelection').show();
-        } else {
-            $('#applySelection').hide();
-        }
-    }); 
-    $("#tree").jstree({
-        "ui" : {
-            "select_limit" : 1,
-        },
-        "themes" : {
-            "theme" : "apple",
-            "icons" : true,
-        },
-        "cookies" : {
-            "save_opened" : true,
-        },
-        "core" : { "initially_open" : [ "node-${subjectId!}" ]},
-        "plugins" : [ "themes", "html_data", "cookies", "ui" ]
-    });
-});
-</script> 
+<script type="module">
+	import LuteceTree from './themes/shared/modules/luteceTree.js';
+	const tree = document.querySelector("#tree");
+	const mapTree = new LuteceTree( tree );
+	
+	// Check all checkboxes when select_all is checked ; display #applySelection when a checkbox is checked
+	document.addEventListener("DOMContentLoaded", function() {
+		var selectAllCheckbox = document.getElementById('select_all');
+		var questionForm = document.getElementById('question_form');
+		var checkboxes = questionForm.querySelectorAll('input[type="checkbox"]');
+		var applySelection = document.getElementById('applySelection');
+		applySelection.style.display = 'none';
+
+		selectAllCheckbox.addEventListener('change', function() {
+			var isChecked = this.checked;
+
+			checkboxes.forEach(function(checkbox) {
+				checkbox.checked = isChecked;
+			});
+		});
+
+		checkboxes.forEach(function(checkbox) {
+			checkbox.addEventListener('change', function() {
+				var hasChecked = Array.from(checkboxes).some(function(checkbox) {
+					return checkbox.checked;
+				});
+
+				if (hasChecked) {
+					applySelection.style.display = 'block';
+				} else {
+					applySelection.style.display = 'none';
+				}
+			});
+		});
+	});
+</script>
 <#-- Number of items per page selector - Combo Box implementation -->
 <#macro NbItemsPerPageSelectorCombo nb_items_per_page>
 <@select id='items_per_page' name='items_per_page'>
