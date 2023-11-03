@@ -40,9 +40,9 @@
 			</@indentation>
 		</@td>
 		<@td>
-			<@aButton href='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.modify_subject.buttonLabelModify}' size='' buttonIcon='pencil' hideTitle=['all'] />
+			<#-- <@aButton href='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.modify_subject.buttonLabelModify}' size='' buttonIcon='pencil' hideTitle=['all'] /> -->
 			<#-- btnTitle='#i18n{helpdesk.modify_subject.buttonLabelModify}' -->
-			<#-- <@offcanvas targetUrl='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' targetElement='#edit_topic_page' id='topic${subject.id}_edit' title='#i18n{helpdesk.modify_subject.buttonLabelModify}' btnTitle='' btnIcon='pencil' btnSize='sm' position='end' /> -->
+			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' targetElement='#edit_page' id='topic${subject.id}_edit' title='#i18n{helpdesk.modify_subject.buttonLabelModify}' btnTitle='' btnIcon='pencil' btnSize='sm' position='end' />
 			
 			
 			<#if subject.idOrder gt 0>

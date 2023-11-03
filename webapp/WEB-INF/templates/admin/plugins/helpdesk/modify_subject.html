@@ -2,7 +2,7 @@
 <@pageContainer>
     <@pageColumn>
 		<@pageHeader title='#i18n{helpdesk.modify_faq.adminTitle}' />
-		<@tform name='modify_subject' action='jsp/admin/plugins/helpdesk/DoModifySubject.jsp' id='edit_topic_page' boxed=true>
+		<@tform name='modify_subject' action='jsp/admin/plugins/helpdesk/DoModifySubject.jsp' id='edit_page' boxed=true>
 			<@input type="hidden" value="${faq_id}" name="faq_id" />
 			<@input type="hidden" value="${subject.id}" name="subject_id" />
 			<@formGroup labelFor='subject' labelKey='#i18n{helpdesk.modify_subject.LabelSubject}' mandatory=true >
@@ -16,8 +16,8 @@
 				</@select>
 			</@formGroup>
 			<@formGroup>
-				<@button title='#i18n{helpdesk.create_subject.buttonLabelCreate}' buttonIcon='device-floppy' size='sm' type='submit' />
-				<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='sm' />
+				<@button title='#i18n{helpdesk.create_subject.buttonLabelCreate}' buttonIcon='device-floppy' size='' type='submit' />
+				<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='' />
 			</@formGroup>
 		</@tform>
 	</@pageColumn>

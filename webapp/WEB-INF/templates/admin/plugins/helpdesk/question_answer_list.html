@@ -6,10 +6,13 @@
 			<li class="lutece-tree-node" id="node-${item.id}">
 				<#assign subjectId = 0 />
 				<#if subject?has_content><#assign subjectId = subject.id /></#if>
-				${item.text}
-				<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&subject_id=${item.id}" title="${item.text}">
-					<@icon style='link' />
-				</a>
+				<#if subjectId == item.id>
+					<strong>${item.text}</strong>
+				<#else>
+					<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&subject_id=${item.id}" title="${item.text}">
+					${item.text}
+					</a>
+				</#if>
 				<#assign child_subjects_list = item.getChilds(plugin) />
 				<#if child_subjects_list?has_content>
 				<@ul>
@@ -41,13 +44,13 @@
 		<@pageHeader title='${faq.name} - #i18n{helpdesk.question_answer_list.adminTitleRight}' />
 		<@row>
 			<@columns xl=3>
-				<@box color='primary' >
+				<@box>
 					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleLeft}' />
 					<@boxBody>
 						<@subjectsList items=helpdesk_subject_list typeList="QuestionAnswer" depth=0 />
 					</@boxBody>
 				</@box>
-				<@box color='primary' >
+				<@box>
 					<@boxHeader title='#i18n{helpdesk.search_results.labelSearch}' />
 					<@boxBody>
 						<@tform name='fullTextSearch' action='jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp' >
@@ -89,15 +92,15 @@
 				</@box> 
 			</@columns>
 			<@columns xl=9>
-				<@box color='primary' >
-					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleRight}' boxTools=true>
+				<@box>
+					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleRight}'>
 						<@div class='d-inline-flex'>
 							<@tform action='jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp'>
 								<@input type='hidden' value=faq.id name='faq_id' />
 								<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if>
-								<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' size='sm' hideTitle=['xs','sm','md'] />
+								<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' size='' hideTitle=['xs','sm','md'] />
 							</@tform>
-							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' buttonIcon='messages' size='sm' hideTitle=['xs','sm','md'] />
+							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' size='' hideTitle=['xs','sm','md'] />
 						</@div>
 					</@boxHeader>
 					<@boxBody>

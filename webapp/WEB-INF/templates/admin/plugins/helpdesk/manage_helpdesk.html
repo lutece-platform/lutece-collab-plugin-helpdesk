@@ -41,7 +41,9 @@
 						<@aButton href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}' hideTitle=['all'] buttonIcon='comment'/>
 					</#if>
 					<#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' hideTitle=['all'] buttonIcon='upload'/>
+						<#-- btnTitle='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' -->
+						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' targetElement='#import_question_answer_list_page' id='import${faq.id}' title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' btnTitle='' btnIcon='upload' btnSize='sm' position='end' />
+						<#-- <@aButton href='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' hideTitle=['all'] buttonIcon='upload'/> -->
 					</#if>
 					<#if faqModel.DELETE?has_content>
 						<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] class='btn-danger' buttonIcon='trash'/>

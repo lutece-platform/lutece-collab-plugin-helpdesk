@@ -1,60 +1,45 @@
 <#include "/admin/util/editor/editor.html" />
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<fieldset>                                
-		<legend>#i18n{helpdesk.modify_visitor_question.adminTitle}</legend>
-		<form class="form-horizontal" method="post" name="modify_visitor_question" action="jsp/admin/plugins/helpdesk/DoModifyVisitorQuestion.jsp">
-			<div class="form-group">
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<label for="last_name">#i18n{helpdesk.view_visitor_question.LabelName}</label>
-				<input type="text" class="form-control input-sm" value="${visitor_question.lastname}"   disabled="disabled" />
-				<input type="hidden" name="last_name" id="last_name" value="${visitor_question.lastname}" />
-				</div>			
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<label for="first_name">#i18n{helpdesk.view_visitor_question.LabelFirstName}</label>
-				<input type="text" class="form-control input-sm" value="${visitor_question.firstname}"  disabled="disabled"/>
-				<input type="hidden" name="first_name" id="first_name" value="${visitor_question.firstname}" />				
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-				<label for="email">#i18n{helpdesk.view_visitor_question.LabelEmail}</label>
-				<a href="mailto:${visitor_question.email}">${visitor_question.email}</a>
-				<input type="hidden" name="email" id="email" value="${visitor_question.email}" />
-				</div>            
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-					<label for="vq_date">#i18n{helpdesk.view_visitor_question.LabelDate}</label>
-					<input type="text" class="form-control input-sm" value="${visitor_question.date}" disabled="disabled" />          
-					<input type="hidden" name="vq_date" id="vq_date" value="${visitor_question.date}" />
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-					<label for="question">#i18n{helpdesk.view_visitor_question.LabelQuestion}</label>
-					<textarea class="form-control input-sm" rows="4" disabled="disabled">${visitor_question.question}</textarea>
-					<input type="hidden" name="question" id="question" value="${visitor_question.question}" />					
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-					<label for="mail_subject">#i18n{helpdesk.view_visitor_question.subject}</label>
-					<input type="text" name="mail_subject" class="form-control input-sm" id="mail_subject" value="#i18n{helpdesk.view_visitor_question.default_subject}" />
-				</div>
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-					<label for="answer">#i18n{helpdesk.modify_visitor_question.LabelAnswer} *</label>
-					<textarea id="answer" name="answer" class="richtext form-control input-sm"  style="width:100%;" rows="20" cols="90">
-				</textarea>
-				</div>	                    
-				<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-					<div class="checkbox">
-						<label>
-							<input type="checkbox" class="checkbox" name="add_question_answer" value="1" tabindex="5">#i18n{helpdesk.modify_visitor_question.LabelAddQuestion}
-						</label>
-					</div>
-				</div>
-			</div>
-			<input type="hidden" name="faq_id" value="${faq_id}" />
-			<#if theme_id??><input type="hidden" name="theme_id" value="${theme_id}" /></#if>
-			<input type="hidden" name="question_id" value="${visitor_question.idVisitorQuestion}" />
-			<div class="form-group">
-				<@button title='#i18n{helpdesk.modify_visitor_question.buttonLabelSend}' buttonIcon='check' size='sm' type='submit'/>
-			</div>
-			</form>
-		</fieldset>
-	</div>
-</div>
+<@pageContainer>
+    <@pageColumn>
+		<@pageHeader title='#i18n{helpdesk.modify_visitor_question.adminTitle}' />
+		<@tform name='modify_visitor_question' action='jsp/admin/plugins/helpdesk/DoModifyVisitorQuestion.jsp' boxed=true>
+			<@formGroup labelFor='last_name' labelKey='#i18n{helpdesk.view_visitor_question.LabelName}'>
+				<@staticText>${visitor_question.lastname}</@staticText>
+				<@input type='hidden' name='last_name' id='last_name' value='${visitor_question.lastname}' />
+			</@formGroup>
+			<@formGroup labelFor='first_name' labelKey='#i18n{helpdesk.view_visitor_question.LabelFirstName}'>
+				<@staticText>${visitor_question.firstname}</@staticText>
+				<@input type='hidden' name='first_name' id='first_name' value='${visitor_question.firstname}' />
+			</@formGroup>
+			<@formGroup labelFor='email' labelKey='#i18n{helpdesk.view_visitor_question.LabelEmail}'>
+				<@staticText><@link href='mailto:${visitor_question.email}'>${visitor_question.email}</@link></@staticText>
+				<@input type='hidden' name='email' id='email' value='${visitor_question.email}' />
+			</@formGroup>
+			<@formGroup labelFor='vq_date' labelKey='#i18n{helpdesk.view_visitor_question.LabelDate}'>
+				<@staticText>${visitor_question.date}</@staticText>    
+				<@input type='hidden' name='vq_date' id='vq_date' value='${visitor_question.date}' />
+			</@formGroup>
+			<@formGroup labelFor='question' labelKey='#i18n{helpdesk.view_visitor_question.LabelQuestion}'>
+				<@staticText>${visitor_question.question}</@staticText>
+				<@input type='hidden' name="question" id="question" value="${visitor_question.question}" />	
+			</@formGroup>
+			<@formGroup labelFor='mail_subject' labelKey='#i18n{helpdesk.view_visitor_question.subject}'>
+				<@input type='text' name='mail_subject' id='mail_subject' value='#i18n{helpdesk.view_visitor_question.default_subject}' />
+			</@formGroup>
+			<@formGroup labelFor='answer' labelKey='#i18n{helpdesk.modify_visitor_question.LabelAnswer}' mandatory=true>
+				<@input type='textarea' id='answer' name='answer' richtext=true rows=20 cols=90 />
+			</@formGroup>
+			<@formGroup>
+				<@checkBox name='add_question_answer' value='1' labelKey='#i18n{helpdesk.modify_visitor_question.LabelAddQuestion}' />
+			</@formGroup>
+			<@input type='hidden' name='faq_id' value='${faq_id}' />
+			<#if theme_id??><@input type='hidden' name='theme_id' value='${theme_id}' /></#if>
+			<@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
+			<@formGroup>
+				<@button title='#i18n{helpdesk.modify_visitor_question.buttonLabelSend}' buttonIcon='device-floppy' size='' type='submit'/>
+				<@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='' />
+			</@formGroup>
+		</@tform>
+	</@pageColumn>
+</@pageContainer>
 <@initEditor />

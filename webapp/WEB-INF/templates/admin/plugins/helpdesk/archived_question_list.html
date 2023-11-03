@@ -1,15 +1,17 @@
 <#macro subjectsList items typeList depth>
 <#if items?has_content>
-<#if depth==0><div id="tree" class="jstree-default overflow-hidden"></#if>  
+<#if depth==0><div id="tree" class="lutece-tree"></#if>  
 <@ul>
 <#list items as item>
-	<li id="node-${item.id}">
+	<li class="lutece-tree-node" id="node-${item.id}">
 		<#assign themeId = 0 />
 		<#if theme?has_content><#assign themeId = theme.id /></#if>
 		<#if themeId==item.id>
 			<strong>${item.text}</strong>
 		<#else>
-			<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&theme_id=${item.id}" title="${item.text}">${item.text}</a>
+			<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&theme_id=${item.id}" title="${item.text}">
+				${item.text}
+			</a>
 		</#if>
 		<#assign child_themes_list = item.getChilds(plugin) />
 		<#if child_themes_list?has_content>
@@ -26,7 +28,7 @@
 <@pageContainer>
     <@pageColumn>
 		<@row>
-			<@columns sm=3>
+			<@columns xl=3>
 				<@box color='primary' >
 					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleLeft}' />
 					<@boxBody>
@@ -34,13 +36,13 @@
 					</@boxBody>
 				</@box>
 			</@columns>
-			<@columns sm=9>
+			<@columns xl=9>
 				<@box color='primary' >
-					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleRight}' boxTools=true >
+					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleRight}'>
 						<@tform type='inline' action='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp'>
-						<#if theme?has_content><@input type='hidden' value=theme.id name='theme_id' /></#if>
-						<@input type='hidden' name='faq_id' value=faq.id />
-						<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' type='submit' size='sm'/>
+							<#if theme?has_content><@input type='hidden' value=theme.id name='theme_id' /></#if>
+							<@input type='hidden' name='faq_id' value=faq.id />
+							<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' buttonIcon='cog' type='submit' size='sm' color='secondary' hideTitle=['xs','sm','md'] />
 						</@tform>
 					</@boxHeader>	
 					<@boxBody>
@@ -84,23 +86,8 @@
 	</@pageColumn>
 </@pageContainer>
 	
-<script src="js/admin/jquery/plugins/ui/jstree/jquery.jstree.js"></script>
-<script src="js/admin/jquery/plugins/ui/jstree/jquery.cookie.js"></script>
-<script>
-$( function(){
-	$("#tree").jstree({
-        "ui" : {
-            "select_limit" : 1,
-        },
-        "themes" : {
-            "theme" : "apple",
-            "icons" : true,
-        },
-        "cookies" : {
-            "save_opened" : true,
-        },
-        "core" : { "initially_open" : [ "node-${themeId!}" ]},
-        "plugins" : [ "themes", "html_data", "cookies", "ui" ]
-    });
-});
+<script type="module">
+	import LuteceTree from './themes/shared/modules/luteceTree.js';
+	const tree = document.querySelector("#tree");
+	const mapTree = new LuteceTree( tree );
 </script>

@@ -5,7 +5,7 @@
 			<#-- <@aButton href='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.themes.themeAdd}' hideTitle=['xs','sm'] /> -->			
 			<#-- btnTitle='#i18n{helpdesk.themes.themeAdd}' -->
 			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' targetElement='#create_theme_page' id='theme-create' title='#i18n{helpdesk.create_theme.boxTitle}' btnTitle='#i18n{helpdesk.themes.themeAdd}' btnIcon='plus' btnSize='sm' position='end' />
-			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' buttonIcon='messages' size='sm' hideTitle=['xs','sm'] />
+			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' size='sm' hideTitle=['xs','sm','md'] />
 		</@pageHeader>
 		<@table>
 			<@tr>

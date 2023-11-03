@@ -2,7 +2,7 @@
 <@pageContainer>
     <@pageColumn>
 		<@pageHeader title='#i18n{helpdesk.modify_theme.boxTitle}' />
-		<@tform name='do_modify_theme' action='jsp/admin/plugins/helpdesk/DoModifyTheme.jsp' id='edit_theme_page' boxed=true>
+		<@tform name='do_modify_theme' action='jsp/admin/plugins/helpdesk/DoModifyTheme.jsp' id='edit_page' boxed=true>
 			<@input type='hidden' value='${faq_id}' name='faq_id' />
 			<@input type='hidden' value='${theme.id}' name='theme_id' />
 			<@formGroup labelFor='theme' labelKey='#i18n{helpdesk.modify_theme.LabelTheme}' mandatory=true >
