@@ -42,7 +42,7 @@
 						<@tform type='inline' action='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp'>
 							<#if theme?has_content><@input type='hidden' value=theme.id name='theme_id' /></#if>
 							<@input type='hidden' name='faq_id' value=faq.id />
-							<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' buttonIcon='cog' type='submit' size='sm' color='secondary' hideTitle=['xs','sm','md'] />
+							<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' buttonIcon='cog' type='submit' color='secondary' hideTitle=['xs','sm','md'] />
 						</@tform>
 					</@boxHeader>	
 					<@boxBody>

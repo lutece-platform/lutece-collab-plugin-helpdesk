@@ -12,12 +12,12 @@
 			<@formGroup labelFor='role_key' labelKey='#i18n{helpdesk.create_faq.LabelRoleKey}'>
 				<@select id='role_key' name='role_key' default_value=role_key_default_value items=role_key_list />
 			</@formGroup>
-			<@formGroup labelFor='workgroup_key' labelKey='#i18n{helpdesk.create_faq.LabelRoleKey}'>
+			<@formGroup labelFor='workgroup_key' labelKey='#i18n{helpdesk.create_faq.LabelWorkgroupKey}'>
 				<@select id='workgroup_key' name='workgroup_key' default_value=workgroup_key_default_value items=workgroup_key_list />
 			</@formGroup>
 			<@formGroup>
-				<@button title='#i18n{helpdesk.create_faq.buttonLabelCreate}' buttonIcon='device-floppy' size='sm' type='submit' />
-				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='sm' />
+				<@button title='#i18n{helpdesk.create_faq.buttonLabelCreate}' buttonIcon='device-floppy' type='submit' />
+				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' />
 			</@formGroup>
 		</@tform>
 	</@pageColumn>

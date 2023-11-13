@@ -4,7 +4,7 @@
 			<#if CREATE?has_content>
 				<#-- <@aButton href='jsp/admin/plugins/helpdesk/CreateFaq.jsp' buttonIcon='plus' title='#i18n{helpdesk.faq.buttonLabelCreate}' hideTitle=['xs','sm'] /> -->
 				<#-- btnTitle='#i18n{helpdesk.faq.buttonLabelCreate}' -->
-				<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateFaq.jsp' targetElement='#create_faq_page' id='faq-create' title='#i18n{helpdesk.create_faq.adminTitle}' btnTitle='#i18n{helpdesk.faq.buttonLabelCreate}' btnIcon='plus' btnSize='sm' position='end' />
+				<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateFaq.jsp' targetElement='#create_faq_page' id='faq-create' title='#i18n{helpdesk.create_faq.adminTitle}' btnTitle='#i18n{helpdesk.faq.buttonLabelCreate}' btnIcon='plus' position='end' />
 			</#if> 
 		</@pageHeader>
 		<@table class='table-striped is-fullwidth' headBody=true >
@@ -26,7 +26,7 @@
 					<#if faqModel.MODIFY?has_content>
 						<#-- <@aButton href='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' size='' title='${faq.name}' hideTitle=['all'] buttonIcon='edit' /> -->
 						<#-- btnTitle='${faq.name}' -->
-						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' targetElement='#edit_faq_page' id='faq${faq.id}-edit' title='#i18n{helpdesk.modify_faq.adminTitle}' btnTitle='' btnIcon='pencil' btnSize='sm' position='end' />						
+						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' targetElement='#edit_faq_page' id='faq${faq.id}-edit' title='#i18n{helpdesk.modify_faq.adminTitle}' btnTitle='' btnIcon='pencil' position='end' />						
 					</#if>
 					<#if faqModel.MANAGE_SUBJECTS?has_content>
 						<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelSubject}' hideTitle=['all'] buttonIcon='question'/>
@@ -42,7 +42,7 @@
 					</#if>
 					<#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content>
 						<#-- btnTitle='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' -->
-						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' targetElement='#import_question_answer_list_page' id='import${faq.id}' title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' btnTitle='' btnIcon='upload' btnSize='sm' position='end' />
+						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' targetElement='#import_question_answer_list_page' id='import${faq.id}' title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' btnTitle='' btnIcon='upload' position='end' />
 						<#-- <@aButton href='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' hideTitle=['all'] buttonIcon='upload'/> -->
 					</#if>
 					<#if faqModel.DELETE?has_content>

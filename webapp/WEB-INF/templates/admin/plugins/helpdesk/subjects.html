@@ -4,8 +4,8 @@
 		<@pageHeader title='${faq.name} - #i18n{helpdesk.subjects.adminTitle}'>
 			<#-- <@aButton href='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.subjects.buttonLabelCreate}' hideTitle=['xs'] /> -->
 			<#-- btnTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' -->
-			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' targetElement='#create_topic_page' id='topic-create' title='#i18n{helpdesk.create_subject.adminTitle}' btnTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' btnIcon='plus' btnSize='sm' position='end' />
-			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' size='sm' hideTitle=['xs','sm'] />
+			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' targetElement='#create_topic_page' id='topic-create' title='#i18n{helpdesk.create_subject.adminTitle}' btnTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' btnIcon='plus' position='end' />
+			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' hideTitle=['xs','sm'] />
 		</@pageHeader>
 		<@table>
 			<@tr>

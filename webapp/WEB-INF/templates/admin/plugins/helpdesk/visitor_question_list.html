@@ -44,8 +44,8 @@
 						<@tform action='jsp/admin/plugins/helpdesk/ArchivedQuestionList.jsp'>
 						<#if theme?has_content><@input type='hidden' value='${theme.id}' name='theme_id' /></#if>
 						<@input type='hidden' name='faq_id' value='${faq.id}' />
-						<@button title='#i18n{helpdesk.visitor_question_list.questionsArchived}' buttonIcon='cog' type='submit' size='sm' hideTitle=['xs','sm','md']/>
-						<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' size='sm' hideTitle=['xs','sm','md'] />
+						<@button title='#i18n{helpdesk.visitor_question_list.questionsArchived}' buttonIcon='cog' type='submit' hideTitle=['xs','sm','md']/>
+						<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' hideTitle=['xs','sm','md'] />
 						</@tform>
 					</@boxHeader>	
 					<@boxBody>
