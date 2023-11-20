@@ -59,6 +59,7 @@
 							<@formGroup labelFor='query' labelKey='#i18n{helpdesk.search_results.labelSearch}' rows=2 >
 								<@input name='query' value='${query!}' />
 							</@formGroup>
+							<#--
 							<@formGroup labelFor='date_start' labelKey='#i18n{helpdesk.search_results.date_start}' rows=2 >
 								<@inputGroup>
 									<@input type='daterange' dateRangeEndId='date_end' name='date_start' id='date_start' value='${date_start_query!}' />
@@ -71,13 +72,14 @@
 									<@inputGroupItem><@icon style='calendar' /></@inputGroupItem>
 								</@inputGroup>
 							</@formGroup>
+							-->
 							<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subjects.title.questions}' rows=2 >
 								<@select id='form_search_subject_id' name='form_search_subject_id' >
 									<@option value='' label='' />
 									<@subjectsListSelect items=helpdesk_subject_list default_value="${subjectId!}" exclude_value="" depth=0 />
 								</@select>
 							</@formGroup>
-							<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subjects.title.questions}' rows=2 >
+							<@formGroup labelFor='form_search_subject_id' labelKey='' rows=2 >
 								<@checkBox name='form_search_sub_subjects' id='form_search_sub_subjects' labelKey='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' orientation='vertical' value='true' />
 							</@formGroup>
 							<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.search_results.labelNbDocsPerPage} ' rows=2 >
@@ -100,7 +102,7 @@
 								<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if>
 								<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' size='' hideTitle=['xs','sm','md'] />
 							</@tform>
-							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' size='' hideTitle=['xs','sm','md'] />
+							<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' size='' hideTitle=['xs','sm','md'] class='ms-1' />
 						</@div>
 					</@boxHeader>
 					<@boxBody>
@@ -145,23 +147,23 @@
 												</#if>
 											</@td>
 											<@td>
-												<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='edit'/>
+												<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='edit' size='sm' />
 												<#if question_answer.idOrder gt 0>
-													<@aButton href='jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-up' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all']/>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoGoUpQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-up' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all'] size='sm' />
 												<#else>
-													<@aButton href='javascript:void;' buttonIcon='chevron-up' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all']/>
+													<@aButton href='javascript:void;' buttonIcon='chevron-up' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all'] size='sm' />
 												</#if>  
 												<#if subject.questions?seq_index_of(question_answer) != subject.questions?size-1>
-													<@aButton href='jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-down' class="btn-light" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all']/>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoGoDownQuestionAnswer.jsp?faq_id=${faq.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='chevron-down' class="btn-light" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all'] size='sm' />
 												<#else>
-													<@aButton href='javascript:void;' buttonIcon='chevron-down' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all']/>
+													<@aButton href='javascript:void;' buttonIcon='chevron-down' class="btn-light disabled" title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all'] size='sm' />
 												</#if>   
 												<#if question_answer.enabled>
-													<@aButton href='jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye-slash' class="btn-light" title='#i18n{helpdesk.question_answer_list.unpublish}' hideTitle=['all']/>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoUnpublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye-slash' class="btn-light" title='#i18n{helpdesk.question_answer_list.unpublish}' hideTitle=['all'] size='sm' />
 												<#else>
-													<@aButton href='jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye' class="btn-light" title='#i18n{helpdesk.question_answer_list.publish}' hideTitle=['all']/>
+													<@aButton href='jsp/admin/plugins/helpdesk/DoPublishQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' buttonIcon='eye' class="btn-light" title='#i18n{helpdesk.question_answer_list.publish}' hideTitle=['all'] size='sm' />
 												</#if>
-												<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] buttonIcon='trash' class="btn-danger"/>
+												<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveQuestionAnswer.jsp?faq_id=${faq.id}&subject_id=${subject.id}&question_id=${question_answer.idQuestionAnswer}' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] buttonIcon='trash' color='danger' size='sm' />
 											</@td>
 										</@tr>
 										</#list>
