@@ -33,6 +33,8 @@
  */
 package fr.paris.lutece.plugins.helpdesk.web;
 
+import fr.paris.lutece.plugins.helpdesk.business.Faq;
+import fr.paris.lutece.plugins.helpdesk.business.FaqHome;
 import fr.paris.lutece.plugins.helpdesk.business.QuestionAnswer;
 import fr.paris.lutece.plugins.helpdesk.business.Subject;
 import fr.paris.lutece.plugins.helpdesk.business.SubjectHome;
@@ -161,6 +163,7 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
 
         String strIdFaq = request.getParameter( PARAMETER_FAQ_ID );
         int nIdFaq = Integer.parseInt( strIdFaq );
+        Faq faq = FaqHome.load( nIdFaq, getPlugin(  ) );
         
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
         
@@ -223,7 +226,7 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
         model.put( MARK_FAQ_ID, nIdFaq );
         model.put( MARK_PLUGIN, plugin );
         model.put( MARK_PATH_LABEL, HelpdeskPlugin.PLUGIN_NAME );
-        model.put( MARK_FAQ_NAME, faq.getName(  ) );
+        model.put( MARK_FAQ_NAME,faq!=null? faq.getName(  ):"" );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_RESULTS, locale, model );
 
