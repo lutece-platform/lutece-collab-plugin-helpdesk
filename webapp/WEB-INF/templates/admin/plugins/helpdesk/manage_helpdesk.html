@@ -26,29 +26,29 @@
 					<#if faqModel.MODIFY?has_content>
 						<#-- <@aButton href='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' size='' title='${faq.name}' hideTitle=['all'] buttonIcon='edit' /> -->
 						<#-- btnTitle='${faq.name}' -->
-						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' targetElement='#edit_faq_page' id='faq${faq.id}-edit' title='#i18n{helpdesk.modify_faq.adminTitle}' btnTitle='' btnIcon='pencil' position='end' />						
+						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' targetElement='#edit_faq_page' id='faq${faq.id}-edit' title='#i18n{helpdesk.modify_faq.adminTitle}' btnTitle='' btnIcon='pencil' position='end' btnSize='sm' />						
 					</#if>
 					<#if faqModel.MANAGE_SUBJECTS?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelSubject}' hideTitle=['all'] buttonIcon='question'/>
+						<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelSubject}' hideTitle=['all'] buttonIcon='question' size='sm' />
 					</#if>
 					<#if faqModel.MANAGE_THEMES?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelTheme}' hideTitle=['all'] buttonIcon='tags'/>
+						<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelTheme}' hideTitle=['all'] buttonIcon='tags'size='sm' />
 					</#if>
 					<#if faqModel.MANAGE_VISITOR_QUESTIONS?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}' hideTitle=['all'] buttonIcon='list'/>
+						<@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelVisitorQuestion}' hideTitle=['all'] buttonIcon='list'size='sm' />
 					</#if>
 					<#if faqModel.MANAGE_QUESTIONS_ANSWERS?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}' hideTitle=['all'] buttonIcon='comment'/>
+						<@aButton href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelQuestionAnswer}' hideTitle=['all'] buttonIcon='comment'size='sm' />
 					</#if>
 					<#if faqModel.IMPORT_QUESTIONS_ANSWERS?has_content>
 						<#-- btnTitle='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' -->
-						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' targetElement='#import_question_answer_list_page' id='import${faq.id}' title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' btnTitle='' btnIcon='upload' position='end' />
-						<#-- <@aButton href='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' hideTitle=['all'] buttonIcon='upload'/> -->
+						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' targetElement='#import_question_answer_list_page' id='import${faq.id}' title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' btnTitle='' btnIcon='upload' btnSize='sm' position='end' />
+						<#-- <@aButton href='jsp/admin/plugins/helpdesk/ImportQuestionAnswerList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelImportQuestionAnswer}' hideTitle=['all'] buttonIcon='upload'size='sm' /> -->
 					</#if>
 					<#if faqModel.DELETE?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] class='btn-danger' buttonIcon='trash'/>
+						<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemoveFaq.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.commonList.buttonLabelDelete}' hideTitle=['all'] class='btn-danger' buttonIcon='trash'size='sm' />
 					</#if>
-						<@aButton href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}' size='' title='View ${faq.name} [#i18n{portal.site.portal_footer.newWindow} ]' hideTitle=['all'] target="_blank" buttonIcon='external-link'/>
+						<@aButton href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}' size='' title='View ${faq.name} [#i18n{portal.site.portal_footer.newWindow} ]' hideTitle=['all'] target="_blank" buttonIcon='external-link'size='sm' />
 					</@td>
 				</@tr>
 				</#list>
