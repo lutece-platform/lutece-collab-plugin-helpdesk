@@ -11,7 +11,7 @@
 				<@select id='mailinglists' name='mailinglists' default_value='' items=mailing_list />
 				<@formHelp>#i18n{helpdesk.create_theme.messageNotificationListNotExist}</@formHelp>
 			</@formGroup>
-			<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.create_subject.LabelParent}' mandatory=true >
+			<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.create_theme.LabelParent}' mandatory=true >
 				<@select id='parent_id' name='parent_id' default_value='' items=''>
 					<@option value='0' label='#i18n{helpdesk.commonList.rootAbstractSubjectName}' />
 					<@themesList items=helpdesk_theme_list default_value='${default_value}' exclude_value='' depth=0 />
