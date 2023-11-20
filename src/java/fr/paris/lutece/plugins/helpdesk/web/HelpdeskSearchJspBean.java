@@ -102,6 +102,7 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
     private static final String MARK_ERROR = "error";
     private static final String MARK_LOCALE = "locale";
     private static final String MARK_FAQ_ID = "faq_id";
+    private static final String MARK_FAQ_NAME = "faq_name";
     private static final String MARK_PLUGIN = "plugin";
     private static final String MARK_PATH_LABEL = "path_label";
     private static final String MARK_SUBJECT_LIST = "helpdesk_subject_list";
@@ -222,6 +223,7 @@ public class HelpdeskSearchJspBean extends PluginAdminPageJspBean
         model.put( MARK_FAQ_ID, nIdFaq );
         model.put( MARK_PLUGIN, plugin );
         model.put( MARK_PATH_LABEL, HelpdeskPlugin.PLUGIN_NAME );
+        model.put( MARK_FAQ_NAME, faq.getName(  ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_RESULTS, locale, model );
 

@@ -30,55 +30,57 @@
 <@pageContainer>
     <@pageColumn>
 		<@row>
-			<@columns sm=3>
+			<@columns xl=3>
 				<@box color='primary' >
-					<@boxHeader title='${faq.name} - #i18n{helpdesk.search_results.labelSearch}' />
+					<@boxHeader title='${faq_name} - #i18n{helpdesk.search_results.labelSearch}' />
 					<@boxBody>
-						<@tform name='fullTextSearch' action='jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp' >
+						<@tform name='fullTextSearch' action='jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp'>
 						<@input type='hidden' value=faq_id name='faq_id' />                     
 						<@input type='hidden' name='page' value='search' />
-						<@formGroup labelFor='query' labelKey='#i18n{helpdesk.search_results.labelSearch}' rows=2 >
+						<@formGroup labelFor='query' labelKey='#i18n{helpdesk.search_results.labelSearch}' rows=2>
 							<@input name='query' value='${query!}' />
 						</@formGroup>
+						<#--
 						<@formGroup labelFor='date_start' labelKey='#i18n{helpdesk.search_results.date_start}' rows=2 >
 							<@inputGroup>
 								<@input type='daterange' dateRangeEndId='date_end' name='date_start' id='date_start' value='${date_start_query!}' />
 								<@inputGroupItem><@icon style='calendar' /></@inputGroupItem>
 							</@inputGroup>
 						</@formGroup>
-						<@formGroup labelFor='date_end' labelKey='#i18n{helpdesk.search_results.date_end}' rows=2 >
+						<@formGroup labelFor='date_end' labelKey='#i18n{helpdesk.search_results.date_end}' rows=2>
 							<@inputGroup>
 								<@input name='date_end' id='date_end' value='${date_end_query!}' />
 								<@inputGroupItem><@icon style='calendar' /></@inputGroupItem>
 							</@inputGroup>
 						</@formGroup>
-						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subjects.title.questions}' rows=2 >
+						-->
+						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subjects.title.questions}' rows=2>
 							<@select id='form_search_subject_id' name='form_search_subject_id' >
 								<@option value='' label='' />
 								<@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
 							</@select>
 						</@formGroup>
-						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subjects.title.questions}' rows=2 >
+						<@formGroup labelFor='form_search_subject_id' rows=2>
 							<@checkBox name='form_search_sub_subjects' id='form_search_sub_subjects' labelKey='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' orientation='vertical' value=filter_search_sub_subject?c />
 						</@formGroup>
-						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.search_results.labelNbDocsPerPage} ' rows=2 >
+						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.search_results.labelNbDocsPerPage}' rows=2>
 							<#-- Number of documents per page selector -->
 							<@NbItemsPerPageSelectorCombo nb_items_per_page />
 						</@formGroup>
 						<@formGroup rows=2 >
-							<@button buttonIcon='search' title='#i18n{helpdesk.search_results.buttonSearch}' type='submit' size='sm' />
+							<@button buttonIcon='search' title='#i18n{helpdesk.search_results.buttonSearch}' type='submit' />
 						</@formGroup>
 						</@tform>
 					</@boxBody>
 				</@box> 
 			</@columns>
-			<@columns sm=9>
+			<@columns xl=9>
 				<@box color='primary' >
 					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleRight}' boxTools=true >
 						<@tform action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
 						<@input type='hidden' value=faq_id name='faq_id' />
 						<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if>
-						<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' size='sm' />
+						<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' />
 						</@tform>
 					</@boxHeader>
 					<@boxBody>
@@ -99,7 +101,7 @@
 									<@tr>
 										<@td><@getParentSubject subject=result.getSubject(plugin) breadcrumb="" /></@td>                   
 										<@td>
-											<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' buttonIcon='edit'/>
+											<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' buttonIcon='edit' size='sm' />
 										</@td>
 									</@tr>            
 								</#list>
@@ -108,7 +110,7 @@
 								<@pagination paginator=paginator />
 								<#if (paginator.itemsCount> 0)>
 									<@tform type='inline' name='export' action='jsp/admin/plugins/helpdesk/DoExportCSV.jsp'>
-										<@button buttonIcon='download' type='submit' title='#i18n{helpdesk.search_results.exportCSV}' size='sm' />
+										<@button buttonIcon='download' type='submit' title='#i18n{helpdesk.search_results.exportCSV}' />
 									</@tform>
 								</#if>
 							<#else>
