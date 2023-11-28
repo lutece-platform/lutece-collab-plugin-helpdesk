@@ -138,7 +138,7 @@
 										<@tr>
 											<@td><@checkBox id='question_selection' name='question_selection' labelKey='' value='${question_answer.idQuestionAnswer}' params='aria-label="${question_answer.idQuestionAnswer} "' /></@td>
 											<@td>
-												${question_answer.question}<br>${question_answer.answer}</@td>
+												${question_answer.question}<#--<br>${question_answer.answer}--></@td>
 											<@td>
 												<#if question_answer.enabled>
 													<@icon style='check' title='#i18n{helpdesk.question_answer_list.published}' class='text-success'/>
