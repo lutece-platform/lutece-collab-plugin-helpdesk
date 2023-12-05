@@ -14,64 +14,65 @@
 </#if>
 </#macro>
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="col-12">
         <fieldset>
-            <legend>#i18n{helpdesk.contact.adminTitle}</legend>
+            <legend class="mb-5">#i18n{helpdesk.contact.adminTitle}</legend>
             <form class="form-horizontal"  name="form_contact" method="post">
                 <input type="hidden" name="valid" value="ok">
                 <input type="hidden" name="faq_id" value="${faq.id}">
                 <input type="hidden" name="page" value="helpdesk">
                 <input type="hidden" name="contact" value="result">
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="mail_subject">#i18n{helpdesk.contact.subject}</label>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <div class="row mb-3">
+                    <label class="form-label col-xs-12 col-md-3" for="mail_subject">#i18n{helpdesk.contact.subject}</label>
+                    <div class="col-xs-12 col-md-9">
                         <input type="text" value="#i18n{helpdesk.contact.default_subject}" name="mail_subject" id="mail_subject" class="form-control input-sm" maxlength="50">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="last_name">#i18n{helpdesk.contact.Name}</label>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <div class="row mb-3">
+                    <label class="form-label col-xs-12 col-md-3" for="last_name">#i18n{helpdesk.contact.Name}</label>
+                    <div class="col-xs-12 col-md-9">
                         <input type="text" name="last_name" id="last_name" class="form-control input-sm" maxlength="50">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="first_name">#i18n{helpdesk.contact.FirstName}</label>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <div class="row mb-3">
+                    <label class="form-label col-xs-12 col-md-3" for="first_name">#i18n{helpdesk.contact.FirstName}</label>
+                    <div class="col-xs-12 col-md-9">
                         <input type="text" name="first_name" id="first_name" class="form-control input-sm" maxlength="50">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="email">#i18n{helpdesk.contact.Email}</label>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <div class="row mb-3">
+                    <label class="form-label col-xs-12 col-md-3" for="email">#i18n{helpdesk.contact.Email}</label>
+                    <div class="col-xs-12 col-md-9">
                         <input type="text" name="email" id="email" class="form-control input-sm" maxlength="80">
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="theme_id">#i18n{helpdesk.contact.QuestionType}</label>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
+                <div class="row mb-3">
+                    <label class="form-label col-xs-12 col-md-3" for="theme_id">#i18n{helpdesk.contact.QuestionType}</label>
+                    <div class="col-xs-12 col-md-9">
                         <select id="theme_id" name="theme_id" class="form-control input-sm">
                             <@themesList items=helpdesk_theme_list default_value="${default_value}" exclude_value="" depth=0 />
                         </select>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="question">#i18n{helpdesk.contact.YourQuestion}</label>
-                    <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">	
+                <div class="row mb-3">
+                    <label class="form-label col-xs-12 col-md-3" for="question">#i18n{helpdesk.contact.YourQuestion}</label>
+                    <div class="col-xs-12 col-md-9">	
                         <textarea name="question" id="question" rows="5" cols="80" class="form-control input-sm"></textarea>
                     </div>
                 </div>	
-                <div class="form-group">
-					<div class="col-xs-12 col-sm-12 col-md-offset-3 col-lg-offset-3">
-						<@button title='#i18n{helpdesk.contact.send}' buttonIcon='envelope' size='sm' type='submit'/>
-						<@aButton href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}' title='#i18n{helpdesk.contact.back}' buttonIcon='remove'/>
+                <div class="row mb-3">
+					<div class="col-xs-12 col-md-3 offset-md-3">
+						<button type="submit" title="#i18n{helpdesk.contact.send}" class="btn btn-primary btn-sm">
+							<span class="ti ti-mail"></span>
+							#i18n{helpdesk.contact.send}
+						</button>
+						<a href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}' title="#i18n{helpdesk.contact.back}" class="btn btn-default btn-sm">
+							<span class="ti ti-x"></span>
+							#i18n{helpdesk.contact.back}
+						</a>
 					</div>
                 </div>
              </form>   
         </fieldset>
     </div>
 </div>
-
-
-
-
-

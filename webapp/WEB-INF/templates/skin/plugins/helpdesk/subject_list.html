@@ -1,40 +1,36 @@
 <#macro subjectsList items typeList depth>
-<#if items?has_content>
-<ul id="${typeList}">
-    <#list items as subject>
-    <li>
-        <#if typeList != "subject">
-            <h4>&nbsp;${subject.text}
-            <#if typeList != "subject">
-                <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top' title='#i18n{helpdesk.question_list_row.top}' class='top btn btn-primary btn-sm' buttonIcon='chevron-up'/> 
-            </#if>
-            </h4>
-            <a name="${anchor_subject}${subject.id}"></a>
-            <ul id="${typeList}">
-                <#list subject.questions as questionAnswer>
-                    <#if questionAnswer.enabled == true>
-                        <li>
-                            <a name="${anchor_question_answer}${questionAnswer.idQuestionAnswer}"></a>
-                            <strong>${questionAnswer.question}</strong>
-                            <blockquote>${questionAnswer.answer}</blockquote>
-                        </li>
-                    </#if>
-                </#list>
-            </ul>
-        <#else>
-            <h4>&nbsp;${subject.text}&nbsp;
-              <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}' size='xs' buttonIcon='tag'/> 
-            </h4>
-        </#if>
-      
-        <#assign child_subjects_list = subject.getChilds(plugin) />
-        <#if child_subjects_list?has_content>
-        <@subjectsList items=child_subjects_list typeList=typeList depth=depth+1 />
-        </#if>
-    </li>
-    </#list>
-</ul>
-</#if>
+	<#if items?has_content>
+		<div class="accordion" id="${typeList}">
+			<#list items as subject>
+				<div class="accordion-item">
+					<h2 class="accordion-header">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${subject.id}" aria-expanded="false" aria-controls="collapse${subject.id}">
+							${subject.text}
+						</button>
+					</h2>
+					<div id="collapse${subject.id}" class="accordion-collapse collapse" data-bs-parent="#accordion${subject.id}">
+					  <div class="accordion-body">
+						<ul>
+						<#list subject.questions as questionAnswer>
+							<#if questionAnswer.enabled == true>
+								<li>
+									<a name="${anchor_question_answer}${questionAnswer.idQuestionAnswer}"></a>
+									<strong>${questionAnswer.question}</strong>
+									<blockquote>${questionAnswer.answer}</blockquote>
+								</li>
+							</#if>
+						</#list>
+						</ul>
+						<#assign child_subjects_list = subject.getChilds(plugin) />
+						<#if child_subjects_list?has_content>
+							<@subjectsList items=child_subjects_list typeList=typeList depth=depth+1 />
+						</#if>
+					  </div>
+					</div>
+				</div>
+			</#list>
+		</div>
+	</#if>
 </#macro>
 
 <#macro subjectsListSelect items default_value exclude_value depth>
@@ -71,94 +67,112 @@ ${breadcrumbCopy}
 </#macro>
 
 <div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-        <div class="portlet">
-            <a name="top"></a>
-            <fieldset>
-                <legend>#i18n{helpdesk.subject_list.pageTitle}</legend>
-                <form class="form-search well well-sm" name="form_search" method="post">
-                    <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
-                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-                            <input type="text" class="form-control input-sm" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-xs-12 col-sm-12 col-md-offset-3 col-md-9 col-lg-offset-3 col-lg-9">
-                            <label class="" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} :</label>
-							<div class="input-group">
-							<span class="input-group-addon"><@icon style='calendar' /></span>
-                            <input type="text" class="form-control input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}">
-							</div>
-                            <label class="">#i18n{helpdesk.subject_list.labelDateEnd}</label>
-							<div class="input-group">
-							<span class="input-group-addon"><@icon style='calendar' /></span>
-                            <input type="text" class="form-control input-sm" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}">
-							</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-xs-12 col-sm-12 col-md-3 col-lg-3" for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} : </label>
-                        <div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-                            <select id="form_search_subject_id" name="form_search_subject_id" class="form-control input-sm">
-                                <option value=""></option>
-                                <@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
-                            </select>
-							<div class="checkbox">
-								<label>
-									<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true" <#if filter_search_sub_subject>checked="checked"</#if> />
-									#i18n{helpdesk.subject_list.labelSearchSubSubjects}
-								</label>
-							</div>
-                        </div>
-                    </div>
-                        <input type="hidden" name="page" value="${path_label}">
-                        <input type="hidden" value="${faq.id}" name="faq_id">
-                        <@button title='#i18n{helpdesk.subject_list.buttonLabelSearch}' buttonIcon='search' size='sm' type='submit'/>
-				</form>
-            </fieldset>
-            <@aButton href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}' title='#i18n{helpdesk.subject_list.labelList}' buttonIcon='list'/>
-            <form class="form-horizontal" method="post">
-                <fieldset>
-                    <legend>#i18n{helpdesk.subject_list.labelNoAnswer}</legend>
-                    <input type="hidden" name="page" value="${path_label}">
-                    <input type="hidden" name="faq_id" value="${faq.id}">
-                    <input type="hidden" name="contact" value="contact">
-                    <@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='edit' size='sm' type='submit'/> 
-                </fieldset>
-            </form>
-            <#if search_page>
-                <#if helpdesk_question_answer_list?has_content>
-                    <ul id="questionAnswer">
-                        <#list helpdesk_question_answer_list as questionAnswer>
-                        <li>
-                            <@getParentSubject subject=questionAnswer.getSubject(plugin) breadcrumb="" />
-                            <br />
-                            <a name="${questionAnswer.idQuestionAnswer}"></a>
-                            <strong>${questionAnswer.question}</strong>
-                            <blockquote>${questionAnswer.answer}</blockquote>
-                        </li>
-                        </#list>
-                    </ul>
-                <#else>
-                    <blockquote>#i18n{helpdesk.message.search_nok}</blockquote>
-                </#if>
-            <#else>
-                <div class="portlet-background">
-                    <@subjectsList items=helpdesk_subject_list typeList="subject" depth=0 />
-                </div>
-                <@subjectsList items=helpdesk_subject_list typeList="questionAnswer" depth=0 />
-            </#if>
-            <form class="form-horizontal" method="post">
-                <fieldset>
-                    <legend>#i18n{helpdesk.subject_list.labelNoAnswer}</legend>
-                    <input type="hidden" name="page" value="${path_label}">
-                    <input type="hidden" name="faq_id" value="${faq.id}">
-                    <input type="hidden" name="contact" value="contact">
-                    <@button title='#i18n{helpdesk.subject_list.labelContact}' buttonIcon='envelope' size='sm' type='submit'/>
-                </fieldset>
-            </form>
-        </div>
+    <div class="col-12">
+		<a name="top"></a>
+		<fieldset>
+			<legend>#i18n{helpdesk.subject_list.pageTitle}</legend>
+			<form class="form-search" name="form_search" method="post">
+				<div class="mb-3 row">
+					<label class="col-md-2 col-form-label" for="form_search_keywords">#i18n{helpdesk.subject_list.labelSearch} : </label>
+					<div class="col-md-10">
+						<input type="text" class="form-control input-sm" id="form_search_keywords" name="form_search_keywords" value="${filter_searched_keywords?html}">
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-md-2 col-form-label" for="form_search_date_begin">#i18n{helpdesk.subject_list.labelDateBegin} :</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<span class="input-group-text"><@icon style='calendar' /></span>
+							<input type="text" class="form-control input-sm" id="form_search_date_begin" name="form_search_date_begin" value="${filter_date_begin?html}">
+						</div>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-md-2 col-form-label" for="form_search_date_end">#i18n{helpdesk.subject_list.labelDateEnd}</label>
+					<div class="col-md-10">
+						<div class="input-group">
+							<span class="input-group-text"><@icon style='calendar' /></span>
+							<input type="text" class="form-control input-sm" id="form_search_date_end" name="form_search_date_end" value="${filter_date_end?html}">
+						</div>
+					</div>
+				</div>
+				<div class="mb-3 row">
+					<label class="col-md-2 col-form-label" for="form_search_subject_id">#i18n{helpdesk.subject_list.labelSubject} :</label>
+					<div class="col-md-10">
+						<select id="form_search_subject_id" name="form_search_subject_id" class="form-control mb-2">
+							<option value=""></option>
+							<@subjectsListSelect items=helpdesk_subject_list default_value='${filter_subject_id}' exclude_value='' depth=0 />
+						</select>
+						<div class="checkbox">
+							<label>
+								<input type="checkbox" name="form_search_sub_subjects" id="form_search_sub_subjects" value="true" <#if filter_search_sub_subject>checked="checked"</#if> />
+								#i18n{helpdesk.subject_list.labelSearchSubSubjects}
+							</label>
+						</div>
+					</div>
+				</div>
+				<input type="hidden" name="page" value="${path_label}">
+				<input type="hidden" value="${faq.id}" name="faq_id">
+				<div class="mb-3 row">
+					<div class="col-md-10 offset-sm-2">
+						<button type="submit" title="#i18n{helpdesk.subject_list.buttonLabelSearch}" class="btn btn-primary btn-sm">
+							<span class="ti ti-search"></span>
+							#i18n{helpdesk.subject_list.buttonLabelSearch}
+						</button>
+						<a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}" title="#i18n{helpdesk.subject_list.labelList}" class="btn btn-primary btn-sm">
+							<span class="ti ti-list"></span>
+							#i18n{helpdesk.subject_list.labelList}
+							</span>
+						</a>
+					</div>
+				</div>
+			</form>
+		</fieldset>
+		<form method="post">
+			<input type="hidden" name="page" value="${path_label}">
+			<input type="hidden" name="faq_id" value="${faq.id}">
+			<input type="hidden" name="contact" value="contact">
+			<div class="mb-3 row">
+				<label class="col-md-2 col-form-label">#i18n{helpdesk.subject_list.labelNoAnswer}</label>
+				<div class="col-md-10">
+					<button type="submit" title="#i18n{helpdesk.modify_faq.buttonLabelModify}" class="btn btn-primary btn-sm">
+						<span class="ti ti-edit"></span>
+						#i18n{helpdesk.modify_faq.buttonLabelModify}
+					</button>
+				</div>
+			</div>
+		</form>
+		<#if search_page>
+			<#if helpdesk_question_answer_list?has_content>
+				<ul id="questionAnswer">
+					<#list helpdesk_question_answer_list as questionAnswer>
+					<li>
+						<@getParentSubject subject=questionAnswer.getSubject(plugin) breadcrumb='' />
+						<br />
+						<a name="${questionAnswer.idQuestionAnswer}"></a>
+						<strong>${questionAnswer.question}</strong>
+						<blockquote>${questionAnswer.answer}</blockquote>
+					</li>
+					</#list>
+				</ul>
+			<#else>
+				<blockquote>#i18n{helpdesk.message.search_nok}</blockquote>
+			</#if>
+		<#else>
+			<@subjectsList items=helpdesk_subject_list typeList="questionAnswer" depth=0 />
+		</#if>
+		<form class="form-horizontal mt-4" method="post">
+			<fieldset>
+				<legend>#i18n{helpdesk.subject_list.labelNoAnswer}</legend>
+				<input type="hidden" name="page" value="${path_label}">
+				<input type="hidden" name="faq_id" value="${faq.id}">
+				<input type="hidden" name="contact" value="contact">
+				<button type="submit" title="#i18n{helpdesk.subject_list.labelContact}" class="btn btn-primary btn-sm">
+					<span class="ti ti-mail"></span>
+					#i18n{helpdesk.subject_list.labelContact}
+				</button>
+			</fieldset>
+		</form>
     </div>
 </div>
 <script src="js/jquery/plugins/ui/jquery-ui-1.9.2.custom.min.js"></script>
