@@ -281,29 +281,28 @@ public class HelpdeskIndexer implements SearchIndexer
 
         FieldType ft = new FieldType( StringField.TYPE_STORED );
         ft.setOmitNorms( false );
-        ft.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ), ft ) );
 
-        doc.add( new Field( HelpdeskSearchItem.FIELD_ROLE, strRoleKey, ft ) );
+        doc.add( new Field( SearchItem.FIELD_ROLE, strRoleKey, ft ) );
 
         // Add the url as a field named "url".  Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
-        doc.add( new Field( HelpdeskSearchItem.FIELD_URL, strUrl, ft ) );
+        doc.add( new Field( SearchItem.FIELD_URL, strUrl, ft ) );
 
         doc.add( new Field( HelpdeskSearchItem.FIELD_SUBJECT, String.valueOf( questionAnswer.getIdSubject( ) ), ft ) );
 
         // Add the uid as a field, so that index can be incrementally maintained.
-        // This field is not stored with question/answer, it is indexed, but it is not
+        // This field is stored with question/answer, it is indexed, but it is not
         // tokenized prior to indexing.
         String strIdQuestionAnswer = String.valueOf( questionAnswer.getIdQuestionAnswer( ) );
-        doc.add( new Field( HelpdeskSearchItem.FIELD_UID, strIdQuestionAnswer + "_" + SHORT_NAME_QUESTION_ANSWER, ft ) );
+        doc.add( new Field( SearchItem.FIELD_UID, strIdQuestionAnswer + "_" + SHORT_NAME_QUESTION_ANSWER, ft ) );
 
         // Add the last modified date of the file a field named "modified".
         // Use a field that is indexed (i.e. searchable), but don't tokenize
         // the field into words.
         String strDate = DateTools.dateToString( questionAnswer.getCreationDate( ), DateTools.Resolution.DAY );
-        doc.add( new Field( HelpdeskSearchItem.FIELD_DATE, strDate, ft ) );
+        doc.add( new Field( SearchItem.FIELD_DATE, strDate, ft ) );
 
         String strContentToIndex = getContentToIndex( questionAnswer, plugin );
         ContentHandler handler = new BodyContentHandler( );
@@ -328,13 +327,13 @@ public class HelpdeskIndexer implements SearchIndexer
 
         // Add the tag-stripped contents as a Reader-valued Text field so it will
         // get tokenized and indexed.
-        doc.add( new Field( HelpdeskSearchItem.FIELD_CONTENTS, sb.toString( ), TextField.TYPE_NOT_STORED ) );
+        doc.add( new Field( SearchItem.FIELD_CONTENTS, sb.toString( ), TextField.TYPE_NOT_STORED ) );
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.
-        doc.add( new Field( HelpdeskSearchItem.FIELD_TITLE, questionAnswer.getQuestion( ), TextField.TYPE_STORED ) );
+        doc.add( new Field( SearchItem.FIELD_TITLE, questionAnswer.getQuestion( ), ft ) );
 
-        doc.add( new Field( HelpdeskSearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, TextField.TYPE_STORED ) );
+        doc.add( new Field( SearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, ft ) );
 
         // return the document
         return doc;
@@ -360,23 +359,18 @@ public class HelpdeskIndexer implements SearchIndexer
 
         FieldType ft = new FieldType( StringField.TYPE_STORED );
         ft.setOmitNorms( false );
-        ft.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
-
-        FieldType ftNotStored = new FieldType( StringField.TYPE_NOT_STORED );
-        ftNotStored.setOmitNorms( false );
-        ftNotStored.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
 
         // Add the url as a field named "url".  Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
         doc.add( new Field( SearchItem.FIELD_URL, strUrl, ft ) );
 
         // Add the uid as a field, so that index can be incrementally maintained.
-        // This field is not stored with question/answer, it is indexed, but it is not
+        // This field is stored with the document, it is indexed, but it is not
         // tokenized prior to indexing.
         String strIdSubject = String.valueOf( subject.getId( ) );
-        doc.add( new Field( SearchItem.FIELD_UID, strIdSubject + "_" + SHORT_NAME_SUBJECT, ftNotStored ) );
+        doc.add( new Field( SearchItem.FIELD_UID, strIdSubject + "_" + SHORT_NAME_SUBJECT, ft ) );
 
-        doc.add( new Field( SearchItem.FIELD_CONTENTS, subject.getText( ), ftNotStored ) );
+        doc.add( new Field( SearchItem.FIELD_CONTENTS, subject.getText( ), TextField.TYPE_NOT_STORED ) );
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.
