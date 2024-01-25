@@ -17,7 +17,7 @@
 				<@input type='textarea' id='question' name='question' richtext=true value='${question_answer.question}' />
 			</@formGroup>
 			<@formGroup labelFor='html_content' labelKey=' #i18n{helpdesk.create_question_answer.LabelAnswer}' mandatory=true >
-				<@input type='textarea' id='html_content' name='html_content' richtext=true value='${html_content}' />
+				<@input type='textarea' id='html_content' name='html_content' richtext=true value='${html_content}' rows=15/>
 			</@formGroup>
 			<@formGroup>
 				<#assign isChecked><#if checked='checked'>true<#else>false</#if></#assign>
