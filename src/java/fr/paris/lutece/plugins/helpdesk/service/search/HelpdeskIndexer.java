@@ -282,6 +282,10 @@ public class HelpdeskIndexer implements SearchIndexer
         FieldType ft = new FieldType( StringField.TYPE_STORED );
         ft.setOmitNorms( false );
 
+        FieldType ftdfp = new FieldType( StringField.TYPE_STORED ); //Flags : Idfp
+        ftdfp.setOmitNorms( false );
+        ftdfp.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
+
         doc.add( new Field( HelpdeskSearchItem.FIELD_FAQ_ID, String.valueOf( nIdFaq ), ft ) );
 
         doc.add( new Field( SearchItem.FIELD_ROLE, strRoleKey, ft ) );
@@ -331,7 +335,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.
-        doc.add( new Field( SearchItem.FIELD_TITLE, questionAnswer.getQuestion( ), ft ) );
+        doc.add( new Field( SearchItem.FIELD_TITLE, questionAnswer.getQuestion( ), ftdfp ) );
 
         doc.add( new Field( SearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, ft ) );
 
@@ -360,6 +364,10 @@ public class HelpdeskIndexer implements SearchIndexer
         FieldType ft = new FieldType( StringField.TYPE_STORED );
         ft.setOmitNorms( false );
 
+        FieldType ftdfp = new FieldType( StringField.TYPE_STORED ); //Flags : Idfp
+        ftdfp.setOmitNorms( false );
+        ftdfp.setIndexOptions( IndexOptions.DOCS_AND_FREQS_AND_POSITIONS );
+
         // Add the url as a field named "url".  Use an UnIndexed field, so
         // that the url is just stored with the question/answer, but is not searchable.
         doc.add( new Field( SearchItem.FIELD_URL, strUrl, ft ) );
@@ -374,7 +382,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.
-        doc.add( new Field( SearchItem.FIELD_TITLE, subject.getText( ), ft ) );
+        doc.add( new Field( SearchItem.FIELD_TITLE, subject.getText( ), ftdfp ) );
 
         doc.add( new Field( SearchItem.FIELD_TYPE, HelpdeskPlugin.PLUGIN_NAME, ft ) );
 
