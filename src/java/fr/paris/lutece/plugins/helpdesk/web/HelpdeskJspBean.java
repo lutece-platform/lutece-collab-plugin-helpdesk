@@ -1,36 +1,3 @@
-/*
- * Copyright (c) 2002-2014, Mairie de Paris
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- *  1. Redistributions of source code must retain the above copyright notice
- *     and the following disclaimer.
- *
- *  2. Redistributions in binary form must reproduce the above copyright notice
- *     and the following disclaimer in the documentation and/or other materials
- *     provided with the distribution.
- *
- *  3. Neither the name of 'Mairie de Paris' nor 'Lutece' nor the names of its
- *     contributors may be used to endorse or promote products derived from
- *     this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDERS OR CONTRIBUTORS BE
- * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
- * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
- * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
- * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * License 1.0
- */
 package fr.paris.lutece.plugins.helpdesk.web;
 
 import java.io.IOException;
@@ -41,14 +8,21 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.FileItem;
+import jakarta.enterprise.context.SessionScoped;
+import jakarta.inject.Named;
+
+import fr.paris.lutece.api.user.User;
+import fr.paris.lutece.portal.service.upload.MultipartItem;
 
 import au.com.bytecode.opencsv.CSVReader;
+import fr.paris.lutece.plugins.helpdesk.business.AbstractSubject;
 import fr.paris.lutece.plugins.helpdesk.business.Faq;
 import fr.paris.lutece.plugins.helpdesk.business.FaqHome;
 import fr.paris.lutece.plugins.helpdesk.business.QuestionAnswer;
@@ -95,6 +69,8 @@ import fr.paris.lutece.util.url.UrlItem;
  * This class provides the user interface to manage helpdesk features ( manage,
  * create, modify, remove)
  */
+@SessionScoped
+@Named
 public class HelpdeskJspBean extends PluginAdminPageJspBean
 {
     //right
@@ -215,6 +191,9 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
     private static final String MESSAGE_CANNOT_DELETE_FAQ = "helpdesk.message.cannotDeleteFaq";
     private static final String MESSAGE_CONFIRM_DELETE_FAQ = "helpdesk.message.confirmDeleteFaq";
     private static final String MESSAGE_ACCESS_DENIED = "helpdesk.message.accessDenied";
+    private static final String MESSAGE_QUESTION_NOT_FOUND = "helpdesk.message.questionNotFound";
+    private static final String PARAMETER_INPUT = "input";
+    private static final String MARK_INPUT_NAME = "input_name";
     private static final String MESSAGE_NEW_QUESTION = "helpdesk.message.newQuestion";
     private static final String MESSAGE_CONFIRM_DELETE_SELECTION = "helpdesk.message.confirmDeleteSelection";
     private static final String MESSAGE_CONFIRM_IMPORT_WITHOUT_DELETING = "helpdesk.message.confirmImportWithoutDeleting";
@@ -273,7 +252,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
     private int _nDefaultItemsPerPage;
     private String _strCurrentPageIndex;
     private String[] _multiSelectionValues;
-    private FileItem _csvItem;
+    private List<String[]> _listPendingCsvRows;
 
     /**
      * Creates a new HelpdeskJspBean object.
@@ -299,8 +278,9 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( MESSAGE_PAGE_TITLE_SUBJECT_LIST );
 
-        Collection<Subject> listSubject = (Collection<Subject>) SubjectHome.getInstance(  )
+        Collection<Subject> listSubject = (Collection<Subject>) SubjectHome
                                                                            .findByIdFaq( faq.getId(  ), getPlugin(  ) );
+        List<Subject> listRootSubject = keepRoots( listSubject );
         _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_STYLES_PER_PAGE, 10 );
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
@@ -309,7 +289,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         UrlItem url = new UrlItem( JSP_LIST_SUBJECTS );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
 
-        Paginator paginator = new Paginator( (List<Subject>) listSubject, _nItemsPerPage, url.getUrl(  ),
+        Paginator paginator = new Paginator( listRootSubject, _nItemsPerPage, url.getUrl(  ),
                 Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
         model.put( MARK_NB_ITEMS_PER_PAGE, "" + _nItemsPerPage );
@@ -340,7 +320,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         Map<String, Object> model = new HashMap<String, Object>(  );
         setPageTitleProperty( MESSAGE_PAGE_TITLE_CREATE_SUBJECT );
 
-        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance(  )
+        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome
                                                                             .findByIdFaq( faq.getId(  ), getPlugin(  ) );
         model.put( MARK_SUBJECT_LIST, listSubjects );
         model.put( MARK_PLUGIN, getPlugin(  ) );
@@ -379,11 +359,11 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         Subject subject = new Subject(  );
         subject.setText( strSubject );
         subject.setIdParent( Integer.parseInt( strParentId ) );
-        subject = (Subject) SubjectHome.getInstance(  ).create( subject, faq.getId(  ), getPlugin(  ) );
+        subject = (Subject) SubjectHome.create( subject, faq.getId(  ), getPlugin(  ) );
 
         if ( subject.getIdParent(  ) == 0 )
         {
-            SubjectHome.getInstance(  ).createLinkToFaq( subject.getId(  ), faq.getId(  ), getPlugin(  ) );
+            SubjectHome.createLinkToFaq( subject.getId(  ), faq.getId(  ), getPlugin(  ) );
         }
 
         // If the operation is successfull, redirect towards the list of subjects
@@ -409,7 +389,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
         int nIdSubject = Integer.parseInt( strIdSubject );
-        SubjectHome.getInstance(  ).goDown( nIdSubject, faq.getId(  ), getPlugin(  ) );
+        SubjectHome.goDown( nIdSubject, faq.getId(  ), getPlugin(  ) );
 
         UrlItem url = new UrlItem( JSP_SUBJECTS_LIST );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
@@ -433,7 +413,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
         int nIdSubject = Integer.parseInt( strIdSubject );
-        SubjectHome.getInstance(  ).goUp( nIdSubject, faq.getId(  ), getPlugin(  ) );
+        SubjectHome.goUp( nIdSubject, faq.getId(  ), getPlugin(  ) );
 
         UrlItem url = new UrlItem( JSP_SUBJECTS_LIST );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
@@ -460,7 +440,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
         int nIdSubject = Integer.parseInt( strIdSubject );
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
         if ( subject == null )
         {
@@ -469,10 +449,10 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( subject.getIdParent(  ) == 0 )
         {
-            SubjectHome.getInstance(  ).removeLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
+            SubjectHome.removeLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
         }
 
-        SubjectHome.getInstance(  ).goIn( nIdSubject, faq.getId(  ), getPlugin(  ) );
+        SubjectHome.goIn( nIdSubject, faq.getId(  ), getPlugin(  ) );
 
         return url.getUrl(  );
     }
@@ -496,9 +476,9 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
         int nIdSubject = Integer.parseInt( strIdSubject );
-        SubjectHome.getInstance(  ).goOut( nIdSubject, faq.getId(  ), getPlugin(  ) );
+        SubjectHome.goOut( nIdSubject, faq.getId(  ), getPlugin(  ) );
 
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
         if ( subject == null )
         {
@@ -507,8 +487,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( subject.getIdParent(  ) == 0 )
         {
-            SubjectHome.getInstance(  ).removeLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
-            SubjectHome.getInstance(  ).createLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
+            SubjectHome.removeLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
+            SubjectHome.createLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
         }
 
         return url.getUrl(  );
@@ -535,7 +515,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         String strIdSubject = request.getParameter( PARAMETER_SUBJECT_ID );
 
         int nIdSubject = Integer.parseInt( strIdSubject );
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
         if ( subject == null )
         {
@@ -546,7 +526,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         model.put( MARK_PLUGIN, getPlugin(  ) );
         model.put( MARK_FAQ_ID, faq.getId(  ) );
 
-        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance(  )
+        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome
                                                                             .findByIdFaq( faq.getId(  ), getPlugin(  ) );
         model.put( MARK_SUBJECT_LIST, listSubjects );
 
@@ -584,7 +564,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         int nIdParent = Integer.parseInt( strIdParent );
 
         //FIXME check if the parent space is a child space from current subject
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
         subject.setText( strSubject );
 
         //If the parent subject have been modified, then set the order to 0
@@ -592,19 +572,19 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         {
             if ( subject.getIdParent(  ) == 0 )
             {
-                SubjectHome.getInstance(  ).removeLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
+                SubjectHome.removeLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
             }
 
             if ( nIdParent == 0 )
             {
-                SubjectHome.getInstance(  ).createLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
+                SubjectHome.createLinkToFaq( nIdSubject, faq.getId(  ), getPlugin(  ) );
             }
 
             subject.setIdParent( nIdParent );
             subject.setIdOrder( SubjectHome.FIRST_ORDER );
         }
 
-        SubjectHome.getInstance(  ).update( subject, faq.getId(  ), getPlugin(  ) );
+        SubjectHome.update( subject, faq.getId(  ), getPlugin(  ) );
 
         // If the operation is successfull, redirect towards the list of subjects
         UrlItem url = new UrlItem( JSP_SUBJECTS_LIST );
@@ -633,7 +613,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_SUBJECT_ID, nIdSubject );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
 
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
         if ( ( subject == null ) || ( subject.getChilds( getPlugin(  ) ).size(  ) > 0 ) )
         {
@@ -665,7 +645,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             QuestionAnswerHome.removeBySubject( nIdSubject, getPlugin(  ) );
         }
 
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
         UrlItem url = new UrlItem( JSP_SUBJECTS_LIST );
         url.addParameter( PARAMETER_SUBJECT_ID, nIdSubject );
@@ -679,10 +659,10 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( subject.getIdParent(  ) == 0 )
         {
-            SubjectHome.getInstance(  ).removeLinkToFaq( subject.getId(  ), faq.getId(  ), getPlugin(  ) );
+            SubjectHome.removeLinkToFaq( subject.getId(  ), faq.getId(  ), getPlugin(  ) );
         }
 
-        SubjectHome.getInstance(  ).remove( nIdSubject, faq.getId(  ), getPlugin(  ) );
+        SubjectHome.remove( nIdSubject, faq.getId(  ), getPlugin(  ) );
 
         // If the operation is successfull, redirect towards the list of subjects
         return url.getUrl(  );
@@ -710,12 +690,12 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         if ( ( strIdSubject != null ) && strIdSubject.matches( REGEX_ID ) )
         {
             int nIdSubject = Integer.parseInt( strIdSubject );
-            subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+            subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
         }
 
         setPageTitleProperty( MESSAGE_PAGE_TITLE_QUESTION_ANSWER_LIST );
 
-        Collection<Subject> listSubject = (Collection<Subject>) SubjectHome.getInstance(  )
+        Collection<Subject> listSubject = (Collection<Subject>) SubjectHome
                                                                            .findByIdFaq( faq.getId(  ), getPlugin(  ) );
 
         if ( ( subject == null ) && ( listSubject.size(  ) > 0 ) )
@@ -816,7 +796,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
         
         model.put( MARK_SUBJECT_LIST,
-            (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( faq.getId(  ), getPlugin(  ) ) );
+            (Collection<Subject>) SubjectHome.findByIdFaq( faq.getId(  ), getPlugin(  ) ) );
         model.put( MARK_DEFAULT_VALUE, ( strSubjectId == null ) ? "" : strSubjectId );
         model.put( MARK_PLUGIN, getPlugin(  ) );
         model.put( MARK_WEBAPP_URL, AppPathService.getBaseUrl( request ) );
@@ -889,9 +869,9 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         if( strThemeId != null )
         {
         	//send a mail to warn that a new question is published
-        	Subject subject = ( Subject ) SubjectHome.getInstance( ).findByPrimaryKey(nIdSubject, getPlugin( ) );
+        	Subject subject = ( Subject ) SubjectHome.findByPrimaryKey(nIdSubject, getPlugin( ) );
         	int nIdTheme = Integer.parseInt( strThemeId );
-            Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );            
+            Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );            
           
             Collection<Recipient> listRecipientTheme = AdminMailingListService.getRecipients( theme.getIdMailingList(  ) );
             
@@ -942,7 +922,15 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         HashMap model = new HashMap(  );
         setPageTitleProperty( MESSAGE_PAGE_TITLE_MODIFY_QUESTION_ANSWER );
 
-        int nIdQuestionAnswer = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
+        String strIdQuestionAnswer = request.getParameter( PARAMETER_QUESTION_ID );
+
+        if ( ( strIdQuestionAnswer == null ) || !strIdQuestionAnswer.matches( REGEX_ID )
+                || ( QuestionAnswerHome.findByPrimaryKey( Integer.parseInt( strIdQuestionAnswer ), getPlugin(  ) ) == null ) )
+        {
+            return getQuestionAnswerList( request );
+        }
+
+        int nIdQuestionAnswer = Integer.parseInt( strIdQuestionAnswer );
 
         QuestionAnswer questionAnswer = QuestionAnswerHome.findByPrimaryKey( nIdQuestionAnswer, getPlugin(  ) );
 
@@ -952,7 +940,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         model.put( MARK_FAQ_ID, faq.getId(  ) );
         model.put( MARK_FAQ_NAME, faq.getName(  ) );
         model.put( MARK_SUBJECT_LIST,
-            (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( faq.getId(  ), getPlugin(  ) ) );
+            (Collection<Subject>) SubjectHome.findByIdFaq( faq.getId(  ), getPlugin(  ) ) );
         model.put( MARK_PLUGIN, getPlugin(  ) );
 
         questionAnswer.setAnswer( questionAnswer.getAnswer(  ) );
@@ -987,7 +975,15 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return AdminMessageService.getMessageUrl( request, MESSAGE_ACCESS_DENIED, AdminMessage.TYPE_STOP );
         }
 
-        int nIdQuestionAnswer = Integer.parseInt( request.getParameter( PARAMETER_QUESTION_ID ) );
+        String strIdQuestionAnswer = request.getParameter( PARAMETER_QUESTION_ID );
+
+        if ( ( strIdQuestionAnswer == null ) || !strIdQuestionAnswer.matches( REGEX_ID )
+                || ( QuestionAnswerHome.findByPrimaryKey( Integer.parseInt( strIdQuestionAnswer ), getPlugin(  ) ) == null ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_QUESTION_NOT_FOUND, AdminMessage.TYPE_STOP );
+        }
+
+        int nIdQuestionAnswer = Integer.parseInt( strIdQuestionAnswer );
         int nIdSubject = Integer.parseInt( request.getParameter( PARAMETER_SUBJECT_ID ) );
         String strQuestion = request.getParameter( PARAMETER_QUESTION );
         String strAnswer = request.getParameter( PARAMETER_CONTENT_HTML );
@@ -1214,6 +1210,13 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         String strIdQuestionAnswer = request.getParameter( PARAMETER_QUESTION_ID );
+
+        if ( ( strIdQuestionAnswer == null ) || !strIdQuestionAnswer.matches( REGEX_ID )
+                || ( QuestionAnswerHome.findByPrimaryKey( Integer.parseInt( strIdQuestionAnswer ), getPlugin(  ) ) == null ) )
+        {
+            return AdminMessageService.getMessageUrl( request, MESSAGE_QUESTION_NOT_FOUND, AdminMessage.TYPE_STOP );
+        }
+
         int nIdQuestionAnswer = Integer.parseInt( strIdQuestionAnswer );
         QuestionAnswerHome.remove( nIdQuestionAnswer, getPlugin(  ) );
 
@@ -1317,15 +1320,15 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( faq == null )
         {
-            return getManageHelpdesk( request );
+            return getEmptyAnswerSelection( request );
         }
 
         Map<String, Object> model = new HashMap<String, Object>(  );
-        List<Subject> listSubject = (List<Subject>) SubjectHome.getInstance(  ).findAll( getPlugin(  ) );
+        List<Subject> listSubject = (List<Subject>) SubjectHome.findAll( getPlugin(  ) );
         model.put( MARK_SUBJECT_LIST, listSubject );
         model.put( MARK_PLUGIN, getPlugin(  ) );
         model.put( MARK_FAQ_ID, faq.getId(  ) );
-        model.put( MARK_QUESTION_LIST, QuestionAnswerHome.findAll( getPlugin(  ) ) );
+        model.put( MARK_INPUT_NAME, request.getParameter( PARAMETER_INPUT ) );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ANSWER_SELECTION, getLocale(  ), model );
 
@@ -1352,10 +1355,10 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         if ( ( strIdTheme != null ) && strIdTheme.matches( REGEX_ID ) )
         {
             int nIdTheme = Integer.parseInt( strIdTheme );
-            theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+            theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
         }
 
-        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance(  )
+        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome
                                                                     .findByIdFaq( faq.getId(  ), getPlugin(  ) );
 
         if ( ( theme == null ) && ( listThemes.size(  ) > 0 ) )
@@ -1471,7 +1474,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return getVisitorQuestionList( request );
         }
 
-        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance(  )
+        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome
                                                                     .findByIdFaq( faq.getId(  ), getPlugin(  ) );
 
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
@@ -1480,7 +1483,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         if ( ( strIdTheme != null ) && strIdTheme.matches( REGEX_ID ) )
         {
             int nIdTheme = Integer.parseInt( strIdTheme );
-            theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+            theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
         }
 
         if ( ( theme == null ) && ( listThemes.size(  ) > 0 ) )
@@ -1684,7 +1687,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
          // delete the existing questionAnswer list
          if ( bDeleteList )
          {
-             QuestionAnswerHome.removeAll( getPlugin(  ) );
+             removeQuestionsOfFaq( faq );
          }
 
          // Save the list
@@ -1712,16 +1715,16 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
         
         Collection<QuestionAnswer> questionAnswerList = new ArrayList<QuestionAnswer>(  );
-        
-        List<String[]> listQuestionAnswers = getRowsFromCsvFile( request, false );
+
+        List<String[]> listQuestionAnswers = _listPendingCsvRows;
+        _listPendingCsvRows = null;
 
         if ( listQuestionAnswers == null )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_NOT_VALID, AdminMessage.TYPE_STOP );
         }
 
-        // the file is empty
-        if ( ( listQuestionAnswers == null ) || ( listQuestionAnswers.size(  ) == 0 ) )
+        if ( listQuestionAnswers.isEmpty(  ) )
         {
             return AdminMessageService.getMessageUrl( request, MESSAGE_CSV_FILE_EMPTY, AdminMessage.TYPE_STOP );
         }
@@ -1757,7 +1760,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         
         Collection<QuestionAnswer> questionAnswerList = new ArrayList<QuestionAnswer>(  );
         boolean bDeleteList = ( request.getParameter( PARAMETER_DELETE_LIST ) != null ) ? true : false;
-        List<String[]> listQuestionAnswers = getRowsFromCsvFile( request, true );
+        List<String[]> listQuestionAnswers = getRowsFromCsvFile( request );
 
         if ( listQuestionAnswers == null )
         {
@@ -1779,10 +1782,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
         else
         {
-        	MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
+        	_listPendingCsvRows = listQuestionAnswers;
 
-            _csvItem = multi.getFile( PARAMETER_CSV_FILE );          
-            
         	UrlItem url = new UrlItem( JSP_DO_IMPORT_CSV );
             url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );            
 
@@ -1814,8 +1815,9 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
             return getManageHelpdesk( request );
         }
 
-        Collection<Theme> listTheme = (Collection<Theme>) ThemeHome.getInstance(  )
+        Collection<Theme> listTheme = (Collection<Theme>) ThemeHome
                                                                    .findByIdFaq( faq.getId(  ), getPlugin(  ) );
+        List<Theme> listRootTheme = keepRoots( listTheme );
         _nDefaultItemsPerPage = AppPropertiesService.getPropertyInt( PROPERTY_STYLES_PER_PAGE, 10 ); //TODO no numbers in hard
         _strCurrentPageIndex = Paginator.getPageIndex( request, Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
         _nItemsPerPage = Paginator.getItemsPerPage( request, Paginator.PARAMETER_ITEMS_PER_PAGE, _nItemsPerPage,
@@ -1824,7 +1826,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         UrlItem url = new UrlItem( JSP_MANAGE_HELPDESK_ADMIN );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
 
-        Paginator paginator = new Paginator( (List<Theme>) listTheme, _nItemsPerPage, url.getUrl(  ),
+        Paginator paginator = new Paginator( listRootTheme, _nItemsPerPage, url.getUrl(  ),
                 Paginator.PARAMETER_PAGE_INDEX, _strCurrentPageIndex );
 
         model.put( MARK_NB_ITEMS_PER_PAGE, String.valueOf( _nItemsPerPage ) );
@@ -1853,7 +1855,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         int nIdTheme = Integer.parseInt( request.getParameter( PARAMETER_THEME_ID ) );
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+        Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
         Collection<VisitorQuestion> listQuestion = ThemeHome.findQuestion( nIdTheme, getPlugin(  ) );
         UrlItem url = new UrlItem( JSP_DO_REMOVE_THEME );
         url.addParameter( PARAMETER_THEME_ID, nIdTheme );
@@ -1898,7 +1900,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
 
         int nIdTheme = Integer.parseInt( request.getParameter( PARAMETER_THEME_ID ) );
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+        Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
         Collection<VisitorQuestion> listQuestion = ThemeHome.findQuestion( nIdTheme, getPlugin(  ) );
 
         if ( theme == null )
@@ -1910,7 +1912,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         {
             if ( theme.getIdParent(  ) == 0 )
             {
-                ThemeHome.getInstance(  ).removeLinkToFaq( theme.getId(  ), faq.getId(  ), getPlugin(  ) );
+                ThemeHome.removeLinkToFaq( theme.getId(  ), faq.getId(  ), getPlugin(  ) );
             }
 
             Collection<VisitorQuestion> visitorQuestionList = VisitorQuestionHome.findArchivedQuestionsByTheme( theme.getId(  ),
@@ -1921,7 +1923,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
                 VisitorQuestionHome.remove( visitorQuestion.getIdVisitorQuestion(  ), getPlugin(  ) );
             }
 
-            ThemeHome.getInstance(  ).remove( nIdTheme, faq.getId(  ), getPlugin(  ) );
+            ThemeHome.remove( nIdTheme, faq.getId(  ), getPlugin(  ) );
         }
 
         // If the operation is successful, redirect towards the list of themes
@@ -1946,7 +1948,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         setPageTitleProperty( MESSAGE_PAGE_TITLE_CREATE_THEME );
 
-        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance(  )
+        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome
                                                                     .findByIdFaq( faq.getId(  ), getPlugin(  ) );
         Theme rootTheme = ThemeHome.getVirtualRootTheme( getLocale(  ) );
         model.put( MARK_THEME_LIST, listThemes );
@@ -1983,7 +1985,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
 
         int nIdTheme = Integer.parseInt( strIdTheme );
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+        Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
 
         if ( theme == null )
         {
@@ -1994,7 +1996,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         model.put( MARK_PLUGIN, getPlugin(  ) );
         model.put( MARK_FAQ_ID, faq.getId(  ) );
 
-        Collection<Theme> listTheme = (Collection<Theme>) ThemeHome.getInstance(  )
+        Collection<Theme> listTheme = (Collection<Theme>) ThemeHome
                                                                    .findByIdFaq( faq.getId(  ), getPlugin(  ) );
         model.put( MARK_THEME_LIST, listTheme );
 
@@ -2045,11 +2047,11 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         theme.setText( strTheme );
         theme.setIdMailingList( nIdQuestionMailingList );
         theme.setIdParent( nIdParent );
-        theme = (Theme) ThemeHome.getInstance(  ).create( theme, faq.getId(  ), getPlugin(  ) );
+        theme = (Theme) ThemeHome.create( theme, faq.getId(  ), getPlugin(  ) );
 
         if ( theme.getIdParent(  ) == 0 )
         {
-            ThemeHome.getInstance(  ).createLinkToFaq( theme.getId(  ), faq.getId(  ), getPlugin(  ) );
+            ThemeHome.createLinkToFaq( theme.getId(  ), faq.getId(  ), getPlugin(  ) );
         }
 
         // If the operation is successful, redirect towards the list of themes
@@ -2103,18 +2105,18 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( theme.getIdParent(  ) == 0 )
         {
-            ThemeHome.getInstance(  ).removeLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
+            ThemeHome.removeLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
         }
 
         if ( nIdParent == 0 )
         {
-            ThemeHome.getInstance(  ).createLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
+            ThemeHome.createLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
         }
 
         theme.setIdParent( nIdParent );
         theme.setIdMailingList( nIdQuestionMailingList );
 
-        ThemeHome.getInstance(  ).update( theme, faq.getId(  ), getPlugin(  ) );
+        ThemeHome.update( theme, faq.getId(  ), getPlugin(  ) );
 
         // If the operation is successfull, redirect towards the list of themes
         UrlItem url = new UrlItem( JSP_MANAGE_HELPDESK_LIST );
@@ -2139,7 +2141,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
         int nIdTheme = Integer.parseInt( strIdTheme );
-        ThemeHome.getInstance(  ).goDown( nIdTheme, faq.getId(  ), getPlugin(  ) );
+        ThemeHome.goDown( nIdTheme, faq.getId(  ), getPlugin(  ) );
 
         UrlItem url = new UrlItem( JSP_MANAGE_HELPDESK_LIST );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
@@ -2163,7 +2165,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
         int nIdTheme = Integer.parseInt( strIdTheme );
-        ThemeHome.getInstance(  ).goUp( nIdTheme, faq.getId(  ), getPlugin(  ) );
+        ThemeHome.goUp( nIdTheme, faq.getId(  ), getPlugin(  ) );
 
         UrlItem url = new UrlItem( JSP_MANAGE_HELPDESK_LIST );
         url.addParameter( PARAMETER_FAQ_ID, faq.getId(  ) );
@@ -2190,7 +2192,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
         int nIdTheme = Integer.parseInt( strIdTheme );
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+        Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
 
         if ( theme == null )
         {
@@ -2199,10 +2201,10 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( theme.getIdParent(  ) == 0 )
         {
-            ThemeHome.getInstance(  ).removeLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
+            ThemeHome.removeLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
         }
 
-        ThemeHome.getInstance(  ).goIn( nIdTheme, faq.getId(  ), getPlugin(  ) );
+        ThemeHome.goIn( nIdTheme, faq.getId(  ), getPlugin(  ) );
 
         return url.getUrl(  );
     }
@@ -2226,9 +2228,9 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         String strIdTheme = request.getParameter( PARAMETER_THEME_ID );
         int nIdTheme = Integer.parseInt( strIdTheme );
-        ThemeHome.getInstance(  ).goOut( nIdTheme, faq.getId(  ), getPlugin(  ) );
+        ThemeHome.goOut( nIdTheme, faq.getId(  ), getPlugin(  ) );
 
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, getPlugin(  ) );
+        Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, getPlugin(  ) );
 
         if ( theme == null )
         {
@@ -2237,8 +2239,8 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         if ( theme.getIdParent(  ) == 0 )
         {
-            ThemeHome.getInstance(  ).removeLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
-            ThemeHome.getInstance(  ).createLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
+            ThemeHome.removeLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
+            ThemeHome.createLinkToFaq( nIdTheme, faq.getId(  ), getPlugin(  ) );
         }
 
         return url.getUrl(  );
@@ -2498,7 +2500,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         int nIdSubject = Integer.parseInt( strSubjectId );
-        Subject subject = (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( nIdSubject, getPlugin(  ) );
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( nIdSubject, getPlugin(  ) );
 
         if ( subject == null )
         {
@@ -2598,7 +2600,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
      * @param request The {@link HttpServletRequest}
      * @return the list of array of String of null if the file is not valid
      */
-    private List<String[]> getRowsFromCsvFile( HttpServletRequest request, boolean isMulti )
+    private List<String[]> getRowsFromCsvFile( HttpServletRequest request )
     {
         String strCsvFileExtension = AppPropertiesService.getProperty( PROPERTY_CSV_FILE_EXTENSION,
                 DEFAULT_CSV_FILE_EXTENSION );
@@ -2606,16 +2608,15 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         char cImportDelimiter = AppPropertiesService.getProperty( PROPERTY_IMPORT_DELIMITER, DEFAULT_IMPORT_DELIMITER )
                                                     .charAt( 0 );
 
-        String strMultiFileName = null;
-        if( isMulti )
-        {
-        	// create the multipart request
-            MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
+        MultipartHttpServletRequest multi = (MultipartHttpServletRequest) request;
+        MultipartItem csvItem = multi.getFile( PARAMETER_CSV_FILE );
 
-            _csvItem = multi.getFile( PARAMETER_CSV_FILE );            
+        if ( csvItem == null )
+        {
+            return null;
         }
-        
-        strMultiFileName = UploadUtil.cleanFileName( _csvItem.getName(  ) );
+
+        String strMultiFileName = UploadUtil.cleanFileName( csvItem.getName(  ) );
 
         if ( strMultiFileName.equals( "" ) )
         {
@@ -2636,7 +2637,7 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
 
         try
         {
-            fileReader = new InputStreamReader( _csvItem.getInputStream(  ), strCharset );
+            fileReader = new InputStreamReader( csvItem.getInputStream(  ), strCharset );
 
             CSVReader csvReader = new CSVReader( fileReader, cImportDelimiter );
 
@@ -2649,6 +2650,38 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
         }
 
         return listQuestionAnswers;
+    }
+
+    /**
+     * Keeps the subjects or themes whose parent is not part of the same list.
+     *
+     * Listing templates render the tree by recursing into the children of every row. Paginating the whole
+     * flat list therefore renders children twice and counts them twice: only the roots belong to the page.
+     *
+     * @param <T> The subject type
+     * @param collAbstractSubjects The flat list read for the FAQ
+     * @return The roots of that list, in the same order
+     */
+    private <T extends AbstractSubject> List<T> keepRoots( Collection<T> collAbstractSubjects )
+    {
+        Set<Integer> setIds = new HashSet<>(  );
+
+        for ( T abstractSubject : collAbstractSubjects )
+        {
+            setIds.add( abstractSubject.getId(  ) );
+        }
+
+        List<T> listRoots = new ArrayList<>(  );
+
+        for ( T abstractSubject : collAbstractSubjects )
+        {
+            if ( !setIds.contains( abstractSubject.getIdParent(  ) ) )
+            {
+                listRoots.add( abstractSubject );
+            }
+        }
+
+        return listRoots;
     }
 
     /**
@@ -2742,4 +2775,57 @@ public class HelpdeskJspBean extends PluginAdminPageJspBean
     }
     
     
+
+    /**
+     * Renders the answer selection fragment without a FAQ context (no back-office layout, no offcanvas macro).
+     * @param request The HTTP request
+     * @return The HTML code of the answer selection fragment
+     */
+    private String getEmptyAnswerSelection( HttpServletRequest request )
+    {
+        Map<String, Object> model = new HashMap<String, Object>(  );
+        model.put( MARK_SUBJECT_LIST, (List<Subject>) SubjectHome.findAll( getPlugin(  ) ) );
+        model.put( MARK_PLUGIN, getPlugin(  ) );
+        model.put( MARK_INPUT_NAME, request.getParameter( PARAMETER_INPUT ) );
+
+        HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_ANSWER_SELECTION, getLocale(  ), model );
+
+        return template.getHtml(  );
+    }
+
+    /**
+     * Removes every question of a FAQ by walking its subject tree, keeping the questions of the other FAQs.
+     * @param faq The FAQ whose questions are removed
+     */
+    private void removeQuestionsOfFaq( Faq faq )
+    {
+        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.findByIdFaq( faq.getId(  ), getPlugin(  ) );
+
+        if ( listSubjects != null )
+        {
+            for ( Subject subject : listSubjects )
+            {
+                removeQuestionsOfSubjectTree( subject );
+            }
+        }
+    }
+
+    /**
+     * Removes the questions of a subject and of its descendants.
+     * @param subject The root subject of the tree to clear
+     */
+    private void removeQuestionsOfSubjectTree( Subject subject )
+    {
+        QuestionAnswerHome.removeBySubject( subject.getId(  ), getPlugin(  ) );
+
+        Collection<Subject> listChildren = subject.getChilds( getPlugin(  ) );
+
+        if ( listChildren != null )
+        {
+            for ( Subject child : listChildren )
+            {
+                removeQuestionsOfSubjectTree( child );
+            }
+        }
+    }
 }

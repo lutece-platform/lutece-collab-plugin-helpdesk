@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.helpdesk.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +45,8 @@ import java.util.List;
 /**
  * This class provides Data Access methods for Theme objects
  */
-public final class ThemeDAO implements IThemeDAO
+@ApplicationScoped
+public class ThemeDAO implements IThemeDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_theme ) FROM helpdesk_theme";
     private static final String SQL_QUERY_SELECT = " SELECT theme, id_mailing_list, id_parent, id_order FROM helpdesk_theme WHERE id_theme = ?";
@@ -55,6 +57,7 @@ public final class ThemeDAO implements IThemeDAO
     private static final String SQL_QUERY_SELECT_BY_PARENT_ID = " SELECT id_theme, theme, id_mailing_list, id_order FROM helpdesk_theme WHERE id_parent = ? ORDER BY id_order ";
     private static final String SQL_QUERY_SELECT_BY_ORDER_ID = " SELECT id_theme, theme, id_mailing_list FROM helpdesk_theme WHERE id_parent = ? AND id_order = ? ORDER BY id_order ";
     private static final String SQL_QUERY_SELECT_QUESTION = " SELECT id_visitor_question, last_name, first_name, email, question, answer, date_visitor_question, id_user FROM helpdesk_visitor_question WHERE answer = ? AND id_theme = ? ORDER BY date_visitor_question DESC ";
+    private static final String SQL_QUERY_COUNT_QUESTION = " SELECT count(id_visitor_question) FROM helpdesk_visitor_question WHERE answer = ? AND id_theme = ? ";
     private static final String SQL_QUERY_MAX_ORDER = " SELECT max(id_order) FROM helpdesk_theme WHERE id_parent = ? ";
     private static final String SQL_QUERY_SELECT_BY_FAQ_ID = " SELECT DISTINCT t.id_theme, t.theme, t.id_mailing_list, t.id_parent, t.id_order FROM helpdesk_theme t, helpdesk_ln_faq_theme lnft WHERE t.id_theme = lnft.id_theme AND lnft.id_faq = ? ORDER BY t.id_order ";
     private static final String SQL_QUERY_SELECT_BY_FAQ_ORDER_ID = " SELECT DISTINCT t.id_theme, t.theme, t.id_mailing_list, t.id_parent, t.id_order FROM helpdesk_theme t, helpdesk_ln_faq_theme lnft WHERE t.id_theme = lnft.id_theme AND lnft.id_faq = ? AND t.id_order = ? ORDER BY t.id_order ";
@@ -156,7 +159,7 @@ public final class ThemeDAO implements IThemeDAO
                 theme.setIdMailingList( daoUtil.getInt( 2 ) );
                 theme.setIdParent( daoUtil.getInt( 3 ) );
                 theme.setIdOrder( daoUtil.getInt( 4 ) );
-                // Load questions
+                theme.setPlugin( plugin );
                 theme.setQuestions( findQuestions( nIdTheme, plugin ) );
             }
 
@@ -205,9 +208,10 @@ public final class ThemeDAO implements IThemeDAO
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
                 theme.setIdParent( daoUtil.getInt( 4 ) );
                 theme.setIdOrder( daoUtil.getInt( 5 ) );
-                theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                theme.setPlugin( plugin );
                 list.add( theme );
             }
+
 
             return list;
         }
@@ -235,9 +239,10 @@ public final class ThemeDAO implements IThemeDAO
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
                 theme.setIdParent( nIdParent );
                 theme.setIdOrder( daoUtil.getInt( 4 ) );
-                theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                theme.setPlugin( plugin );
                 listThemes.add( theme );
             }
+
 
             return listThemes;
         }
@@ -266,11 +271,31 @@ public final class ThemeDAO implements IThemeDAO
                 theme.setIdMailingList( daoUtil.getInt( 3 ) );
                 theme.setIdParent( daoUtil.getInt( 4 ) );
                 theme.setIdOrder( daoUtil.getInt( 5 ) );
-                theme.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                theme.setPlugin( plugin );
                 listThemes.add( theme );
             }
 
+
             return listThemes;
+        }
+    }
+
+
+    /**
+     * Counts the pending visitor questions of a theme without loading them.
+     * @param nIdTheme The identifier of the Theme
+     * @param plugin The Plugin using this data access service
+     * @return The number of pending questions
+     */
+    public int countQuestion( int nIdTheme, Plugin plugin )
+    {
+        try ( DAOUtil daoUtil = new DAOUtil( SQL_QUERY_COUNT_QUESTION, plugin ) )
+        {
+            daoUtil.setString( 1, "" );
+            daoUtil.setInt( 2, nIdTheme );
+            daoUtil.executeQuery(  );
+
+            return daoUtil.next(  ) ? daoUtil.getInt( 1 ) : 0;
         }
     }
 

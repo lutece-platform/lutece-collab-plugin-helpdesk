@@ -5,16 +5,16 @@
 		<@tform name='modify_faq' action='jsp/admin/plugins/helpdesk/DoModifyFaq.jsp' id='edit_faq_page' boxed=true>
 			<@input type='hidden' value='${faq.id}' name='faq_id' />
 			<@formGroup labelFor='name' labelKey='#i18n{helpdesk.modify_faq.LabelName}' mandatory=true >
-				<@input type='text' id='name' name='name' value=faq.name maxlength=50 />
+				<@input type='text' id='name' name='name' value='${faq.name!}' maxlength=50 />
 			</@formGroup>
 			<@formGroup labelFor='description' labelKey='#i18n{helpdesk.modify_faq.LabelDescription}' mandatory=true >
-				<@input type='text' id='description' name='description' value=faq.description maxlength=50 />
+				<@input type='text' id='description' name='description' value='${faq.description!}' maxlength=50 />
 			</@formGroup>
 			<@formGroup labelFor='role_key' labelKey='#i18n{helpdesk.modify_faq.LabelRoleKey}'>
-				<@select id='role_key' name='role_key' default_value=roleKey items=role_key_list />
+				<@select id='role_key' name='role_key' default_value='${faq.roleKey!}' items=role_key_list />
 			</@formGroup>
 			<@formGroup labelFor='workgroup_key' labelKey='#i18n{helpdesk.modify_faq.LabelWorkgroupKey}'>
-				<@select id='workgroup_key' name='workgroup_key' default_value=workgroup items=workgroup_key_list />
+				<@select id='workgroup_key' name='workgroup_key' default_value='${faq.workgroup!}' items=workgroup_key_list />
 			</@formGroup>
 			<@formGroup>
 				<@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='device-floppy' type='submit' />

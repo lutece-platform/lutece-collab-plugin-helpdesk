@@ -34,8 +34,9 @@
 package fr.paris.lutece.plugins.helpdesk.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
+import java.util.Collection;
 import java.util.List;
 
 
@@ -46,35 +47,212 @@ import java.util.List;
 public final class SubjectHome extends AbstractSubjectHome
 {
     // Static variable pointed at the DAO instance
-    private static ISubjectDAO _dao = (ISubjectDAO) SpringContextService.getPluginBean( "helpdesk", "subjectDAO" );
-
-    /* This class implements the Singleton design pattern. */
-    private static SubjectHome _singleton;
+    private static ISubjectDAO _dao = CDI.current( ).select( ISubjectDAO.class ).get( );
 
     /**
-     * Constructor
+     * Private constructor
      */
-    public SubjectHome(  )
+    private SubjectHome( )
     {
-        if ( _singleton == null )
-        {
-            _singleton = this;
-        }
     }
 
     /**
-     * Returns the instance of SubjectHome
+     * Creation of an instance of a {@link Subject}
      *
-     * @return the SubjectHome instance
+     * @param abstractSubject An instance of the {@link Subject} which contains the informations to store
+     * @param nIdFaq The {@link Faq} Id
+     * @param plugin The current plugin using this method
+     * @return The instance of the {@link Subject} which has been created
      */
-    public static SubjectHome getInstance(  )
+    public static AbstractSubject create( AbstractSubject abstractSubject, int nIdFaq, Plugin plugin )
     {
-        if ( _singleton == null )
-        {
-            _singleton = new SubjectHome(  );
-        }
+        return AbstractSubjectHome.create( _dao, abstractSubject, nIdFaq, plugin );
+    }
 
-        return _singleton;
+    /**
+     * Updates of the {@link Subject} instance specified in parameter
+     *
+     * @param abstractSubject An instance of the {@link Subject} which contains the informations to store
+     * @param nIdFaq The {@link Faq} Id
+     * @param plugin The current plugin using this method
+     * @return The instance of the {@link Subject} which has been updated.
+     */
+    public static AbstractSubject update( AbstractSubject abstractSubject, int nIdFaq, Plugin plugin )
+    {
+        return AbstractSubjectHome.update( _dao, abstractSubject, nIdFaq, plugin );
+    }
+
+    /**
+     * Deletes the {@link Subject} instance whose identifier is specified in parameter
+     *
+     * @param nIdAbstractSubject The identifier of the {@link Subject} to delete in the database
+     * @param nIdFaq The {@link Faq} Id
+     * @param plugin The current plugin using this method
+     */
+    public static void remove( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.remove( _dao, nIdAbstractSubject, nIdFaq, plugin );
+    }
+
+    /**
+     * Returns an instance of the {@link Subject} whose identifier is specified in parameter
+     *
+     * @param nKey The primary key of the {@link Subject} to find in the database
+     * @param plugin The current plugin using this method
+     * @return An instance of the {@link Subject} which corresponds to the key
+     */
+    public static AbstractSubject findByPrimaryKey( int nKey, Plugin plugin )
+    {
+        return AbstractSubjectHome.findByPrimaryKey( _dao, nKey, plugin );
+    }
+
+    /**
+     * Returns {@link Subject} list
+     *
+     * @param plugin The current plugin using this method
+     * @return the list of the {@link Subject} of the database in form of a Subject Collection object
+     */
+    public static List<?extends AbstractSubject> findAll( Plugin plugin )
+    {
+        return AbstractSubjectHome.findAll( _dao, plugin );
+    }
+
+    /**
+     * Finds all {@link Subject} specified by the parent id
+     * @param nIdParent The parent {@link Subject} id
+     * @param plugin The Plugin using this data access service
+     * @return A collection of {@link Subject}
+     */
+    public static Collection<?extends AbstractSubject> findByIdParent( int nIdParent, Plugin plugin )
+    {
+        return AbstractSubjectHome.findByIdParent( _dao, nIdParent, plugin );
+    }
+
+    /**
+     * Finds all {@link Subject} specified by the Faq id
+     * @param nIdFaq The faq subject id
+     * @param plugin The Plugin using this data access service
+     * @return A collection of {@link Subject}
+     */
+    public static Collection<?extends AbstractSubject> findByIdFaq( int nIdFaq, Plugin plugin )
+    {
+        return AbstractSubjectHome.findByIdFaq( _dao, nIdFaq, plugin );
+    }
+
+    /**
+     * Returns an instance of the {@link Subject} whose identifier is specified in parameter
+     *
+     * @param nIdParent The primary key of the parent {@link Subject}
+     * @param nOrder The order id
+     * @param plugin The current plugin using this method
+     * @return An instance of the {@link Subject} which corresponds to the parent id and order id
+     */
+    public static AbstractSubject findByOrder( int nIdParent, int nOrder, Plugin plugin )
+    {
+        return AbstractSubjectHome.findByOrder( _dao, nIdParent, nOrder, plugin );
+    }
+
+    /**
+     * Returns an instance of the {@link Subject} whose identifier is specified in parameter
+     *
+     * @param nIdFaq The primary key of the faq {@link Subject}
+     * @param nOrder The order id
+     * @param plugin The current plugin using this method
+     * @return An instance of the {@link Subject} which corresponds to the faq id and order id
+     */
+    public static AbstractSubject findByFaqOrder( int nIdFaq, int nOrder, Plugin plugin )
+    {
+        return AbstractSubjectHome.findByFaqOrder( _dao, nIdFaq, nOrder, plugin );
+    }
+
+    /**
+     * Get the max order of a parent {@link Subject}
+     * @param nIdParent The id of the parent {@link Subject}
+     * @param plugin The {@link Plugin}
+     * @return the max order
+     */
+    public static int getMaxOrder( int nIdParent, Plugin plugin )
+    {
+        return AbstractSubjectHome.getMaxOrder( _dao, nIdParent, plugin );
+    }
+
+    /**
+    * Move down a {@link Subject} into the list
+    * @param nId The id of the {@link Subject}
+    * @param nIdFaq The {@link Faq} Id
+    * @param plugin The plugin
+    */
+    public static void goDown( int nId, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.goDown( _dao, nId, nIdFaq, plugin );
+    }
+
+    /**
+     * Move up a {@link Subject} into the list
+     * @param nId The id of the {@link Subject}
+     * @param nIdFaq The {@link Faq} Id
+     * @param plugin The plugin
+     */
+    public static void goUp( int nId, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.goUp( _dao, nId, nIdFaq, plugin );
+    }
+
+    /**
+     * Set the {@link Subject} into another parent {@link Subject}
+     * @param nId The {@link Subject} to move
+     * @param nIdFaq The {@link Faq} Id
+     * @param plugin The plugin
+     */
+    public static void goIn( int nId, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.goIn( _dao, nId, nIdFaq, plugin );
+    }
+
+    /**
+     * Set the {@link Subject} out of another parent {@link Subject}
+     * @param nId The {@link Subject} to move
+     * @param nIdFaq The {@link Faq} Id
+     * @param plugin The plugin
+     */
+    public static void goOut( int nId, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.goOut( _dao, nId, nIdFaq, plugin );
+    }
+
+    /**
+     * Create a new record in the table.
+     *
+     * @param nIdAbstractSubject The id of the object Subject
+     * @param nIdFaq The parent id of the object Faq
+     * @param plugin The Plugin using this data access service
+     */
+    public static void createLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.createLinkToFaq( _dao, nIdAbstractSubject, nIdFaq, plugin );
+    }
+
+    /**
+     * Remove a record in the table.
+     *
+     * @param nIdAbstractSubject The id of the object Subject
+     * @param nIdFaq The parent id of the object Faq
+     * @param plugin The Plugin using this data access service
+     */
+    public static void removeLinkToFaq( int nIdAbstractSubject, int nIdFaq, Plugin plugin )
+    {
+        AbstractSubjectHome.removeLinkToFaq( _dao, nIdAbstractSubject, nIdFaq, plugin );
+    }
+
+    /**
+     * Remove a record in the table.
+     *
+     * @param nIdAbstractSubject The id of the object Subject
+     * @param plugin The Plugin using this data access service
+     */
+    public static void removeAllLinksToFaq( int nIdAbstractSubject, Plugin plugin )
+    {
+        AbstractSubjectHome.removeAllLinksToFaq( _dao, nIdAbstractSubject, plugin );
     }
 
     /**
@@ -97,14 +275,5 @@ public final class SubjectHome extends AbstractSubjectHome
     public static int countQuestionSubject( int nIdSubject, Plugin plugin )
     {
         return _dao.countQuestion( nIdSubject, plugin );
-    }
-
-    /**
-     * Return the used dao
-     * @return The used DAO
-     */
-    public IAbstractSubjectDAO getDAO(  )
-    {
-        return _dao;
     }
 }

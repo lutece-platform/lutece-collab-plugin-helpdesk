@@ -51,4 +51,12 @@ public interface IThemeDAO extends IAbstractSubjectDAO
      * @return A collection of questions
      */
     Collection<VisitorQuestion> findQuestions( int nIdTheme, Plugin plugin );
+
+    /**
+     * Counts the pending visitor questions of a theme
+     * @param nIdTheme The Theme ID
+     * @param plugin The Plugin
+     * @return The number of pending questions
+     */
+    int countQuestion( int nIdTheme, Plugin plugin );
 }

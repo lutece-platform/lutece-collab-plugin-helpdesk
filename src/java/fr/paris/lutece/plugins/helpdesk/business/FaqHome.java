@@ -38,10 +38,10 @@ import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.search.IndexationService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupService;
 import fr.paris.lutece.util.ReferenceList;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Collection;
 
@@ -53,7 +53,7 @@ import java.util.Collection;
 public final class FaqHome
 {
     // Static variable pointed at the DAO instance
-    private static IFaqDAO _dao = (IFaqDAO) SpringContextService.getPluginBean( "helpdesk", "faqDAO" );
+    private static IFaqDAO _dao = CDI.current( ).select( IFaqDAO.class ).get( );
 
     /**
      * Insert a new record in the table.

@@ -34,7 +34,7 @@
 package fr.paris.lutece.plugins.helpdesk.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Collection;
 
@@ -46,8 +46,7 @@ import java.util.Collection;
 public final class VisitorQuestionHome
 {
     // Static variable pointed at the DAO instance
-    private static IVisitorQuestionDAO _dao = (IVisitorQuestionDAO) SpringContextService.getPluginBean( "helpdesk",
-            "visitorQuestionDAO" );
+    private static IVisitorQuestionDAO _dao = CDI.current( ).select( IVisitorQuestionDAO.class ).get( );
 
     /**
      * Private constructor - this class need not be instantiated.

@@ -1,44 +1,62 @@
-<div class="row">
-	<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-			<fieldset>
-			<legend>#i18n{helpdesk.view_visitor_question.adminTitle}</legend>
-			<p>#i18n{helpdesk.view_visitor_question.LabelName} : ${visitor_question.lastname}</p>
-			<p>#i18n{helpdesk.view_visitor_question.LabelFirstName} : ${visitor_question.firstname}</p>
-			<p>#i18n{helpdesk.view_visitor_question.LabelEmail} : <a href="mailto:${visitor_question.email}">${visitor_question.email}</a></p>
-			<p>#i18n{helpdesk.view_visitor_question.LabelDate} : ${visitor_question.date}</p>
-			<p>#i18n{helpdesk.view_visitor_question.LabelQuestion}: ${visitor_question.question}</p>
-			<p>#i18n{helpdesk.view_visitor_question.LabelAnswerName}: ${helpdesk_user.firstName} ${helpdesk_user.lastName}</p>
-			<#if visitor_question.answer?has_content>
-			<p>#i18n{helpdesk.view_visitor_question.LabelAnswer}:${visitor_question.answer}</p>
-			</#if> 
-			<form class="form-horizontal" method="post" name="delete_visitor_question" action="jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp">
-			<input type="hidden" name="faq_id" value="${faq_id}" />                
-			<input type="hidden" name="question_id" value="${visitor_question.idVisitorQuestion}" />
-			<@button class='btn-danger' title='#i18n{helpdesk.view_visitor_question.buttonLabelRemove}' buttonIcon='trash' type='submit' size='sm'/>
-			</form>
-		   </fieldset>
-		</div>
-		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
-		<#if question_answer_list?has_content>            
-			<#list question_answer_list as question_list>                
-				<#if question_list.answer != visitor_question.answer>
-					<form class="form-horizontal" method="post" name="add_question" action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
-					<input type="hidden" name="faq_id" value="${faq_id}" />
-					<input type="hidden" name="question_id" value="${visitor_question.idVisitorQuestion}" />
-					<button class="btn btn-primary btn-sm" type="submit">#i18n{helpdesk.view_visitor_question.buttonLabelAdd}</button>
-					</form>
-				<#else>
-					<form class="form-horizontal" method="post" name="add_question" action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
-					<input type="hidden" name="faq_id" value="${faq_id}" />                                    
-					<input type="hidden" name="question_id" value="${visitor_question.idVisitorQuestion}" />
-					<button class="btn btn-primary btn-sm" type="submit">#i18n{helpdesk.view_visitor_question.buttonLabelAdd}</button>
-				</form>
-				</#if>
-			</#list>
-		<#else>
-			<div class="label label-important">#i18n{helpdesk.view_visitor_question.noQuestion}</div>
-		</#if>
-		</div>
-	</div>
-</div>
+<@pageContainer>
+    <@pageColumn>
+        <@pageHeader title='#i18n{helpdesk.view_visitor_question.adminTitle}'>
+            <@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='arrow-left' />
+        </@pageHeader>
+        <@row>
+            <@columns xl=4>
+                <@box>
+                    <@boxHeader title='#i18n{helpdesk.view_visitor_question.adminTitle}' />
+                    <@boxBody>
+                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelName} :</strong> ${visitor_question.lastname!}</@p>
+                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelFirstName} :</strong> ${visitor_question.firstname!}</@p>
+                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelEmail} :</strong> <@link href='mailto:${visitor_question.email!}'>${visitor_question.email!}</@link></@p>
+                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelDate} :</strong> ${visitor_question.date!}</@p>
+                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelQuestion} :</strong> ${visitor_question.question!}</@p>
+                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelAnswerName} :</strong> ${helpdesk_user.firstName!} ${helpdesk_user.lastName!}</@p>
+                        <#if visitor_question.answer?has_content>
+                            <@p><strong>#i18n{helpdesk.view_visitor_question.LabelAnswer} :</strong> ${visitor_question.answer}</@p>
+                        </#if>
+                        <@tform method='post' name='delete_visitor_question' action='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp'>
+                            <@input type='hidden' name='faq_id' value='${faq_id}' />
+                            <@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
+                            <@button color='danger' title='#i18n{helpdesk.view_visitor_question.buttonLabelRemove}' buttonIcon='trash' type='submit' size='sm' />
+                        </@tform>
+                    </@boxBody>
+                </@box>
+            </@columns>
+            <@columns xl=8>
+                <@box>
+                    <@boxHeader title='#i18n{helpdesk.view_visitor_question.LabelQuestionAnswerList}' />
+                    <@boxBody>
+                        <#if question_answer_list?has_content>
+                            <@table>
+                                <@tr>
+                                    <@th>#i18n{helpdesk.view_visitor_question.LabelQuestion}</@th>
+                                    <@th>#i18n{helpdesk.view_visitor_question.LabelAnswer}</@th>
+                                    <@th></@th>
+                                </@tr>
+                                <@tableHeadBodySeparator />
+                                <#list question_answer_list as question_list>
+                                <@tr>
+                                    <@td>${question_list.question!}</@td>
+                                    <@td>${question_list.answer!}</@td>
+                                    <@td>
+                                        <@tform method='post' name='add_question' action='jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp'>
+                                            <@input type='hidden' name='faq_id' value='${faq_id}' />
+                                            <@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
+                                            <@button color='primary' title='#i18n{helpdesk.view_visitor_question.buttonLabelAdd}' buttonIcon='plus' type='submit' size='sm' />
+                                        </@tform>
+                                    </@td>
+                                </@tr>
+                                </#list>
+                            </@table>
+                        <#else>
+                            <@empty title='#i18n{helpdesk.view_visitor_question.noQuestion}' subtitle='#i18n{helpdesk.view_visitor_question.noQuestionSubtitle}' />
+                        </#if>
+                    </@boxBody>
+                </@box>
+            </@columns>
+        </@row>
+    </@pageColumn>
+</@pageContainer>

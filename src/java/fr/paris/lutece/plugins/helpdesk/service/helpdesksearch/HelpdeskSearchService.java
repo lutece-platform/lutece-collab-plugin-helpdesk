@@ -39,43 +39,30 @@ import fr.paris.lutece.plugins.helpdesk.business.Subject;
 import fr.paris.lutece.plugins.helpdesk.service.search.HelpdeskIndexer;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.search.SearchResult;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 /**
  * DocumentSearchService
  */
+@ApplicationScoped
 public class HelpdeskSearchService
 {
-    private static final String BEAN_SEARCH_ENGINE = "helpdeskSearchEngine";
     private static final String REGEX_ID = "^[\\d]+_(" + HelpdeskIndexer.SHORT_NAME_SUBJECT + "|" +
         HelpdeskIndexer.SHORT_NAME_QUESTION_ANSWER + ")$";
     private static final String UNDERSCORE = "_";
 
-    // Constants corresponding to the variables defined in the lutece.properties file
-    private static HelpdeskSearchService _singleton;
-
-    /**
-     * Get the HelpdeskSearchService instance
-     *
-     * @return The {@link HelpdeskSearchService}
-     */
-    public static HelpdeskSearchService getInstance(  )
-    {
-        if ( _singleton == null )
-        {
-            _singleton = new HelpdeskSearchService(  );
-        }
-
-        return _singleton;
-    }
+    @Inject
+    private HelpdeskSearchEngine _engine;
 
     /**
      * Return search results
@@ -94,9 +81,7 @@ public class HelpdeskSearchService
         Subject subject, boolean bSearchSubSubjects, HttpServletRequest request, Plugin plugin )
     {
         Collection<QuestionAnswer> listQuestionAnswer = new ArrayList<QuestionAnswer>(  );
-        HelpdeskSearchEngine engine = (HelpdeskSearchEngine) SpringContextService.getPluginBean( plugin.getName(  ),
-                BEAN_SEARCH_ENGINE );
-        List<SearchResult> listResults = engine.getSearchResults( nIdFaq, strQuery, dateBegin, dateEnd, subject,
+        List<SearchResult> listResults = _engine.getSearchResults( nIdFaq, strQuery, dateBegin, dateEnd, subject,
                 bSearchSubSubjects, request );
 
         for ( SearchResult searchResult : listResults )

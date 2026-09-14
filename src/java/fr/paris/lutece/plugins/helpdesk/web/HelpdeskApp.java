@@ -71,7 +71,11 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -79,10 +83,14 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * This class implements the HelpDesk XPage.
  */
+@RequestScoped
+@Named( "helpdesk.xpage.helpdesk" )
 public class HelpdeskApp implements XPageApplication
 {
 	private static final long serialVersionUID = -1592321991604068308L;
-	
+
+    @Inject
+    private HelpdeskSearchService _helpdeskSearchService;
     //Public constants
     public static final String ANCHOR_SUBJECT = "subject_";
     public static final String ANCHOR_QUESTION_ANSWER = "question_answer_";
@@ -246,7 +254,7 @@ public class HelpdeskApp implements XPageApplication
     public String getContactForm( HttpServletRequest request, Plugin plugin, Faq faq )
     {
         Map<String, Object> model = new HashMap<>(  );
-        model.put( MARK_THEME_LIST, (Collection<Theme>) ThemeHome.getInstance(  ).findByIdFaq( faq.getId(  ), plugin ) );
+        model.put( MARK_THEME_LIST, (Collection<Theme>) ThemeHome.findByIdFaq( faq.getId(  ), plugin ) );
         model.put( MARK_PLUGIN, plugin );
         model.put( MARK_DEFAULT_VALUE, "" );
         model.put( MARK_FAQ, faq );
@@ -305,7 +313,7 @@ public class HelpdeskApp implements XPageApplication
         java.sql.Date dateDateVQ = DateUtil.formatDateSql( strToday, getLocale( request ) );
 
         int nIdTheme = Integer.parseInt( strThemeId );
-        Theme theme = (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( nIdTheme, plugin );
+        Theme theme = (Theme) ThemeHome.findByPrimaryKey( nIdTheme, plugin );
 
         VisitorQuestion visitorQuestion = new VisitorQuestion(  );
         visitorQuestion.setLastname( strVisitorLastName );
@@ -435,18 +443,17 @@ public class HelpdeskApp implements XPageApplication
 
             if ( strIdSubject.matches( REGEX_ID ) )
             {
-                subject = (Subject) SubjectHome.getInstance(  )
+                subject = (Subject) SubjectHome
                                                .findByPrimaryKey( Integer.parseInt( strIdSubject ), plugin );
             }
 
             bSearchSubSubjects = Boolean.parseBoolean( strSearchSubSubjects );
 
-            listQuestionAnswer = HelpdeskSearchService.getInstance(  )
-                                                      .getSearchResults( faq.getId(  ), strKeywords, dateBegin,
+            listQuestionAnswer = _helpdeskSearchService.getSearchResults( faq.getId(  ), strKeywords, dateBegin,
                     dateEnd, subject, bSearchSubSubjects, request, plugin );
         }
 
-        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( faq.getId(  ), plugin );
+        Collection<Subject> listSubjects = (Collection<Subject>) SubjectHome.findByIdFaq( faq.getId(  ), plugin );
 
         Map<String, Object> model = new HashMap<>(  );
 
@@ -508,8 +515,7 @@ public class HelpdeskApp implements XPageApplication
                 SiteMessageService.setMessage( request, MESSAGE_SEARCH_DATE_VALIDITY, SiteMessage.TYPE_STOP );
             }
 
-            listQuestionAnswer = HelpdeskSearchService.getInstance(  )
-                                                      .getSearchResults( strKeywords, dateBegin,
+            listQuestionAnswer = _helpdeskSearchService.getSearchResults( strKeywords, dateBegin,
                     dateEnd, request, plugin );
         }
 

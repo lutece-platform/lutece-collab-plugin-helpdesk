@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.helpdesk.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,7 +45,8 @@ import java.util.Collection;
 /**
  * This class provides Data Access methods for Faq objects
  */
-public final class FaqDAO implements IFaqDAO
+@ApplicationScoped
+public class FaqDAO implements IFaqDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_faq ) FROM helpdesk_faq";
     private static final String SQL_QUERY_SELECT = " SELECT id_faq, name, description, role_key, workgroup_key FROM helpdesk_faq WHERE id_faq = ?";

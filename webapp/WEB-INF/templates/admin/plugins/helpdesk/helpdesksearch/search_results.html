@@ -32,7 +32,8 @@
 		<@row>
 			<@columns xl=3>
 				<@box color='primary' >
-					<@boxHeader title='${faq_name} - #i18n{helpdesk.search_results.labelSearch}' />
+					<#assign searchBoxTitle><#if faq_name?has_content>${faq_name} - </#if>#i18n{helpdesk.search_results.labelSearch}</#assign>
+					<@boxHeader title='${searchBoxTitle}' />
 					<@boxBody>
 						<@tform name='fullTextSearch' action='jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp'>
 						<@input type='hidden' value=faq_id name='faq_id' />                     
@@ -61,7 +62,7 @@
 							</@select>
 						</@formGroup>
 						<@formGroup labelFor='form_search_subject_id' rows=2>
-							<@checkBox name='form_search_sub_subjects' id='form_search_sub_subjects' labelKey='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' orientation='vertical' value=filter_search_sub_subject?c />
+							<@checkBox name='form_search_sub_subjects' id='form_search_sub_subjects' labelKey='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' orientation='vertical' value=(filter_search_sub_subject!false)?c />
 						</@formGroup>
 						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.search_results.labelNbDocsPerPage}' rows=2>
 							<#-- Number of documents per page selector -->
@@ -85,11 +86,11 @@
 					</@boxHeader>
 					<@boxBody>
 						<#if error??>
-							<@alert class='alert-error' color='danger' title='#i18n{helpdesk.search_results.error}' >	  	
-								<@p class="text-muted font-weight-bold ml-3 ms-3 mb-1">${error}</@p>	  
+							<@alert color='danger' title='#i18n{helpdesk.search_results.error}' >
+								<@p class="text-muted font-weight-bold ml-3 ms-3 mb-1">${error.message}</@p>
 							</@alert>
 						<#else>
-							<#if results_list?size gt 0>
+							<#if results_list?has_content>
 								<h2>#i18n{helpdesk.question_answer_list.LabelQuestion}</h2>
 								<@table>
 									<@tr>
@@ -101,13 +102,14 @@
 									<@tr>
 										<@td><@getParentSubject subject=result.getSubject(plugin) breadcrumb="" /></@td>                   
 										<@td>
-											<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' buttonIcon='edit' size='sm' />
+											<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' buttonIcon='edit' size='sm' hideTitle=['all'] title='#i18n{helpdesk.modify_question_answer.adminTitle}' />
+											${result.question}
 										</@td>
 									</@tr>            
 								</#list>
 								</@table>
 								<@p>#i18n{helpdesk.search_results.labelResultsCount} : <strong>${paginator.itemsCount}</strong>            #i18n{helpdesk.search_results.labelResultsRange} : <strong>${paginator.rangeMin} - ${paginator.rangeMax}</strong></@p>
-								<@pagination paginator=paginator />
+								<@paginationAdmin paginator=paginator combo=1 />
 								<#if (paginator.itemsCount> 0)>
 									<@tform type='inline' name='export' action='jsp/admin/plugins/helpdesk/DoExportCSV.jsp'>
 										<@button buttonIcon='download' type='submit' title='#i18n{helpdesk.search_results.exportCSV}' />
@@ -123,7 +125,6 @@
 		</@row>
 	</@pageColumn>
 </@pageContainer>
-</##if> 
 <#-- Freemarker macros -->
 <#-- Number of items per page selector - Combo Box implementation -->
 <#macro NbItemsPerPageSelectorCombo nb_items_per_page>

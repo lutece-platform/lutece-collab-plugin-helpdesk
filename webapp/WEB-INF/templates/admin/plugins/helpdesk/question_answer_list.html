@@ -125,7 +125,7 @@
 								<@table>
 									<@tr>
 										<@th>
-											<@checkBox id='select_all' name='select_all' labelKey='#i18n{helpdesk.question_answer_list.selectAll}' value='' params='onclick="toggle_checkboxes();"' />
+											<@checkBox id='select_all' name='select_all' labelKey='#i18n{helpdesk.question_answer_list.selectAll}' value='' />
 											<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if> 
 										</@th>
 										<@th>#i18n{helpdesk.question_answer_list.titleSubject}</@th>
@@ -184,12 +184,14 @@
 	const tree = document.querySelector("#tree");
 	const mapTree = new LuteceTree( tree );
 	
-	// Check all checkboxes when select_all is checked ; display #applySelection when a checkbox is checked
 	document.addEventListener("DOMContentLoaded", function() {
 		var selectAllCheckbox = document.getElementById('select_all');
 		var questionForm = document.getElementById('question_form');
-		var checkboxes = questionForm.querySelectorAll('input[type="checkbox"]');
 		var applySelection = document.getElementById('applySelection');
+		if (!selectAllCheckbox || !questionForm || !applySelection) {
+			return;
+		}
+		var checkboxes = questionForm.querySelectorAll('input[type="checkbox"]');
 		applySelection.style.display = 'none';
 
 		selectAllCheckbox.addEventListener('change', function() {

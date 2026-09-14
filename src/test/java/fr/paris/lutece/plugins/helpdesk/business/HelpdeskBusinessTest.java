@@ -34,10 +34,12 @@
 package fr.paris.lutece.plugins.helpdesk.business;
 
 import fr.paris.lutece.test.LuteceTestCase;
+import org.junit.jupiter.api.Test;
 
-public class HelpDeskBusinessTest extends LuteceTestCase
+public class HelpdeskBusinessTest extends LuteceTestCase
 {
 
+    @Test
     public void testDefault( )
     {
 

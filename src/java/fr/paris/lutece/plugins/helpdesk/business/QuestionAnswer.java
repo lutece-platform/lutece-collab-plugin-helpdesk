@@ -130,7 +130,7 @@ public class QuestionAnswer
      */
     public Subject getSubject( Plugin plugin )
     {
-        return (Subject) SubjectHome.getInstance(  ).findByPrimaryKey( getIdSubject(  ), plugin );
+        return (Subject) SubjectHome.findByPrimaryKey( getIdSubject(  ), plugin );
     }
 
     /**

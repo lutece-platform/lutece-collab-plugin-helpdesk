@@ -48,12 +48,10 @@ import fr.paris.lutece.portal.service.plugin.PluginService;
 import fr.paris.lutece.portal.service.search.IndexationService;
 import fr.paris.lutece.portal.service.search.SearchIndexer;
 import fr.paris.lutece.portal.service.search.SearchItem;
-import fr.paris.lutece.portal.service.util.AppException;
 import fr.paris.lutece.portal.service.util.AppPathService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.util.url.UrlItem;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,13 +64,7 @@ import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexOptions;
-import org.apache.tika.exception.TikaException;
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.ParseContext;
-import org.apache.tika.parser.html.HtmlParser;
-import org.apache.tika.sax.BodyContentHandler;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.SAXException;
+import org.jsoup.Jsoup;
 
 
 /**
@@ -114,7 +106,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
         for ( Faq faq : FaqHome.findAll( plugin ) )
         {
-            for ( Subject subject : (Collection<Subject>) SubjectHome.getInstance( ).findByIdFaq( faq.getId( ), plugin ) )
+            for ( Subject subject : (Collection<Subject>) SubjectHome.findByIdFaq( faq.getId( ), plugin ) )
             {
                 indexSubject( faq, subject );
             }
@@ -208,7 +200,7 @@ public class HelpdeskIndexer implements SearchIndexer
         String strPortalUrl = AppPathService.getPortalUrl( );
         Plugin plugin = PluginService.getPlugin( HelpdeskPlugin.PLUGIN_NAME );
 
-        Subject subject = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( Integer.parseInt( strDocument ),
+        Subject subject = (Subject) SubjectHome.findByPrimaryKey( Integer.parseInt( strDocument ),
                 plugin );
 
         if ( subject != null )
@@ -223,7 +215,7 @@ public class HelpdeskIndexer implements SearchIndexer
 
             while ( nIdParent != SubjectHome.FIRST_ORDER )
             {
-                parentSubject = (Subject) SubjectHome.getInstance( ).findByPrimaryKey( nIdParent, plugin );
+                parentSubject = (Subject) SubjectHome.findByPrimaryKey( nIdParent, plugin );
                 nIdParent = parentSubject.getIdParent( );
             }
 
@@ -309,29 +301,12 @@ public class HelpdeskIndexer implements SearchIndexer
         doc.add( new Field( SearchItem.FIELD_DATE, strDate, ft ) );
 
         String strContentToIndex = getContentToIndex( questionAnswer, plugin );
-        ContentHandler handler = new BodyContentHandler( );
-        Metadata metadata = new Metadata( );
-        try
-        {
-            new HtmlParser( ).parse( new ByteArrayInputStream( strContentToIndex.getBytes( ) ), handler, metadata,
-                    new ParseContext( ) );
-        }
-        catch ( SAXException e )
-        {
-            throw new AppException( "Error during page parsing." );
-        }
-        catch ( TikaException e )
-        {
-            throw new AppException( "Error during page parsing." );
-        }
-
-        //the content of the article is recovered in the parser because this one
-        //had replaced the encoded caracters (as &eacute;) by the corresponding special caracter (as ?)
-        StringBuilder sb = new StringBuilder( handler.toString( ) );
+        // Strip HTML tags with Jsoup (tika was transitive via core v7, absent in v8)
+        String strContent = Jsoup.parse( strContentToIndex ).text( );
 
         // Add the tag-stripped contents as a Reader-valued Text field so it will
         // get tokenized and indexed.
-        doc.add( new Field( SearchItem.FIELD_CONTENTS, sb.toString( ), TextField.TYPE_NOT_STORED ) );
+        doc.add( new Field( SearchItem.FIELD_CONTENTS, strContent, TextField.TYPE_NOT_STORED ) );
 
         // Add the subject name as a separate Text field, so that it can be searched
         // separately.

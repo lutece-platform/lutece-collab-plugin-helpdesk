@@ -1,10 +1,4 @@
-<%@ page errorPage="../../ErrorPage.jsp"%>
-
-<jsp:useBean id="helpdesk" scope="session"
-	class="fr.paris.lutece.plugins.helpdesk.web.HelpdeskJspBean" />
-
-
-<%
-	out.println(helpdesk.getAnswerSelection(request));
-%>
-
+<%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page import="fr.paris.lutece.plugins.helpdesk.web.HelpdeskJspBean" %>
+${helpdeskJspBean.init( pageContext.request, HelpdeskJspBean.RIGHT_MANAGE_HELPDESK )}
+${helpdeskJspBean.getAnswerSelection( pageContext.request )}

@@ -29,7 +29,7 @@
 						<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/ModifyFaq.jsp?faq_id=${faq.id}' targetElement='#edit_faq_page' id='faq${faq.id}-edit' title='#i18n{helpdesk.modify_faq.adminTitle}' btnTitle='' btnIcon='pencil' position='end' btnSize='sm' />						
 					</#if>
 					<#if faqModel.MANAGE_SUBJECTS?has_content>
-						<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelSubject}' hideTitle=['all'] buttonIcon='question' size='sm' />
+						<@aButton href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelSubject}' hideTitle=['all'] buttonIcon='folders' size='sm' />
 					</#if>
 					<#if faqModel.MANAGE_THEMES?has_content>
 						<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdeskAdmin.jsp?faq_id=${faq.id}' size='' title='#i18n{helpdesk.helpdesk_manage.LabelTheme}' hideTitle=['all'] buttonIcon='tags'size='sm' />

@@ -41,8 +41,8 @@ import fr.paris.lutece.plugins.helpdesk.utils.HelpdeskIndexerUtils;
 import fr.paris.lutece.portal.business.indexeraction.IndexerAction;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.portal.service.search.IndexationService;
-import fr.paris.lutece.portal.service.spring.SpringContextService;
 import fr.paris.lutece.portal.service.util.AppPropertiesService;
+import jakarta.enterprise.inject.spi.CDI;
 
 
 /**
@@ -53,8 +53,7 @@ public final class QuestionAnswerHome
 {
 	public static final int FIRST_ORDER = 0;
     // Static variable pointed at the DAO instance
-    private static IQuestionAnswerDAO _dao = (IQuestionAnswerDAO) SpringContextService.getPluginBean( "helpdesk",
-            "questionAnswerDAO" );
+    private static IQuestionAnswerDAO _dao = CDI.current( ).select( IQuestionAnswerDAO.class ).get( );
     private static final int STEP = 1;
    
 

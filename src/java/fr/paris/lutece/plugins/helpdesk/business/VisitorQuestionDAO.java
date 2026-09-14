@@ -35,6 +35,7 @@ package fr.paris.lutece.plugins.helpdesk.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +46,8 @@ import java.util.Collection;
 /**
  * This class provides Data Access methods for VisitorQuestionAnswer objects
  */
-public final class VisitorQuestionDAO implements IVisitorQuestionDAO
+@ApplicationScoped
+public class VisitorQuestionDAO implements IVisitorQuestionDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_visitor_question ) FROM helpdesk_visitor_question ";
     private static final String SQL_QUERY_SELECT = " SELECT id_visitor_question, last_name, first_name, email, question, answer, date_visitor_question, id_user, id_theme FROM helpdesk_visitor_question WHERE id_visitor_question = ?";
@@ -56,26 +58,6 @@ public final class VisitorQuestionDAO implements IVisitorQuestionDAO
     private static final String SQL_QUERY_SELECT_BY_USER = " SELECT id_visitor_question, last_name, first_name, email, question, answer, id_question_type, date_visitor_question, id_user, id_question_topic FROM helpdesk_visitor_question WHERE id_user = ?";
     private static final String SQL_QUERY_SELECT_BY_THEME = " SELECT id_visitor_question, last_name, first_name, email, question, answer, date_visitor_question, id_user, id_theme FROM helpdesk_visitor_question WHERE id_theme = ? ORDER BY date_visitor_question DESC ";
     private static final String SQL_QUERY_SELECT_ARHIVED_BY_THEME = " SELECT id_visitor_question, last_name, first_name, email, question, answer, date_visitor_question, id_user, id_theme FROM helpdesk_visitor_question WHERE answer != ? AND id_theme = ? ORDER BY date_visitor_question DESC ";
-
-    /** This class implements the Singleton design pattern. */
-    private static VisitorQuestionDAO _dao = new VisitorQuestionDAO(  );
-
-    /**
-     * Creates a new VisitorQuestionDAO object.
-     */
-    private VisitorQuestionDAO(  )
-    {
-    }
-
-    /**
-     * Returns the unique instance of the singleton.
-     *
-     * @return the instance
-     */
-    static VisitorQuestionDAO getInstance(  )
-    {
-        return _dao;
-    }
 
     ///////////////////////////////////////////////////////////////////////////////////////
     //Access methods to data

@@ -1,8 +1,4 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
-
-<jsp:useBean id="helpdesk" scope="session" class="fr.paris.lutece.plugins.helpdesk.web.HelpdeskJspBean" />
-
-<%
-    helpdesk.init( request , helpdesk.RIGHT_MANAGE_HELPDESK );
-    response.sendRedirect( helpdesk.doPublishQuestionAnswer( request ) );
-%>
+<%@ page import="fr.paris.lutece.plugins.helpdesk.web.HelpdeskJspBean" %>
+${helpdeskJspBean.init( pageContext.request, HelpdeskJspBean.RIGHT_MANAGE_HELPDESK )}
+${pageContext.response.sendRedirect( helpdeskJspBean.doPublishQuestionAnswer( pageContext.request ) )}

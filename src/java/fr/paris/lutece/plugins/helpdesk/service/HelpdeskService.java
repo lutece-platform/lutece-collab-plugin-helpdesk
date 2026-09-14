@@ -36,16 +36,17 @@ package fr.paris.lutece.plugins.helpdesk.service;
 import fr.paris.lutece.plugins.helpdesk.business.Faq;
 import fr.paris.lutece.plugins.helpdesk.business.Theme;
 
+import jakarta.enterprise.context.ApplicationScoped;
+
 
 /**
  *
  * HelpdeskService
  *
  */
+@ApplicationScoped
 public class HelpdeskService
 {
-    private static HelpdeskService _singleton = new HelpdeskService(  );
-
     /**
     * Initialize the Helpdesk service
     *
@@ -54,15 +55,5 @@ public class HelpdeskService
     {
         Theme.init(  );
         Faq.init(  );
-    }
-
-    /**
-     * Returns the instance of the singleton
-     *
-     * @return The instance of the singleton
-     */
-    public static HelpdeskService getInstance(  )
-    {
-        return _singleton;
     }
 }

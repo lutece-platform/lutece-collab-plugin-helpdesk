@@ -1,9 +1,7 @@
 <%@ page errorPage="../../ErrorPage.jsp" %>
+<%@ page import="fr.paris.lutece.plugins.helpdesk.web.HelpdeskJspBean" %>
+${helpdeskJspBean.init( pageContext.request, HelpdeskJspBean.RIGHT_MANAGE_HELPDESK )}
+${pageContext.setAttribute( 'strContent', helpdeskJspBean.getManageHelpdeskAdmin( pageContext.request ) )}
 <jsp:include page="../../AdminHeader.jsp" />
-
-<jsp:useBean id="helpdesk" scope="session" class="fr.paris.lutece.plugins.helpdesk.web.HelpdeskJspBean" />
-
-<% helpdesk.init( request , helpdesk.RIGHT_MANAGE_HELPDESK ); %>
-<%= helpdesk.getManageHelpdeskAdmin(request) %>
-
+${pageContext.getAttribute( 'strContent' )}
 <%@ include file="../../AdminFooter.jsp" %>

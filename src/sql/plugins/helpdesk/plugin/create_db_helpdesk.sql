@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset helpdesk:create_db_helpdesk.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Structure for table helpdesk_faq
 --
