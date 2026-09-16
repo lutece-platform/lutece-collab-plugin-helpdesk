@@ -9,7 +9,9 @@
 			</@formGroup>
 			<@formGroup labelFor='mailinglists' labelKey='#i18n{helpdesk.create_theme.LabelMailingList}' mandatory=true >
 				<@select id='mailinglists' name='mailinglists' default_value='' items=mailing_list />
-				<@formHelp>#i18n{helpdesk.create_theme.messageNotificationListNotExist}</@formHelp>
+				<#if !mailing_list?has_content>
+					<@formHelp>#i18n{helpdesk.create_theme.messageNotificationListNotExist}</@formHelp>
+				</#if>
 			</@formGroup>
 			<@formGroup labelFor='parent_id' labelKey='#i18n{helpdesk.create_theme.LabelParent}' mandatory=true >
 				<@select id='parent_id' name='parent_id' default_value='' items=''>

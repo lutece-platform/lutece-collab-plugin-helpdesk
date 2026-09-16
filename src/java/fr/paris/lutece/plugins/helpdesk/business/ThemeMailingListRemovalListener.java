@@ -62,7 +62,7 @@ public class ThemeMailingListRemovalListener implements RemovalListener
         }
 
         //Get list of themes
-        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome.getInstance(  )
+        Collection<Theme> listThemes = (Collection<Theme>) ThemeHome
                                                                     .findAll( PluginService.getPlugin( 
                     HelpdeskPlugin.PLUGIN_NAME ) );
 

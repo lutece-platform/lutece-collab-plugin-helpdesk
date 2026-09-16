@@ -1,16 +1,13 @@
-<div class="row">
-    <div class="col-12">
-        <fieldset>
-            <legend class="mb-5">#i18n{helpdesk.contact_result.boxTitle}</legend>
-            <div class="alert alert-success"><@icon style='exclamation-sign' /></i>&nbsp;#i18n{helpdesk.contact_result.message}</div>
-            <form class="form-horizontal" method="post">
-				<input type="hidden" name="page" value="helpdesk">
-				<input type="hidden" name="faq_id" value="${faq.id}">
-				<button type="submit" title="#i18n{helpdesk.contact_result.back}" class="btn btn-primary btn-sm">
-					<span class="ti ti-check"></span>
-					#i18n{helpdesk.contact_result.back}
-				</button>
-			</form>
-		</fieldset>
-    </div>
-</div>
+<@cTpl>
+    <@cContainer>
+        <@cTitle level=1>#i18n{helpdesk.contact_result.boxTitle}</@cTitle>
+        <@cAlert type='success' title='#i18n{helpdesk.contact_result.message}' />
+        <@cForm method='post'>
+            <@cInput type='hidden' name='page' value='helpdesk' />
+            <@cInput type='hidden' name='faq_id' value='${faq.id}' />
+            <@cBtn label='#i18n{helpdesk.contact_result.back}' class='primary' type='submit' params='title="#i18n{helpdesk.contact_result.back}"'>
+                <@cIcon name='check' />
+            </@cBtn>
+        </@cForm>
+    </@cContainer>
+</@cTpl>

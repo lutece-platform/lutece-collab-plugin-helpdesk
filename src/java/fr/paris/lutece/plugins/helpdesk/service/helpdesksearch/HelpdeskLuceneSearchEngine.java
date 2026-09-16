@@ -52,7 +52,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
+
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
@@ -76,6 +78,7 @@ import org.apache.lucene.util.BytesRef;
 /**
  * LuceneSearchEngine
  */
+@ApplicationScoped
 public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
 {
     private static final String OPEN_PARENTHESIS = "(";
@@ -290,8 +293,8 @@ public class HelpdeskLuceneSearchEngine implements HelpdeskSearchEngine
             }
             catch ( ParseException e )
             {
-                AppLogService.error( "Bad Date Format for indexed item \"" + item.getTitle( ) + "\" : "
-                        + e.getMessage( ) );
+                AppLogService.error( "Bad Date Format for indexed item \"{}\" : {}", item.getTitle( ),
+                        e.getMessage( ) );
             }
 
             result.setUrl( item.getUrl( ) );

@@ -33,8 +33,11 @@
  */
 package fr.paris.lutece.plugins.helpdesk.business;
 
-import fr.paris.lutece.portal.service.mailinglist.MailingListRemovalListenerService;
 import fr.paris.lutece.portal.service.plugin.Plugin;
+import fr.paris.lutece.portal.service.util.BeanUtils;
+import fr.paris.lutece.portal.service.util.RemovalListenerService;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Collection;
 
@@ -47,6 +50,8 @@ public class Theme extends AbstractSubject
     private static ThemeMailingListRemovalListener _listenerMailinglist;
     private int _nIdMailingList;
     private Collection<VisitorQuestion> _questions;
+    private transient Plugin _plugin;
+    private int _nQuestionCount = -1;
 
     /**
      * Creates a new Theme object.
@@ -64,7 +69,8 @@ public class Theme extends AbstractSubject
         if ( _listenerMailinglist == null )
         {
             _listenerMailinglist = new ThemeMailingListRemovalListener(  );
-            MailingListRemovalListenerService.getService(  ).registerListener( _listenerMailinglist );
+            CDI.current( ).select( RemovalListenerService.class, NamedLiteral.of( BeanUtils.BEAN_MAILINGLIST_REMOVAL_SERVICE ) ).get( )
+                    .registerListener( _listenerMailinglist );
         }
     }
 
@@ -74,7 +80,51 @@ public class Theme extends AbstractSubject
      */
     public Collection<VisitorQuestion> getQuestions(  )
     {
+        if ( ( _questions == null ) && ( _plugin != null ) )
+        {
+            _questions = ThemeHome.findQuestion( getId(  ), _plugin );
+        }
+
         return _questions;
+    }
+
+    /**
+     * Sets the plugin the theme was loaded with, so its visitor questions can be fetched on demand.
+     * @param plugin The Plugin
+     */
+    public void setPlugin( Plugin plugin )
+    {
+        _plugin = plugin;
+    }
+
+    /**
+     * Number of visitor questions attached to the theme, counted without loading them.
+     * @return The question count
+     */
+    public int getQuestionCount(  )
+    {
+        if ( _nQuestionCount < 0 )
+        {
+            if ( _questions != null )
+            {
+                _nQuestionCount = _questions.size(  );
+            }
+            else
+            {
+                _nQuestionCount = ( _plugin != null ) ? ThemeHome.countQuestionTheme( getId(  ), _plugin ) : 0;
+            }
+        }
+
+        return _nQuestionCount;
+    }
+
+    /**
+     * Assigns the question count read by a batched count query.
+     * @param nQuestionCount The question count
+     */
+    public void setQuestionCount( int nQuestionCount )
+    {
+        _nQuestionCount = nQuestionCount;
     }
 
     /**
@@ -93,7 +143,7 @@ public class Theme extends AbstractSubject
      */
     public Theme getParent( Plugin plugin )
     {
-        return (Theme) ThemeHome.getInstance(  ).findByPrimaryKey( getIdParent(  ), plugin );
+        return (Theme) ThemeHome.findByPrimaryKey( getIdParent(  ), plugin );
     }
 
     /**
@@ -103,7 +153,7 @@ public class Theme extends AbstractSubject
      */
     public Collection<Theme> getChilds( Plugin plugin )
     {
-        return (Collection<Theme>) ThemeHome.getInstance(  ).findByIdParent( getId(  ), plugin );
+        return (Collection<Theme>) ThemeHome.findByIdParent( getId(  ), plugin );
     }
 
     /**

@@ -1,6 +1,6 @@
 <@pageContainer>
 	<@pageColumn>
-        <@pageHeader title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle} : ${faq.name}' />
+        <@pageHeader title='${faq.name} - #i18n{helpdesk.import_question_answer_list.pageTitle}' />
 		<@tform action='jsp/admin/plugins/helpdesk/DoImportQuestionAnswerList.jsp' enctype='multipart/form-data' boxed=true id='import_question_answer_list_page'>
 			<@input type="hidden" value="${faq.id!}" name="faq_id" />
 			<@formGroup labelFor='csv_file' labelKey='#i18n{helpdesk.import_question_answer_list.importLabel}'  mandatory=true >

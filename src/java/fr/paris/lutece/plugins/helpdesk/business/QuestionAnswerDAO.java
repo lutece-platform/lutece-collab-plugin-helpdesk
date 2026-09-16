@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.helpdesk.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.sql.DAOUtil;
 import fr.paris.lutece.util.string.StringUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.sql.Timestamp;
 
@@ -48,7 +49,8 @@ import java.util.StringTokenizer;
 /**
  * This class provides Data Access methods for QuestionAnswerAnswer objects
  */
-public final class QuestionAnswerDAO implements IQuestionAnswerDAO
+@ApplicationScoped
+public class QuestionAnswerDAO implements IQuestionAnswerDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_question_answer ) FROM helpdesk_question_answer";
     private static final String SQL_QUERY_SELECT = " SELECT id_question_answer, question, answer, id_subject, status, creation_date,id_order FROM helpdesk_question_answer WHERE id_question_answer = ?";

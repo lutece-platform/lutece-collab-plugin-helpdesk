@@ -34,9 +34,8 @@
 	<@tr>
 		<@td>
 			<@indentation depth=depth >
-			<@tag title='#i18n{helpdesk.commonList.labelId}'>${subject.id}</@tag> 
 			<strong>${subject.text}</strong>
-			<small>[ ${subject.questions?size}  #i18n{helpdesk.commonList.labelQuestion} ]</small>
+			<small class='text-muted'>[ ${subject.questionCount} #i18n{helpdesk.commonList.labelQuestion} ]</small>
 			</@indentation>
 		</@td>
 		<@td>

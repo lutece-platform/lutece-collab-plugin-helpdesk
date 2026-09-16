@@ -1,15 +1,13 @@
 <@div class='insert-service'>
 	<@tform method='post' action='jsp/admin/plugins/helpdesk/DoInsertAnswer.jsp'>
-		<@input type='hidden' name='input' value='${input}' />
+		<@input type='hidden' name='input' value='${input_name!}' />
 		<@fieldSet legend='&nbsp;#i18n{helpdesk.answer_selection.boxTitle}'>
-			<#list helpdesk_subject_list as subject_list>
-				<strong>${subject_list.subject}</strong>
-				<@input type='hidden' name='subject_id' value='${subject_list.idSubject}' />
-				<@table>
-					<thead></thead>
-					<tbody>
-					<#list helpdesk_question_list as question_list>
-						<#if subject_list.idSubject=question_list.idSubject>                                                
+			<#list (helpdesk_subject_list![]) as subject_list>
+				<#if subject_list.questions?has_content>
+					<strong>${subject_list.text!}</strong>
+					<@input type='hidden' name='subject_id' value='${subject_list.id}' />
+					<@table>
+						<#list subject_list.questions as question_list>
 						<@tr>
 							<@td>
 								<@formGroup labelFor='helpdesk_${question_list.idQuestionAnswer}' labelKey='${question_list.question}'>
@@ -19,13 +17,12 @@
 						</@tr>
 						<@tr>
 							<@td>${question_list.answer}</@td>
-						</@tr>        
-						</#if>
-					</#list>                      
-					</tbody>
-				</@table>
+						</@tr>
+						</#list>
+					</@table>
+				</#if>
 			</#list>
-			<@button buttonIcon='device-floppy' type='submit' size='sm'/>
+			<@button buttonIcon='device-floppy' title='#i18n{portal.util.labelValidate}' type='submit' size='sm'/>
 		</@fieldSet>
 	</@tform>
 </@div>

@@ -35,6 +35,8 @@ package fr.paris.lutece.plugins.helpdesk.service;
 
 import fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation;
 
+import jakarta.enterprise.inject.spi.CDI;
+
 
 /**
  * class HelpdeskPlugin
@@ -49,6 +51,6 @@ public class HelpdeskPlugin extends PluginDefaultImplementation
     public void init(  )
     {
         // Initialize the Helpdesk service
-        HelpdeskService.getInstance(  ).init(  );
+        CDI.current( ).select( HelpdeskService.class ).get( ).init(  );
     }
 }

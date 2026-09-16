@@ -36,6 +36,7 @@ package fr.paris.lutece.plugins.helpdesk.business;
 import fr.paris.lutece.portal.service.plugin.Plugin;
 import fr.paris.lutece.util.ReferenceList;
 import fr.paris.lutece.util.sql.DAOUtil;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -45,7 +46,8 @@ import java.util.List;
 /**
  * This class provides Data Access methods for Subject objects
  */
-public final class SubjectDAO implements ISubjectDAO
+@ApplicationScoped
+public class SubjectDAO implements ISubjectDAO
 {
     private static final String SQL_QUERY_NEW_PK = " SELECT max( id_subject ) FROM helpdesk_subject";
     private static final String SQL_QUERY_SELECT = " SELECT id_subject, subject, id_parent, id_order FROM helpdesk_subject WHERE id_subject = ?";
@@ -156,7 +158,7 @@ public final class SubjectDAO implements ISubjectDAO
                 subject.setText( daoUtil.getString( 2 ) );
                 subject.setIdParent( daoUtil.getInt( 3 ) );
                 subject.setIdOrder( daoUtil.getInt( 4 ) );
-                // Load questions
+                subject.setPlugin( plugin );
                 subject.setQuestions( findQuestions( nIdSubject, plugin ) );
             }
 
@@ -203,9 +205,10 @@ public final class SubjectDAO implements ISubjectDAO
                 subject.setText( daoUtil.getString( 2 ) );
                 subject.setIdParent( daoUtil.getInt( 3 ) );
                 subject.setIdOrder( daoUtil.getInt( 4 ) );
-                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                subject.setPlugin( plugin );
                 list.add( subject );
             }
+
 
             return list;
         }
@@ -253,9 +256,10 @@ public final class SubjectDAO implements ISubjectDAO
                 subject.setText( daoUtil.getString( 2 ) );
                 subject.setIdParent( nIdParent );
                 subject.setIdOrder( daoUtil.getInt( 3 ) );
-                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                subject.setPlugin( plugin );
                 listSubjects.add( subject );
             }
+
 
             return listSubjects;
         }
@@ -282,13 +286,15 @@ public final class SubjectDAO implements ISubjectDAO
                 subject.setText( daoUtil.getString( 2 ) );
                 subject.setIdParent( daoUtil.getInt( 3 ) );
                 subject.setIdOrder( daoUtil.getInt( 4 ) );
-                subject.setQuestions( findQuestions( daoUtil.getInt( 1 ), plugin ) );
+                subject.setPlugin( plugin );
                 listSubjects.add( subject );
             }
+
 
             return listSubjects;
         }
     }
+
 
     /**
      * Returns all questions on a subject

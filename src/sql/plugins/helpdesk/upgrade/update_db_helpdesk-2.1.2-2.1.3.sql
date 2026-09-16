@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset helpdesk:update_db_helpdesk-2.1.2-2.1.3.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Table helpdesk_question_answer
 --

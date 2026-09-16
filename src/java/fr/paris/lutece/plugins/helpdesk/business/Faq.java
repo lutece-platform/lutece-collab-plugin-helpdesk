@@ -34,9 +34,11 @@
 package fr.paris.lutece.plugins.helpdesk.business;
 
 import fr.paris.lutece.portal.service.plugin.Plugin;
-import fr.paris.lutece.portal.service.role.RoleRemovalListenerService;
+import fr.paris.lutece.portal.service.util.BeanUtils;
+import fr.paris.lutece.portal.service.util.RemovalListenerService;
 import fr.paris.lutece.portal.service.workgroup.AdminWorkgroupResource;
-import fr.paris.lutece.portal.service.workgroup.WorkgroupRemovalListenerService;
+import jakarta.enterprise.inject.literal.NamedLiteral;
+import jakarta.enterprise.inject.spi.CDI;
 
 import java.util.Collection;
 
@@ -72,13 +74,15 @@ public class Faq implements AdminWorkgroupResource
         if ( _listenerWorkgroup == null )
         {
             _listenerWorkgroup = new FaqWorkgroupRemovalListener(  );
-            WorkgroupRemovalListenerService.getService(  ).registerListener( _listenerWorkgroup );
+            CDI.current( ).select( RemovalListenerService.class, NamedLiteral.of( BeanUtils.BEAN_WORKGROUP_REMOVAL_SERVICE ) ).get( )
+                    .registerListener( _listenerWorkgroup );
         }
 
         if ( _listenerRole == null )
         {
             _listenerRole = new FaqRoleRemovalListener(  );
-            RoleRemovalListenerService.getService(  ).registerListener( _listenerRole );
+            CDI.current( ).select( RemovalListenerService.class, NamedLiteral.of( BeanUtils.BEAN_ROLE_REMOVAL_SERVICE ) ).get( )
+                    .registerListener( _listenerRole );
         }
     }
 
@@ -169,7 +173,7 @@ public class Faq implements AdminWorkgroupResource
      */
     public Collection<Subject> getSubjectsList( Plugin plugin )
     {
-        return (Collection<Subject>) SubjectHome.getInstance(  ).findByIdFaq( getId(  ), plugin );
+        return (Collection<Subject>) SubjectHome.findByIdFaq( getId(  ), plugin );
     }
 
     /**
@@ -180,7 +184,7 @@ public class Faq implements AdminWorkgroupResource
      */
     public Collection<Theme> getThemesList( Plugin plugin )
     {
-        return (Collection<Theme>) ThemeHome.getInstance(  ).findByIdFaq( getId(  ), plugin );
+        return (Collection<Theme>) ThemeHome.findByIdFaq( getId(  ), plugin );
     }
 
     /**

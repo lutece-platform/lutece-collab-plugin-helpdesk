@@ -1,3 +1,6 @@
+-- liquibase formatted sql
+-- changeset helpdesk:init_db_helpdesk_data_sample.sql
+-- preconditions onFail:MARK_RAN onError:WARN
 --
 -- Dumping data for table helpdesk_faq
 --
