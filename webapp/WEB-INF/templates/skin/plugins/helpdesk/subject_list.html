@@ -1,132 +1,138 @@
-<#macro subjectsList items typeList depth>
-	<#if items?has_content>
-		<div class="accordion" id="${typeList}">
-			<#list items as subject>
-				<div class="accordion-item">
-					<h2 class="accordion-header">
-						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse${subject.id}" aria-expanded="false" aria-controls="collapse${subject.id}">
-							${subject.text}
-						</button>
-					</h2>
-					<div id="collapse${subject.id}" class="accordion-collapse collapse" data-bs-parent="#accordion${subject.id}">
-					  <div class="accordion-body">
-						<ul>
-						<#list subject.questions as questionAnswer>
-							<#if questionAnswer.enabled == true>
-								<li>
-									<a name="${anchor_question_answer}${questionAnswer.idQuestionAnswer}"></a>
-									<strong>${questionAnswer.question}</strong>
-									<blockquote>${questionAnswer.answer}</blockquote>
-								</li>
-							</#if>
-						</#list>
-						</ul>
-						<#assign child_subjects_list = subject.getChilds(plugin) />
-						<#if child_subjects_list?has_content>
-							<@subjectsList items=child_subjects_list typeList=typeList depth=depth+1 />
-						</#if>
-					  </div>
-					</div>
-				</div>
-			</#list>
-		</div>
-	</#if>
-</#macro>
-
-<#macro subjectsListSelect items default_value exclude_value depth>
-<#if items?has_content>
-<#list items as subject>
-<#if exclude_value="${subject.id}">
-<#else>
-<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
-    <#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
-<#assign child_subjects_list = subject.getChilds(plugin) />
-<#if child_subjects_list?has_content>
-<@subjectsListSelect items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
-</#if>
-</#if>
-</#list>
-
-</#if>
-</#macro>
-
-<#macro getParentSubject subject breadcrumb>
-<#if subject?has_content>
-<#if breadcrumb == "">
-<#assign breadcrumbCopy = subject.text />
-<#else>
-<#assign breadcrumbCopy = subject.text + " &gt; " + breadcrumb />
-</#if>
-<#if subject.getParent(plugin)?has_content && subject.idParent != 0>
-<@getParentSubject subject=subject.getParent(plugin) breadcrumb=breadcrumbCopy />
-<#else>
-<@cBtn label='#i18n{helpdesk.question_list_row.top}' class='primary' href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#top' params='title="#i18n{helpdesk.question_list_row.top}"'>
-    <@cIcon name='chevron-up' />
-</@cBtn>
-${breadcrumbCopy}
-</#if>
-</#if>
-</#macro>
-
 <@cTpl>
-    <@cContainer>
-        <@cTitle level=1>#i18n{helpdesk.subject_list.pageTitle}</@cTitle>
-        <@cFieldset legend='#i18n{helpdesk.subject_list.labelSearch}'>
-            <@cForm name='form_search' method='post'>
-                <@cInput type='hidden' name='page' value='${path_label}' />
-                <@cInput type='hidden' name='faq_id' value='${faq.id}' />
-                <@cField label='#i18n{helpdesk.subject_list.labelSearch}' for='form_search_keywords'>
-                    <@cInput type='text' name='form_search_keywords' id='form_search_keywords' value='${filter_searched_keywords!?html}' />
-                </@cField>
-                <@cField label='#i18n{helpdesk.subject_list.labelDateBegin}' for='form_search_date_begin'>
-                    <@cInput type='date' name='form_search_date_begin' id='form_search_date_begin' value='${filter_date_begin!?html}' />
-                </@cField>
-                <@cField label='#i18n{helpdesk.subject_list.labelDateEnd}' for='form_search_date_end'>
-                    <@cInput type='date' name='form_search_date_end' id='form_search_date_end' value='${filter_date_end!?html}' />
-                </@cField>
-                <@cField label='#i18n{helpdesk.subject_list.labelSubject}' for='form_search_subject_id'>
-                    <@cSelect name='form_search_subject_id' id='form_search_subject_id'>
-                        <@cOption label='' value='' />
-                        <@subjectsListSelect items=helpdesk_subject_list default_value='${filter_subject_id!}' exclude_value='' depth=0 />
-                    </@cSelect>
-                </@cField>
-                <@cCheckbox name='form_search_sub_subjects' id='form_search_sub_subjects' label='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' value='true' checked=(filter_search_sub_subject!false) />
-                <@cBtn label='#i18n{helpdesk.subject_list.buttonLabelSearch}' class='primary' type='submit' params='title="#i18n{helpdesk.subject_list.buttonLabelSearch}"'>
-                    <@cIcon name='search' />
-                </@cBtn>
-                <@cBtn label='#i18n{helpdesk.subject_list.labelList}' class='secondary' href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}' params='title="#i18n{helpdesk.subject_list.labelList}"'>
-                    <@cIcon name='list' />
-                </@cBtn>
-            </@cForm>
-        </@cFieldset>
-        <#if (search_page!false)>
-            <#if helpdesk_question_answer_list?has_content>
-                <ul id="questionAnswer">
-                    <#list helpdesk_question_answer_list as questionAnswer>
-                    <li>
-                        <@getParentSubject subject=questionAnswer.getSubject(plugin) breadcrumb='' />
-                        <br />
-                        <a name="${questionAnswer.idQuestionAnswer}"></a>
-                        <strong>${questionAnswer.question}</strong>
-                        <blockquote>${questionAnswer.answer}</blockquote>
-                    </li>
-                    </#list>
-                </ul>
-            <#else>
-                <@cAlert type='warning' title='#i18n{helpdesk.message.search_nok}' />
-            </#if>
-        <#else>
-            <@subjectsList items=helpdesk_subject_list typeList="questionAnswer" depth=0 />
+<#-- Recursive accordion of subjects, each one listing its enabled questions then its sub-subjects -->
+<#macro subjectsList items>
+<#if items?has_content>
+    <#list items as subject>
+        <#local subjectId = subject.id?c>
+        <@cBlock id='${anchor_subject}${subjectId}' class='mb-2'>
+            <@cAccordion id=subjectId title=subject.text titleLevel=2 state=false>
+                <#local enabledQuestions = subject.questions?filter(q -> q.enabled)>
+                <#if enabledQuestions?has_content>
+                    <@chList class='list-unstyled'>
+                        <#list enabledQuestions as questionAnswer>
+                            <@chItem id='${anchor_question_answer}${questionAnswer.idQuestionAnswer?c}' class='mb-3'>
+                                <@cText><@cInline type='strong'>${questionAnswer.question}</@cInline></@cText>
+                                <@cBlock type='blockquote' class='blockquote'>${questionAnswer.answer}</@cBlock>
+                            </@chItem>
+                        </#list>
+                    </@chList>
+                </#if>
+                <#local child_subjects_list = subject.getChilds(plugin) />
+                <#if child_subjects_list?has_content>
+                    <@subjectsList items=child_subjects_list />
+                </#if>
+            </@cAccordion>
+        </@cBlock>
+    </#list>
+</#if>
+</#macro>
+<#-- Recursive select options, indented by depth -->
+<#macro subjectsListSelect items default_value depth>
+<#if items?has_content>
+    <#list items as subject>
+        <#local subjectId = subject.id?c>
+        <#local subjectLabel><#if depth gt 0><#list 1..depth as i>–</#list> </#if>${subject.text}</#local>
+        <@cOption value=subjectId label=subjectLabel selected=(default_value == subjectId) />
+        <#local child_subjects_list = subject.getChilds(plugin) />
+        <#if child_subjects_list?has_content>
+            <@subjectsListSelect items=child_subjects_list default_value=default_value depth=depth+1 />
         </#if>
-        <@cFieldset legend='#i18n{helpdesk.subject_list.labelNoAnswer}'>
-            <@cForm method='post'>
-                <@cInput type='hidden' name='page' value='${path_label}' />
-                <@cInput type='hidden' name='faq_id' value='${faq.id}' />
-                <@cInput type='hidden' name='contact' value='contact' />
-                <@cBtn label='#i18n{helpdesk.subject_list.labelContact}' class='primary' type='submit' params='title="#i18n{helpdesk.subject_list.labelContact}"'>
+    </#list>
+</#if>
+</#macro>
+<#-- Builds the subject path (root subject first) into the namespace variable breadcrumbItems -->
+<#macro subjectPathItems subject>
+<#if subject.getParent(plugin)?has_content && subject.idParent != 0><@subjectPathItems subject=subject.getParent(plugin) /></#if>
+<#assign subjectPathHref>jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id?c}#${anchor_subject}${subject.id?c}</#assign>
+<#assign breadcrumbItems = breadcrumbItems + [{ 'title': subject.text, 'url': subjectPathHref }]>
+</#macro>
+<#assign hasQuery = (filter_searched_keywords?has_content || filter_date_begin?has_content || filter_date_end?has_content) || filter_subject_id?has_content />
+<@cContainer>
+    <@cTitle level=2 class="mb-3">#i18n{helpdesk.subject_list.pageTitle}</@cTitle>
+    <@cFieldset legend='#i18n{portal.util.labelSearch}' class='mb-3' params='style="padding:0 15px;border-inline-start: var(--lutece-ds-border-large) var(--lutece-ds-secondary) solid;"'>
+        <@cForm name='form_search' method='post'>
+            <@cInput type='hidden' name='page' value=path_label />
+            <@cInput type='hidden' name='faq_id' value=faq.id?c />
+            <@cRow>
+                <@cCol cols='12 col-md-4'>
+                    <@cField label='#i18n{helpdesk.subject_list.labelSearch}' for='form_search_keywords'>
+                        <@cInput type='text' name='form_search_keywords' id='form_search_keywords' value=(filter_searched_keywords!)?html />
+                    </@cField>
+                </@cCol>
+            </@cRow>
+            <@cRow>
+                <@cCol cols='12 col-md-2'>
+                    <@cField label='#i18n{helpdesk.subject_list.labelDateBegin}' for='form_search_date_begin'>
+                        <@cInput type='date' name='form_search_date_begin' id='form_search_date_begin' value=(filter_date_begin!)?html />
+                    </@cField>
+                </@cCol>
+                <@cCol cols='12 col-md-2'>
+                    <@cField label='#i18n{helpdesk.subject_list.labelDateEnd}' for='form_search_date_end'>
+                        <@cInput type='date' name='form_search_date_end' id='form_search_date_end' value=(filter_date_end!)?html />
+                    </@cField>
+                </@cCol>
+                <@cCol cols='12 col-md-4'>
+                    <@cField label='#i18n{helpdesk.subject_list.labelSubject}' for='form_search_subject_id'>
+                        <@cSelect name='form_search_subject_id' id='form_search_subject_id' >
+                            <@cOption label='' value='' />
+                            <@subjectsListSelect items=helpdesk_subject_list default_value=filter_subject_id! depth=0 />
+                        </@cSelect>
+                    </@cField>
+                    <@cFormCheck type='checkbox' name='form_search_sub_subjects' id='form_search_sub_subjects' label='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' value='true' checked=(filter_search_sub_subject!false) />
+                </@cCol>
+            </@cRow>
+            <@cRow>
+                 <@cCol>
+                     <@cBtn label='#i18n{helpdesk.subject_list.buttonLabelSearch}' class='primary' type='submit' params='title="#i18n{helpdesk.subject_list.buttonLabelSearch}"'>
+                         <@cIcon name='search' class='me-1' />
+                     </@cBtn>
+                     <#if hasQuery>
+                     <@cBtn label='#i18n{helpdesk.subject_list.labelList}' class='secondary' href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id?c}' params='title="#i18n{helpdesk.subject_list.labelList}"'>
+                         <@cIcon name='refresh' class='me-1' />
+                     </@cBtn>
+                     </#if>
+                 </@cCol>
+            </@cRow>
+        </@cForm>
+    </@cFieldset>
+    <#if (search_page!false)>
+        <#if helpdesk_question_answer_list?has_content>
+            <@chList id='questionAnswer' class='list-unstyled mt-4'>
+                <#list helpdesk_question_answer_list as questionAnswer>
+                    <#assign breadcrumbItems = []>
+                    <@subjectPathItems subject=questionAnswer.getSubject(plugin) />
+                    <@chItem id='${anchor_question_answer}${questionAnswer.idQuestionAnswer?c}' class='mb-5 bg-light'>
+                        <@cBreadCrumb home='' type='fluid' items=breadcrumbItems class='bg-light' listClass='bg-light' />
+                        <@cBlock class='px-5 pt-2 pb-3'>
+                            <@cText><@cInline type='strong'>${questionAnswer.question}</@cInline></@cText>
+                            <@cBlock type='blockquote' class='blockquote'>${questionAnswer.answer}</@cBlock>
+                        </@cBlock>
+                    </@chItem>
+                </#list>
+            </@chList>
+        <#else>
+            <@cAlert type='warning' title='#i18n{helpdesk.message.search_nok}' />
+        </#if>
+    <#else>
+        <@subjectsList items=helpdesk_subject_list />
+    </#if>
+    <@cRow class='justify-content-between align-items-center'>
+        <@cCol>
+            <@cForm method='post' class='d-flex align-items-center'>
+                <@cInput type='hidden' name='page' value=path_label class='' />
+                <@cInput type='hidden' name='faq_id' value=faq.id?c class='' />
+                <@cInput type='hidden' name='contact' value='contact' class='' />
+                <@p class='mb-0 fs-3 me-2'>#i18n{helpdesk.subject_list.labelNoAnswer}</@p>
+                <@cBtn label='#i18n{helpdesk.subject_list.labelContact}' class='primary mt-0' type='submit' params='title="#i18n{helpdesk.subject_list.labelContact}"'>
                     <@cIcon name='mail' />
                 </@cBtn>
             </@cForm>
-        </@cFieldset>
-    </@cContainer>
+        </@cCol>
+        <@cCol class='text-end'>    
+            <@cBtn label='#i18n{helpdesk.question_list_row.top}' class='secondary' href='jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id?c}#top' params='title="#i18n{helpdesk.question_list_row.top}"'>
+                <@cIcon name='chevron-up' />
+            </@cBtn>
+        </@cCol>
+    </@cRow>
+</@cContainer>
 </@cTpl>

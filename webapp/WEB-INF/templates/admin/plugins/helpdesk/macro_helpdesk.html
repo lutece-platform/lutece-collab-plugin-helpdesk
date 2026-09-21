@@ -1,87 +1,116 @@
+<#-- Options d'un select : arborescence des sujets (indentation par niveau) -->
 <#macro subjectsList items default_value exclude_value depth>
 <#if items?has_content>
-<#list items as subject>
-	<#if exclude_value="${subject.id}">
-	<#else>
-		<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
-		<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
-		<#assign child_subjects_list = subject.getChilds(plugin) />
-		<#if child_subjects_list?has_content>
-			<@subjectsList items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+	<#list items as subject>
+		<#if exclude_value != "${subject.id}">
+			<#assign optionLabel><#if depth gt 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</#assign>
+			<@option value='${subject.id}' label=optionLabel selected=(default_value == "${subject.id}") />
+			<#assign child_subjects_list = subject.getChilds(plugin) />
+			<#if child_subjects_list?has_content>
+				<@subjectsList items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+			</#if>
 		</#if>
-	</#if>
-</#list>
+	</#list>
 </#if>
 </#macro>
+<#-- Options d'un select : arborescence des thèmes (indentation par niveau) -->
 <#macro themesList items default_value exclude_value depth>
 <#if items?has_content>
-<#list items as theme>
-	<#if exclude_value="${theme.id}">
-	<#else>
-		<option <#if default_value="${theme.id}">selected="selected"</#if> value="${theme.id}">
-		<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${theme.text}</option>
-		<#assign child_themes_list = theme.getChilds(plugin) />
-		<#if child_themes_list?has_content>
-			<@themesList items=child_themes_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+	<#list items as theme>
+		<#if exclude_value != "${theme.id}">
+			<#assign optionLabel><#if depth gt 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${theme.text}</#assign>
+			<@option value='${theme.id}' label=optionLabel selected=(default_value == "${theme.id}") />
+			<#assign child_themes_list = theme.getChilds(plugin) />
+			<#if child_themes_list?has_content>
+				<@themesList items=child_themes_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
+			</#if>
 		</#if>
+	</#list>
+</#if>
+</#macro>
+<#-- Arbre de navigation (sujets ou thèmes) rendu avec luteceTree.js -->
+<#macro helpdeskTree items typeList paramName currentId>
+<#if items?has_content>
+	<@div id='tree' class='lutece-tree'>
+	<@ul>
+		<@li class='lutece-tree-node' params='data-tree-icon="home"'>
+			#i18n{helpdesk.visitor_question_list.adminTitleLeft}
+			<@helpdeskTreeNodes items=items typeList=typeList paramName=paramName currentId=currentId />
+		</@li>
+	</@ul>
+	</@div>
+</#if>
+</#macro>
+<#macro helpdeskTreeNodes items typeList paramName currentId>
+<@ul>
+	<#list items as item>
+		<@li class='lutece-tree-node' id='node-${item.id}' params='data-tree-icon="message"'>
+			<#if currentId == item.id>
+				<strong>${item.text}</strong>
+			<#else>
+				<@link href='jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&amp;${paramName}=${item.id}' title='${item.text}' label='${item.text}' />
+			</#if>
+			<#assign child_items_list = item.getChilds(plugin) />
+			<#if child_items_list?has_content>
+				<@helpdeskTreeNodes items=child_items_list typeList=typeList paramName=paramName currentId=currentId />
+			</#if>
+		</@li>
+	</#list>
+</@ul>
+</#macro>
+<#-- Items de la liste des sujets / thèmes (@manageFeature), récursif sur les enfants -->
+<#macro commonListItems items depth jspRef paramId>
+<#if items?has_content>
+<#list items as subject>
+<#if depth == 0><#assign itemCardClass = 'border-bottom-1'><#assign bodyCardClass = ''><#assign divClass = 'border-bottom pb-2'><#else><#assign itemCardClass = 'border-0 rounded-0'><#assign bodyCardClass = 'pt-1'><#assign divClass = ''></#if>
+<@manageFeature id='subject-list-${subject.id}' class=itemCardClass! colClass='' listClass=''>
+	<@manageFeatureItem id='item-${paramId}-${subject.id}' class='border-0 rounded-0' bodyClass=bodyCardClass! >
+		<@manageFeatureItemColumn flex=false class='mt-1'>
+			<@div params='style="margin-left:${(depth * 2)?c}rem"' class='d-flex align-items-center ${divClass}'>
+				<#if depth gt 0><@icon style='arrow-bar-right' class='me-1 text-muted' /></#if>
+				<@offcanvas id='${paramId}-update-${subject.id}' targetUrl='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' targetElement='#edit_page' title='#i18n{portal.util.labelModify}' btnTitle=subject.text btnClass='btn btn-link fw-bold text-dark' btnColor='' osition='end' />
+				<@tag color='secondary' class='ms-2'>${subject.questionCount} #i18n{helpdesk.commonList.labelQuestion}</@tag>
+			</@div>
+		</@manageFeatureItemColumn>
+		<@manageFeatureItemColumn auto=true align='end' class='mt-1 ${divClass}'>
+			<@btnGroup class='me-1' ariaLabel='#i18n{portal.util.labelActions}'>
+				<#if subject.idOrder gt 0>
+					<@aButton href='jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&amp;${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all'] buttonIcon='chevron-up' />
+				<#else>
+					<@aButton href='#' color='light' class='disabled' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' hideTitle=['all'] buttonIcon='chevron-up' params='aria-disabled="true"' />
+				</#if>
+				<#if items?seq_index_of(subject) != items?size - 1>
+					<@aButton href='jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&amp;${paramId}=${subject.id}'  title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all'] buttonIcon='chevron-down' />
+					<@aButton href='jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&amp;${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoIn}' hideTitle=['all'] buttonIcon='chevron-right' />
+				<#else>
+					<@aButton href='#' color='light' class='disabled' title='#i18n{helpdesk.commonList.buttonLabelGoDown}' hideTitle=['all'] buttonIcon='chevron-down' params='aria-disabled="true"' />
+					<@aButton href='#' color='light' class='disabled' title='#i18n{helpdesk.commonList.buttonLabelGoIn}' hideTitle=['all'] buttonIcon='chevron-right' params='aria-disabled="true"' />
+				</#if>
+				<#if subject.idOrder == 0 && subject.idParent gt 0>
+					<@aButton href='jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&amp;${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelGoOut}' hideTitle=['all'] buttonIcon='chevron-left' />
+				<#else>
+					<@aButton href='#' color='light' class='disabled' title='#i18n{helpdesk.commonList.buttonLabelGoOut}' hideTitle=['all'] buttonIcon='chevron-left' params='aria-disabled="true"' />
+				</#if>
+			</@btnGroup>
+			<@offcanvas id='${paramId}-modify-${subject.id}' targetUrl='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' targetElement='#edit_page' title='#i18n{portal.util.labelModify}' btnTitle='#i18n{portal.util.labelModify}' btnIcon='pencil' btnColor='' btnClass='me-1' hideTitle=['all'] position='end' />
+			<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&amp;${paramId}=${subject.id}' title='#i18n{helpdesk.commonList.buttonLabelDelete}' color='danger' hideTitle=['all'] buttonIcon='trash' />
+		</@manageFeatureItemColumn>
+	</@manageFeatureItem>
+	<#assign child_subjects_list = subject.getChilds(plugin) />
+	<#if child_subjects_list?has_content>
+	<@li class='child-subjects-list border-0'>
+		<@commonListItems items=child_subjects_list depth=depth+1 jspRef=jspRef paramId=paramId />
+	</@li>
 	</#if>
+	</@manageFeature>
 </#list>
 </#if>
 </#macro>
-<#macro commonListTable items depth jspRef paramId>
-<#if items?has_content>
-	<#list items as subject>
-	<@tr>
-		<@td>
-			<@indentation depth=depth >
-			<strong>${subject.text}</strong>
-			<small class='text-muted'>[ ${subject.questionCount} #i18n{helpdesk.commonList.labelQuestion} ]</small>
-			</@indentation>
-		</@td>
-		<@td>
-			<#-- <@aButton href='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' title='#i18n{helpdesk.modify_subject.buttonLabelModify}' size='' buttonIcon='pencil' hideTitle=['all'] /> -->
-			<#-- btnTitle='#i18n{helpdesk.modify_subject.buttonLabelModify}' -->
-			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/Modify${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' targetElement='#edit_page' id='topic${subject.id}_edit' title='#i18n{helpdesk.modify_subject.buttonLabelModify}' btnTitle='' btnIcon='pencil' btnSize='sm' position='end' />
-			
-			
-			<#if subject.idOrder gt 0>
-				<@aButton href='jsp/admin/plugins/helpdesk/DoGoUp${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' size='sm' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' class='btn-light' hideTitle=['all'] buttonIcon='chevron-up' />
-			<#else>
-				<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoUp}' class='btn-light disabled' size='sm' hideTitle=['all'] buttonIcon='chevron-up' />
-			</#if>
-			<#if items?seq_index_of(subject) != items?size-1>
-				<@aButton href='jsp/admin/plugins/helpdesk/DoGoDown${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' size='sm' title='#i18n{helpdesk.commonList.buttonLabelGoDown}' class='btn-light' hideTitle=['all'] buttonIcon='chevron-down' />
-				<@aButton href='jsp/admin/plugins/helpdesk/DoGoIn${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' size='sm'  title='#i18n{helpdesk.commonList.buttonLabelGoIn}' class='btn-light' hideTitle=['all'] buttonIcon='chevron-right' />
-			<#else>
-				<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoDown}' class='btn-light disabled' size='sm' hideTitle=['all'] buttonIcon='chevron-down' />
-				<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoIn}' class='btn-light disabled' size='sm' hideTitle=['all'] buttonIcon='chevron-right' />
-			</#if>
-			<#if subject.idOrder == 0 && subject.idParent gt 0>
-				<@aButton href='jsp/admin/plugins/helpdesk/DoGoOut${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' size='sm'  title='#i18n{helpdesk.commonList.buttonLabelGoOut}' class='btn-light disabled' hideTitle=['all'] buttonIcon='chevron-left' />
-			<#else>
-				<@aButton href='javascript:void' title='#i18n{helpdesk.commonList.buttonLabelGoOut}' class='btn-light disabled' size='sm' hideTitle=['all'] buttonIcon='chevron-left' />
-			</#if>
-			<@aButton href='jsp/admin/plugins/helpdesk/ConfirmRemove${jspRef}.jsp?faq_id=${faq.id}&${paramId}=${subject.id}' size='sm'  title='#i18n{helpdesk.commonList.buttonLabelDelete}' class='btn-danger' hideTitle=['all'] buttonIcon='trash' />
-		</@td>            
-	</@tr>
-	<#assign child_subjects_list = subject.getChilds(plugin) />
-	<#if child_subjects_list?has_content>
-		<@commonListTable items=child_subjects_list depth=depth+1 jspRef=jspRef paramId=paramId />
-	</#if>
+<#-- Sélecteur du nombre d'éléments par page -->
+<#macro NbItemsPerPageSelectorCombo nb_items_per_page>
+<@select id='items_per_page' name='items_per_page'>
+	<#list [ "10", "20", "50", "100" ] as nb>
+		<@option value=nb label=nb selected=(nb_items_per_page == nb) />
 	</#list>
-</#if>
-</#macro>
-<#macro indentation depth>
-<#if depth gt 0>
-	<blockquote>
-	<#list 1..depth as i>
-		<blockquote><#if i = depth><#nested></#if>
-	</#list>
-	<#list 1..depth as i>
-		</blockquote>
-	</#list>
-	</blockquote>
-<#else>
-	<blockquote><#nested></blockquote>
-</#if>
+</@select>
 </#macro>

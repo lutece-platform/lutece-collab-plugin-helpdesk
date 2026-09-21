@@ -1,54 +1,54 @@
-<#macro themesList items default_value exclude_value depth>
-<#if items?has_content>
-<#list items as theme>
-<#if exclude_value="${theme.id}">
-<#else>
-<option <#if default_value="${theme.id}">selected="selected"</#if> value="${theme.id}">
-    <#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${theme.text}</option>
-<#assign child_themes_list = theme.getChilds(plugin) />
-<#if child_themes_list?has_content>
-<@themesList items=child_themes_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
-</#if>
-</#if>
-</#list>
-</#if>
-</#macro>
 <@cTpl>
-    <@cContainer>
-        <@cTitle level=1>#i18n{helpdesk.contact.adminTitle}</@cTitle>
-        <@cFieldset>
-            <@cForm name='form_contact' method='post'>
-                <@cInput type='hidden' name='valid' value='ok' />
-                <@cInput type='hidden' name='faq_id' value='${faq.id}' />
-                <@cInput type='hidden' name='page' value='helpdesk' />
-                <@cInput type='hidden' name='contact' value='result' />
-                <@cField label='#i18n{helpdesk.contact.subject}' for='mail_subject'>
-                    <@cInput type='text' name='mail_subject' id='mail_subject' value='#i18n{helpdesk.contact.default_subject}' maxlength=50 />
-                </@cField>
-                <@cField label='#i18n{helpdesk.contact.Name}' for='last_name'>
-                    <@cInput type='text' name='last_name' id='last_name' maxlength=50 />
-                </@cField>
-                <@cField label='#i18n{helpdesk.contact.FirstName}' for='first_name'>
-                    <@cInput type='text' name='first_name' id='first_name' maxlength=50 />
-                </@cField>
-                <@cField label='#i18n{helpdesk.contact.Email}' for='email'>
-                    <@cInput type='email' name='email' id='email' maxlength=80 />
-                </@cField>
-                <@cField label='#i18n{helpdesk.contact.QuestionType}' for='theme_id'>
-                    <@cSelect name='theme_id' id='theme_id'>
-                        <@themesList items=helpdesk_theme_list default_value="${default_value!}" exclude_value="" depth=0 />
-                    </@cSelect>
-                </@cField>
-                <@cField label='#i18n{helpdesk.contact.YourQuestion}' for='question'>
-                    <@cTextArea name='question' id='question' rows=5 />
-                </@cField>
+<#macro themesList items default_value depth>
+    <#if items?has_content>
+        <#list items as theme>
+            <#local themeId = theme.id?c>
+            <#local themeLabel><#if depth gt 0><#list 1..depth as i>–</#list> </#if>${theme.text}</#local>
+            <@cOption value=themeId label=themeLabel selected=(default_value == themeId) />
+            <#local child_themes_list = theme.getChilds(plugin) />
+            <#if child_themes_list?has_content>
+                <@themesList items=child_themes_list default_value=default_value depth=depth+1 />
+            </#if>
+        </#list>
+    </#if>
+</#macro>
+<@cContainer>
+    <@cTitle level=1>#i18n{helpdesk.contact.adminTitle}</@cTitle>
+    <@cForm name='form_contact' method='post'>
+        <@cInput type='hidden' name='valid' value='ok' class='' />
+        <@cInput type='hidden' name='faq_id' value=faq.id?c class='' />
+        <@cInput type='hidden' name='page' value='helpdesk' class='' />
+        <@cInput type='hidden' name='contact' value='result' class='' />
+        <@cField label='#i18n{helpdesk.contact.subject}' for='mail_subject'>
+            <@cInput type='text' name='mail_subject' id='mail_subject' value='#i18n{helpdesk.contact.default_subject}' maxlength=50 />
+        </@cField>
+        <@cField label='#i18n{helpdesk.contact.Name}' for='last_name'>
+            <@cInput type='text' name='last_name' id='last_name' maxlength=50 />
+        </@cField>
+        <@cField label='#i18n{helpdesk.contact.FirstName}' for='first_name'>
+            <@cInput type='text' name='first_name' id='first_name' maxlength=50 />
+        </@cField>
+        <@cField label='#i18n{helpdesk.contact.Email}' for='email'>
+            <@cInput type='email' name='email' id='email' maxlength=80 />
+        </@cField>
+        <@cField label='#i18n{helpdesk.contact.QuestionType}' for='theme_id'>
+            <@cSelect name='theme_id' id='theme_id'>
+                <@themesList items=helpdesk_theme_list default_value=default_value! depth=0 />
+            </@cSelect>
+        </@cField>
+        <@cField label='#i18n{helpdesk.contact.YourQuestion}' for='question'>
+            <@cTextArea name='question' id='question' rows=5 />
+        </@cField>
+        <@cRow class='mt-3'>
+            <@cCol>
                 <@cBtn label='#i18n{helpdesk.contact.send}' class='primary' type='submit' params='title="#i18n{helpdesk.contact.send}"'>
                     <@cIcon name='mail' />
                 </@cBtn>
-                <@cBtn label='#i18n{helpdesk.contact.back}' class='secondary' href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}' params='title="#i18n{helpdesk.contact.back}"'>
-                    <@cIcon name='x' />
+                <@cBtn label='#i18n{helpdesk.contact.back}' class='secondary' href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id?c}' params='title="#i18n{helpdesk.contact.back}"'>
+                    <@cIcon name='arrow-left' />
                 </@cBtn>
-            </@cForm>
-        </@cFieldset>
-    </@cContainer>
+            </@cCol>
+        </@cRow>
+    </@cForm>
+</@cContainer>
 </@cTpl>

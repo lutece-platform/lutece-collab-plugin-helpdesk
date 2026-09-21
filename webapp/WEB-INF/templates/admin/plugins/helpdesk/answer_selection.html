@@ -1,28 +1,29 @@
 <@div class='insert-service'>
 	<@tform method='post' action='jsp/admin/plugins/helpdesk/DoInsertAnswer.jsp'>
 		<@input type='hidden' name='input' value='${input_name!}' />
-		<@fieldSet legend='&nbsp;#i18n{helpdesk.answer_selection.boxTitle}'>
+		<@fieldSet legend='#i18n{helpdesk.answer_selection.boxTitle}'>
+			<@p class='text-muted'>#i18n{helpdesk.answer_selection.LabelChooseQuestion}</@p>
+			<#assign hasQuestion = false />
 			<#list (helpdesk_subject_list![]) as subject_list>
 				<#if subject_list.questions?has_content>
-					<strong>${subject_list.text!}</strong>
+					<#assign hasQuestion = true />
+					<@h level=4 class='mt-3'>${subject_list.text!}</@h>
 					<@input type='hidden' name='subject_id' value='${subject_list.id}' />
-					<@table>
+					<@listGroup class='mb-3'>
 						<#list subject_list.questions as question_list>
-						<@tr>
-							<@td>
-								<@formGroup labelFor='helpdesk_${question_list.idQuestionAnswer}' labelKey='${question_list.question}'>
-									<@radioButton name='helpdesk_answer' id='helpdesk_${question_list.idQuestionAnswer}' value='${question_list.idQuestionAnswer}' />
-								</@formGroup>
-							</@td>
-						</@tr>
-						<@tr>
-							<@td>${question_list.answer}</@td>
-						</@tr>
+						<@listGroupItem>
+							<@radioButton name='helpdesk_answer' id='helpdesk_${question_list.idQuestionAnswer}' value='${question_list.idQuestionAnswer}' labelKey='${question_list.question}' />
+							<@div class='text-muted small ms-4'>${question_list.answer}</@div>
+						</@listGroupItem>
 						</#list>
-					</@table>
+					</@listGroup>
 				</#if>
 			</#list>
-			<@button buttonIcon='device-floppy' title='#i18n{portal.util.labelValidate}' type='submit' size='sm'/>
+			<#if hasQuestion>
+				<@button buttonIcon='device-floppy' title='#i18n{portal.util.labelValidate}' type='submit' size='sm' />
+			<#else>
+				<@empty title='#i18n{helpdesk.question_answer_list.noQuestion}' iconName='message-off' />
+			</#if>
 		</@fieldSet>
 	</@tform>
 </@div>

@@ -5,7 +5,7 @@
 -- Dumping data for table core_admin_right
 --
 INSERT INTO core_admin_right (id_right,name,level_right,admin_url,description,is_updatable,plugin_name,id_feature_group,icon_url,documentation_url) VALUES
-('HELPDESK_MANAGEMENT','helpdesk.adminFeature.helpdesk_management.name',1,'jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp','helpdesk.adminFeature.helpdesk_management.description',0,'helpdesk','APPLICATIONS','images/admin/skin/plugins/helpdesk/helpdesk.png',NULL);
+('HELPDESK_MANAGEMENT','helpdesk.adminFeature.helpdesk_management.name',1,'jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp','helpdesk.adminFeature.helpdesk_management.description',0,'helpdesk','APPLICATIONS','ti ti-messages',NULL);
 
 
 --

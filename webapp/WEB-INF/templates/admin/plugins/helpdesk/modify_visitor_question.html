@@ -42,14 +42,14 @@
 				<@input type='textarea' id='answer' name='answer' richtext=true rows=20 cols=90 />
 			</@formGroup>
 			<@formGroup>
-				<@checkBox name='add_question_answer' value='1' labelKey='#i18n{helpdesk.modify_visitor_question.LabelAddQuestion}' />
+				<@checkBox orientation='switch' name='add_question_answer' id='add_question_answer' value='1' labelKey='#i18n{helpdesk.modify_visitor_question.LabelAddQuestion}' />
 			</@formGroup>
 			<@input type='hidden' name='faq_id' value='${faq_id}' />
 			<#if theme_id??><@input type='hidden' name='theme_id' value='${theme_id}' /></#if>
 			<@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
 			<@formGroup>
-				<@button title='#i18n{helpdesk.modify_visitor_question.buttonLabelSend}' buttonIcon='device-floppy' size='' type='submit'/>
-				<@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='' />
+				<@button title='#i18n{helpdesk.modify_visitor_question.buttonLabelSend}' buttonIcon='device-floppy' size='' type='submit' class='form-validation'/>
+				<@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='arrow-left' size='' class='form-validation' />
 			</@formGroup>
 		</@tform>
 	</@pageColumn>
