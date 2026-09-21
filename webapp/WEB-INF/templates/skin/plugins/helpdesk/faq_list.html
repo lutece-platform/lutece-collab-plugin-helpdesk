@@ -1,70 +1,65 @@
-<#macro getParentSubject subject faq breadcrumb>
-<#if subject?has_content && faq?has_content>
-<#if breadcrumb == "">
-<#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" />
-<#else>
-<#assign breadcrumbCopy = "<a href=\"jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}#${anchor_subject}${subject.id}\">${subject.text}</a>" + " &gt; " + breadcrumb />
-</#if>
-<#if subject.getParent(plugin)?has_content && subject.idParent != 0>
-<@getParentSubject subject=subject.getParent(plugin) faq=faq breadcrumb=breadcrumbCopy />
-<#else>
-<a class="top" href="jsp/site/Portal.jsp?page=${path_label}#top">#i18n{helpdesk.question_list_row.top}</a>
-<a href="jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id}">${faq.name}</a> &gt; ${breadcrumbCopy}
-</#if>
-</#if>
-</#macro>
-
 <@cTpl>
-    <@cContainer>
-        <#if faq_list?has_content>
-            <@cTitle level=1>#i18n{helpdesk.faq_list.portlet_search.title}</@cTitle>
-            <@cFieldset>
-                <@cForm name='form_search' method='post'>
-                    <@cInput type='hidden' name='page' value='${path_label}' />
-                    <@cField label='#i18n{helpdesk.faq_list.portlet_search.labelSearch}' for='form_search_keywords'>
-                        <@cInput type='text' name='form_search_keywords' id='form_search_keywords' value='${(filter_searched_keywords!)!?html}' />
-                    </@cField>
-                    <@cField label='#i18n{helpdesk.faq_list.portlet_search.labelDateBegin}' for='form_search_date_begin'>
-                        <@cInput type='date' name='form_search_date_begin' id='form_search_date_begin' value='${(filter_date_begin!)!?html}' />
-                    </@cField>
-                    <@cField label='#i18n{helpdesk.faq_list.portlet_search.labelDateEnd}' for='form_search_date_end'>
-                        <@cInput type='date' name='form_search_date_end' id='form_search_date_end' value='${(filter_date_end!)!?html}' />
-                    </@cField>
+<#-- Builds the subject path (root subject first) into the namespace variable breadcrumbItems -->
+<#macro subjectPathItems subject faq>
+    <#if subject.getParent(plugin)?has_content && subject.idParent != 0>
+        <@subjectPathItems subject=subject.getParent(plugin) faq=faq />
+    </#if>
+    <#assign subjectPathHref>jsp/site/Portal.jsp?page=${path_label}&faq_id=${faq.id?c}#${anchor_subject}${subject.id?c}</#assign>
+    <#assign breadcrumbItems = breadcrumbItems + [{ 'title': subject.text, 'url': subjectPathHref }]>
+</#macro>
+<@cContainer>
+    <#if faq_list?has_content>
+        <@cTitle level=1>#i18n{helpdesk.faq_list.portlet_search.title}</@cTitle>
+        <@cForm name='form_search' method='post'>
+            <@cInput type='hidden' name='page' value=path_label class='' />
+            <@cField label='#i18n{helpdesk.faq_list.portlet_search.labelSearch}' for='form_search_keywords'>
+                <@cInput type='text' name='form_search_keywords' id='form_search_keywords' value=(filter_searched_keywords!)?html />
+            </@cField>
+            <@cField label='#i18n{helpdesk.faq_list.portlet_search.labelDateBegin}' for='form_search_date_begin'>
+                <@cInput type='date' name='form_search_date_begin' id='form_search_date_begin' value=(filter_date_begin!)?html />
+            </@cField>
+            <@cField label='#i18n{helpdesk.faq_list.portlet_search.labelDateEnd}' for='form_search_date_end'>
+                <@cInput type='date' name='form_search_date_end' id='form_search_date_end' value=(filter_date_end!)?html />
+            </@cField>
+            <@cRow class='mt-3'>
+                <@cCol>
                     <@cBtn label='#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}' class='primary' type='submit' params='title="#i18n{helpdesk.faq_list.portlet_search.buttonLabelSearch}"'>
                         <@cIcon name='search' />
                     </@cBtn>
-                </@cForm>
-                <#if (search_page!false)>
-                    <#if helpdesk_question_answer_list?has_content>
-                        <ul id="questionAnswer">
-                            <#list helpdesk_question_answer_list as questionAnswer>
-                            <li class="mb-5">
-                                <#assign currentSubject = questionAnswer.getSubject(plugin) />
-                                <p><@getParentSubject subject=currentSubject faq=currentSubject.getFaq(plugin) breadcrumb="" /></p>
-                                <br />
-                                <a name="${questionAnswer.idQuestionAnswer}"></a>
-                                <p><strong>${questionAnswer.question}</strong></p>
-                                <p>${questionAnswer.answer}</p>
-                            </li>
-                            </#list>
-                        </ul>
-                    <#else>
-                        <@cAlert type='warning' title='#i18n{helpdesk.message.search_nok}' />
-                    </#if>
-                </#if>
-            </@cFieldset>
-        </#if>
-        <@cTitle level=2>#i18n{helpdesk.faq_list.portlet_list.title}</@cTitle>
-        <@cFieldset>
-            <#if faq_list?has_content>
-                <ul>
-                    <#list faq_list as faq>
-                    <li><a href="jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id}">${faq.name}</a></li>
+                </@cCol>
+            </@cRow>
+        </@cForm>
+        <#if (search_page!false)>
+            <#if helpdesk_question_answer_list?has_content>
+                <@chList id='questionAnswer' class='list-unstyled mt-4'>
+                    <#list helpdesk_question_answer_list as questionAnswer>
+                        <#assign currentSubject = questionAnswer.getSubject(plugin) />
+                        <#assign currentFaq = currentSubject.getFaq(plugin) />
+                        <#assign faqHref = 'jsp/site/Portal.jsp?page=' + path_label + '&faq_id=' + currentFaq.id?c>
+                        <#assign breadcrumbItems = [{ 'title': currentFaq.name, 'url': faqHref }]>
+                        <@subjectPathItems subject=currentSubject faq=currentFaq />
+                        <@chItem id='${anchor_question_answer}${questionAnswer.idQuestionAnswer?c}' class='mb-5'>
+                            <@cCard>
+                                <@cBtn label='#i18n{helpdesk.question_list_row.top}' class='link border-0 btn-sm' href='jsp/site/Portal.jsp?page=${path_label}#top' params='title="#i18n{helpdesk.question_list_row.top}"'>
+                                    <@cIcon name='chevron-up' />
+                                </@cBtn>
+                                <@cBreadCrumb home='' type='fluid' items=breadcrumbItems />
+                                <@cText><@cInline type='strong'>${questionAnswer.question}</@cInline></@cText>
+                                <@cBlock>${questionAnswer.answer}</@cBlock>
+                            </@cCard>
+                        </@chItem>
                     </#list>
-                </ul>
+                </@chList>
             <#else>
-                <@cAlert type='warning' title='#i18n{helpdesk.faq_list.emptyList}' />
+                <@cAlert type='warning' title='#i18n{helpdesk.message.search_nok}' />
             </#if>
-        </@cFieldset>
-    </@cContainer>
+        </#if>
+    </#if>
+    <@cTitle level=2>#i18n{helpdesk.faq_list.portlet_list.title}</@cTitle>
+    <#if faq_list?has_content>
+        <@chList><#list faq_list as faq><@chItem><@cLink href='jsp/site/Portal.jsp?page=helpdesk&faq_id=${faq.id?c}' label=faq.name /></@chItem></#list></@chList>
+    <#else>
+        <@cAlert type='warning' title='#i18n{helpdesk.faq_list.emptyList}' />
+    </#if>
+</@cContainer>
 </@cTpl>

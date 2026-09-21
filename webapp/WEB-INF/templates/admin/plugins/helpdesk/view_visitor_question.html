@@ -1,62 +1,58 @@
 <@pageContainer>
-    <@pageColumn>
-        <@pageHeader title='#i18n{helpdesk.view_visitor_question.adminTitle}'>
-            <@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='arrow-left' />
-        </@pageHeader>
-        <@row>
-            <@columns xl=4>
-                <@box>
-                    <@boxHeader title='#i18n{helpdesk.view_visitor_question.adminTitle}' />
-                    <@boxBody>
-                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelName} :</strong> ${visitor_question.lastname!}</@p>
-                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelFirstName} :</strong> ${visitor_question.firstname!}</@p>
-                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelEmail} :</strong> <@link href='mailto:${visitor_question.email!}'>${visitor_question.email!}</@link></@p>
-                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelDate} :</strong> ${visitor_question.date!}</@p>
-                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelQuestion} :</strong> ${visitor_question.question!}</@p>
-                        <@p><strong>#i18n{helpdesk.view_visitor_question.LabelAnswerName} :</strong> ${helpdesk_user.firstName!} ${helpdesk_user.lastName!}</@p>
-                        <#if visitor_question.answer?has_content>
-                            <@p><strong>#i18n{helpdesk.view_visitor_question.LabelAnswer} :</strong> ${visitor_question.answer}</@p>
-                        </#if>
-                        <@tform method='post' name='delete_visitor_question' action='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp'>
-                            <@input type='hidden' name='faq_id' value='${faq_id}' />
-                            <@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
-                            <@button color='danger' title='#i18n{helpdesk.view_visitor_question.buttonLabelRemove}' buttonIcon='trash' type='submit' size='sm' />
-                        </@tform>
-                    </@boxBody>
-                </@box>
-            </@columns>
-            <@columns xl=8>
-                <@box>
-                    <@boxHeader title='#i18n{helpdesk.view_visitor_question.LabelQuestionAnswerList}' />
-                    <@boxBody>
-                        <#if question_answer_list?has_content>
-                            <@table>
-                                <@tr>
-                                    <@th>#i18n{helpdesk.view_visitor_question.LabelQuestion}</@th>
-                                    <@th>#i18n{helpdesk.view_visitor_question.LabelAnswer}</@th>
-                                    <@th></@th>
-                                </@tr>
-                                <@tableHeadBodySeparator />
-                                <#list question_answer_list as question_list>
-                                <@tr>
-                                    <@td>${question_list.question!}</@td>
-                                    <@td>${question_list.answer!}</@td>
-                                    <@td>
-                                        <@tform method='post' name='add_question' action='jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp'>
-                                            <@input type='hidden' name='faq_id' value='${faq_id}' />
-                                            <@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
-                                            <@button color='primary' title='#i18n{helpdesk.view_visitor_question.buttonLabelAdd}' buttonIcon='plus' type='submit' size='sm' />
-                                        </@tform>
-                                    </@td>
-                                </@tr>
-                                </#list>
-                            </@table>
-                        <#else>
-                            <@empty title='#i18n{helpdesk.view_visitor_question.noQuestion}' subtitle='#i18n{helpdesk.view_visitor_question.noQuestionSubtitle}' />
-                        </#if>
-                    </@boxBody>
-                </@box>
-            </@columns>
-        </@row>
-    </@pageColumn>
+	<@pageColumn>
+		<@pageHeader title='#i18n{helpdesk.view_visitor_question.adminTitle}'>
+			<@aButton href='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq_id}' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='arrow-left' hideTitle=['xs','sm'] />
+		</@pageHeader>
+		<@row>
+			<@columns xl=4>
+				<@box>
+					<@boxHeader title='#i18n{helpdesk.view_visitor_question.adminTitle}' />
+					<@boxBody>
+						<@p><strong>#i18n{helpdesk.view_visitor_question.LabelName} :</strong> ${visitor_question.lastname!}</@p>
+						<@p><strong>#i18n{helpdesk.view_visitor_question.LabelFirstName} :</strong> ${visitor_question.firstname!}</@p>
+						<@p><strong>#i18n{helpdesk.view_visitor_question.LabelEmail} :</strong> <@link href='mailto:${visitor_question.email!}' label='${visitor_question.email!}' /></@p>
+						<@p><strong>#i18n{helpdesk.view_visitor_question.LabelDate} :</strong> ${visitor_question.date!}</@p>
+						<@p><strong>#i18n{helpdesk.view_visitor_question.LabelQuestion} :</strong> ${visitor_question.question!}</@p>
+						<@p><strong>#i18n{helpdesk.view_visitor_question.LabelAnswerName} :</strong> ${helpdesk_user.firstName!} ${helpdesk_user.lastName!}</@p>
+						<#if visitor_question.answer?has_content>
+							<@p><strong>#i18n{helpdesk.view_visitor_question.LabelAnswer} :</strong> ${visitor_question.answer}</@p>
+						</#if>
+					</@boxBody>
+					<@boxFooter>
+						<@tform type='inline' method='post' name='delete_visitor_question' action='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp'>
+							<@input type='hidden' name='faq_id' value='${faq_id}' />
+							<@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
+							<@button color='danger' title='#i18n{helpdesk.view_visitor_question.buttonLabelRemove}' buttonIcon='trash' type='submit' size='sm' />
+						</@tform>
+					</@boxFooter>
+				</@box>
+			</@columns>
+			<@columns xl=8>
+				<@h level=3 class='mb-3'>#i18n{helpdesk.view_visitor_question.LabelQuestionAnswerList}</@h>
+				<#if question_answer_list?has_content>
+					<@manageFeature id='question-answer-list' class='mt-0'>
+						<#list question_answer_list as question_list>
+						<@manageFeatureItem id='question-answer-${question_list.idQuestionAnswer}'>
+							<@manageFeatureItemColumn flex=false>
+								<strong>${question_list.question!}</strong>
+								<@div class='text-muted mt-1'>${question_list.answer!}</@div>
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn auto=true align='end'>
+								<@tform type='inline' method='post' name='add_question_${question_list.idQuestionAnswer}' action='jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp'>
+									<@input type='hidden' name='faq_id' value='${faq_id}' />
+									<@input type='hidden' name='question_id' value='${visitor_question.idVisitorQuestion}' />
+									<@button color='primary' title='#i18n{helpdesk.view_visitor_question.buttonLabelAdd}' buttonIcon='plus' type='submit' size='sm' hideTitle=['xs','sm'] />
+								</@tform>
+							</@manageFeatureItemColumn>
+						</@manageFeatureItem>
+						</#list>
+					</@manageFeature>
+				<#else>
+					<@card>
+						<@empty title='#i18n{helpdesk.view_visitor_question.noQuestion}' subtitle='#i18n{helpdesk.view_visitor_question.noQuestionSubtitle}' iconName='message-off' />
+					</@card>
+				</#if>
+			</@columns>
+		</@row>
+	</@pageColumn>
 </@pageContainer>

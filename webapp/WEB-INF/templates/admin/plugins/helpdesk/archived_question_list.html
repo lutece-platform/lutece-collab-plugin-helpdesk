@@ -1,93 +1,66 @@
-<#macro subjectsList items typeList depth>
-<#if items?has_content>
-<#if depth==0><div id="tree" class="lutece-tree"></#if>  
-<@ul>
-<#list items as item>
-	<li class="lutece-tree-node" id="node-${item.id}">
-		<#assign themeId = 0 />
-		<#if theme?has_content><#assign themeId = theme.id /></#if>
-		<#if themeId==item.id>
-			<strong>${item.text}</strong>
-		<#else>
-			<a href="jsp/admin/plugins/helpdesk/${typeList}List.jsp?faq_id=${faq.id}&theme_id=${item.id}" title="${item.text}">
-				${item.text}
-			</a>
-		</#if>
-		<#assign child_themes_list = item.getChilds(plugin) />
-		<#if child_themes_list?has_content>
-		<@ul>
-			<@subjectsList items=child_themes_list typeList=typeList depth=depth+1 />
-		</@ul>    
-		</#if>
-	</li>
-</#list>
-</@ul>
-<#if depth==0></div></#if>
+<#include 'macro_helpdesk.html' />
+<#assign currentThemeId = 0 />
+<#assign backUrl = 'jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp?faq_id=${faq.id}' />
+<#if theme?has_content>
+	<#assign currentThemeId = theme.id />
+	<#assign backUrl = backUrl + '&theme_id=${theme.id}' />
 </#if>
-</#macro>
 <@pageContainer>
-    <@pageColumn>
+	<@pageColumn>
+		<@pageHeader title='${faq.name} - #i18n{helpdesk.archived_question_list.adminTitleRight}'>
+			<@aButton href=backUrl title='#i18n{helpdesk.archived_question_list.visitorQuestions}' color='secondary' buttonIcon='arrow-left' hideTitle=['xs','sm'] />
+		</@pageHeader>
 		<@row>
 			<@columns xl=3>
-				<@box color='primary' >
+				<@box>
 					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleLeft}' />
 					<@boxBody>
-						<@subjectsList items=helpdesk_theme_list typeList="VisitorQuestion" depth=0 />
+						<@helpdeskTree items=helpdesk_theme_list typeList='ArchivedQuestion' paramName='theme_id' currentId=currentThemeId />
 					</@boxBody>
 				</@box>
 			</@columns>
 			<@columns xl=9>
-				<@box color='primary' >
-					<@boxHeader title='#i18n{helpdesk.archived_question_list.adminTitleRight}'>
-						<@tform type='inline' action='jsp/admin/plugins/helpdesk/VisitorQuestionList.jsp'>
-							<#if theme?has_content><@input type='hidden' value=theme.id name='theme_id' /></#if>
-							<@input type='hidden' name='faq_id' value=faq.id />
-							<@button title='#i18n{helpdesk.archived_question_list.visitorQuestions}' buttonIcon='cog' type='submit' color='secondary' hideTitle=['xs','sm','md'] />
-						</@tform>
-					</@boxHeader>	
-					<@boxBody>
-						<#if theme?has_content>	
-							<#if helpdesk_archived_question_list?has_content>
-								<@table headBody=true >
-									<@tr>
-										<@th>#i18n{helpdesk.archived_question_list.titleQuestion}</@th>
-										<@th>#i18n{helpdesk.archived_question_list.titleVisitor}</@th>
-										<@th>#i18n{helpdesk.archived_question_list.titleDate}</@th>
-										<@th>#i18n{helpdesk.archived_question_list.titleActions}</@th>
-									</@tr>
-									<@tableHeadBodySeparator />
-									<#list helpdesk_archived_question_list as visitor_question>
-										<#assign truncated_value=125 />
-										<@tr>
-											<@td>
-											<#if visitor_question.question?length gt truncated_value>
-												${visitor_question.question?substring(0,truncated_value-3)}...
-											<#else>
-												${visitor_question.question}
-											</#if>
-											</@td>
-											<@td>${visitor_question.firstname} ${visitor_question.lastname}</@td>
-											<@td>${visitor_question.date}</@td>
-											<@td>
-												<@aButton href='jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}' buttonIcon='edit' />
-												<@aButton class='btn-danger' href='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&theme_id=${theme.id}&question_id=${visitor_question.idVisitorQuestion}' title='#i18n{helpdesk.archived_question_list.buttonLabelRemove}' hideTitle=['all'] buttonIcon='trash' />
-											</@td>
-										</@tr>
-									</#list>
-								</@table>
-							<#else>
-								<@empty title='#i18n{helpdesk.archived_question_list.noQuestion}' />
-							</#if>
-						</#if>
-					</@boxBody>
-				</@box>
+				<#if theme?has_content && helpdesk_archived_question_list?has_content>
+					<@manageFeature id='archived-question-list'>
+						<#assign truncated_value = 125 />
+						<#list helpdesk_archived_question_list as visitor_question>
+						<@manageFeatureItem id='archived-question-${visitor_question.idVisitorQuestion}'>
+							<@manageFeatureItemColumn flex=false>
+								<#if visitor_question.question?length gt truncated_value>
+									${visitor_question.question?substring(0, truncated_value - 3)}...
+								<#else>
+									${visitor_question.question}
+								</#if>
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn auto=true flex=false valign='top'>
+								<@p class='fw-bold fs-3'>#i18n{helpdesk.archived_question_list.titleVisitor}</@p>
+								${visitor_question.firstname} ${visitor_question.lastname}
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn auto=true flex=false valign='top'>
+								<@p class='fw-bold fs-3'>#i18n{helpdesk.archived_question_list.titleDate}</@p>
+								${visitor_question.date}
+							</@manageFeatureItemColumn>
+							<@manageFeatureItemColumn auto=true align='end'>
+								<@offcanvas id='archived-question-modify-${visitor_question.idVisitorQuestion}' targetUrl='jsp/admin/plugins/helpdesk/ModifyVisitorQuestion.jsp?faq_id=${faq.id}&question_id=${visitor_question.idVisitorQuestion}' useIframe=true title='#i18n{helpdesk.modify_visitor_question.adminTitle}' btnTitle='#i18n{portal.util.labelModify}' btnIcon='edit' btnColor='' btnSize='sm' btnClass='me-1' hideTitle=['all'] position='end' size='half' />
+								<@aButton href='jsp/admin/plugins/helpdesk/DoRemoveVisitorQuestion.jsp?faq_id=${faq.id}&amp;theme_id=${theme.id}&amp;question_id=${visitor_question.idVisitorQuestion}' title='#i18n{helpdesk.archived_question_list.buttonLabelRemove}' color='danger' size='sm' hideTitle=['all'] buttonIcon='trash' />
+							</@manageFeatureItemColumn>
+						</@manageFeatureItem>
+						</#list>
+					</@manageFeature>
+				<#else>
+					<@card>
+						<@empty title='#i18n{helpdesk.archived_question_list.noQuestion}' iconName='archive-off' />
+					</@card>
+				</#if>
 			</@columns>
 		</@row>
 	</@pageColumn>
 </@pageContainer>
-	
 <script type="module">
 	import LuteceTree from './themes/shared/modules/luteceTree.js';
 	const tree = document.querySelector("#tree");
-	const mapTree = new LuteceTree( tree );
+	if ( tree ) {
+		const themeTree = new LuteceTree( tree );
+		themeTree.selectTreeNode( '#node-${currentThemeId!}' )
+	}
 </script>

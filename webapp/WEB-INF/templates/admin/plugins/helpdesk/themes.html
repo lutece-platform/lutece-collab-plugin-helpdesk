@@ -1,21 +1,18 @@
 <#include 'macro_helpdesk.html' />
 <@pageContainer>
-    <@pageColumn>
-		<@pageHeader title='${faq.name} : #i18n{helpdesk.themes.adminTitle}'>
-			<#-- <@aButton href='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.themes.themeAdd}' hideTitle=['xs','sm'] /> -->			
-			<#-- btnTitle='#i18n{helpdesk.themes.themeAdd}' -->
-			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' targetElement='#create_theme_page' id='theme-create' title='#i18n{helpdesk.create_theme.boxTitle}' btnTitle='#i18n{helpdesk.themes.themeAdd}' btnIcon='plus' position='end' />
-			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' hideTitle=['xs','sm','md'] class='ms-1' />
+	<@pageColumn>
+		<@pageHeader title='${faq.name} - #i18n{helpdesk.themes.adminTitle}'>
+		<@offcanvas id='theme-create' targetUrl='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' targetElement='#create_theme_page' title='#i18n{helpdesk.create_theme.boxTitle}' btnTitle='#i18n{helpdesk.themes.themeAdd}' btnIcon='plus' btnColor='primary' position='end' />
 		</@pageHeader>
-		<@table>
-			<@tr>
-				<@th>#i18n{helpdesk.themes.title}</@th>
-				<@th>#i18n{helpdesk.themes.title.actions}</@th>
-			</@tr>
-			<@tableHeadBodySeparator />
-			<@commonListTable items=helpdesk_theme_list depth=0 jspRef='Theme' paramId='theme_id' />
-		</@table>
-		<@paginationAdmin paginator=paginator combo=1 />
+		<#if helpdesk_theme_list?has_content>
+			<@manageFeature id='theme-list'>
+				<@commonListItems items=helpdesk_theme_list depth=0 jspRef='Theme' paramId='theme_id' />
+			</@manageFeature>
+			<@paginationAdmin paginator=paginator combo=1 />
+		<#else>
+			<@card>
+				<@empty title='#i18n{portal.util.labelNoItem}' iconName='tags-off' actionTitle='#i18n{helpdesk.themes.themeAdd}' actionUrl='jsp/admin/plugins/helpdesk/CreateTheme.jsp?faq_id=${faq.id}' />
+			</@card>
+		</#if>
 	</@pageColumn>
 </@pageContainer>
-		

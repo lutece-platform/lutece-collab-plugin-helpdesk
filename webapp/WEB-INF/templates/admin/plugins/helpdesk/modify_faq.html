@@ -17,8 +17,8 @@
 				<@select id='workgroup_key' name='workgroup_key' default_value='${faq.workgroup!}' items=workgroup_key_list />
 			</@formGroup>
 			<@formGroup>
-				<@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='device-floppy' type='submit' />
-				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' />
+				<@button title='#i18n{helpdesk.modify_faq.buttonLabelModify}' buttonIcon='device-floppy' type='submit' class='form-validation'	/>
+				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='arrow-left' class='form-validation'/>
 			</@formGroup>
 		</@tform>
 	</@pageColumn>

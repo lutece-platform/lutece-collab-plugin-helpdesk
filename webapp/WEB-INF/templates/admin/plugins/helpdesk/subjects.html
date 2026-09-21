@@ -1,20 +1,16 @@
 <#include 'macro_helpdesk.html' />
 <@pageContainer>
-    <@pageColumn>
-		<@pageHeader title='${faq.name} - #i18n{helpdesk.subjects.adminTitle}'>
-			<#-- <@aButton href='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' buttonIcon='plus' title='#i18n{helpdesk.subjects.buttonLabelCreate}' hideTitle=['xs'] /> -->
-			<#-- btnTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' -->
-			<@offcanvas targetUrl='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' targetElement='#create_topic_page' id='topic-create' title='#i18n{helpdesk.create_subject.adminTitle}' btnTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' btnIcon='plus' position='end' />
-			<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' title='#i18n{helpdesk.helpdesk_manage.pageTitle}' color='secondary' buttonIcon='messages' hideTitle=['xs','sm'] class='ms-1' />
-		</@pageHeader>
-		<@table>
-			<@tr>
-				<@th>#i18n{helpdesk.subjects.title.questions}</@th>
-				<@th>#i18n{helpdesk.subjects.title.actions}</@th>
-			</@tr>
-			<@tableHeadBodySeparator />
-			<@commonListTable items=helpdesk_subject_list depth=0 jspRef='Subject' paramId='subject_id' />
-		</@table>
+	<@pageColumn>
+	<@pageHeader title='#i18n{helpdesk.subjects.adminTitle}'>
+		<@offcanvas id='subject-create' targetUrl='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' targetElement='#create_topic_page' title='#i18n{helpdesk.create_subject.adminTitle}' btnTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' btnIcon='plus' btnColor='primary' position='end' />
+	</@pageHeader>
+	<#if helpdesk_subject_list?has_content>
+		<@commonListItems items=helpdesk_subject_list depth=0 jspRef='Subject' paramId='subject_id' />
 		<@paginationAdmin paginator=paginator combo=1 />
+	<#else>
+		<@card>
+			<@empty title='#i18n{portal.util.labelNoItem}' iconName='folder-off' actionTitle='#i18n{helpdesk.subjects.buttonLabelCreate}' actionUrl='jsp/admin/plugins/helpdesk/CreateSubject.jsp?faq_id=${faq.id}' />
+		</@card>
+	</#if>
 	</@pageColumn>
 </@pageContainer>

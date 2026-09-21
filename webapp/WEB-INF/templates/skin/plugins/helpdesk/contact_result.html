@@ -1,13 +1,13 @@
 <@cTpl>
-    <@cContainer>
-        <@cTitle level=1>#i18n{helpdesk.contact_result.boxTitle}</@cTitle>
-        <@cAlert type='success' title='#i18n{helpdesk.contact_result.message}' />
-        <@cForm method='post'>
-            <@cInput type='hidden' name='page' value='helpdesk' />
-            <@cInput type='hidden' name='faq_id' value='${faq.id}' />
-            <@cBtn label='#i18n{helpdesk.contact_result.back}' class='primary' type='submit' params='title="#i18n{helpdesk.contact_result.back}"'>
-                <@cIcon name='check' />
-            </@cBtn>
-        </@cForm>
-    </@cContainer>
+<@cContainer>
+    <@cTitle level=1>#i18n{helpdesk.contact_result.boxTitle}</@cTitle>
+    <@cAlert type='success' title='#i18n{helpdesk.contact_result.message}' />
+    <@cForm method='post'>
+        <@cInput type='hidden' name='page' value='helpdesk' class='' />
+        <@cInput type='hidden' name='faq_id' value=faq.id?c class='' />
+        <@cBtn label='#i18n{helpdesk.contact_result.back}' class='primary' type='submit' params='title="#i18n{helpdesk.contact_result.back}"'>
+            <@cIcon name='check' />
+        </@cBtn>
+    </@cForm>
+</@cContainer>
 </@cTpl>

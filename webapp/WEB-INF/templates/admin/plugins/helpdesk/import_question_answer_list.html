@@ -7,11 +7,11 @@
 				<@input type='file' id='csv_file' name='csv_file' />
 			</@formGroup>
 			<@formGroup>
-				<@checkBox name='delete_list' id='delete_list' labelKey='#i18n{helpdesk.import_question_answer_list.deleteListLabel}' checked=true />
+				<@checkBox orientation='switch' name='delete_list' id='delete_list' labelKey='#i18n{helpdesk.import_question_answer_list.deleteListLabel}' checked=true />
 			</@formGroup>
 			<@formGroup>
-				<@button title='#i18n{helpdesk.import_question_answer_list.buttonLabelImport}' buttonIcon='upload' size='' type='submit' />
-				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='x' size='' />
+				<@button title='#i18n{helpdesk.import_question_answer_list.buttonLabelImport}' buttonIcon='upload' size='' type='submit' class='form-validation' />
+				<@aButton href='jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp' color='secondary' title='#i18n{portal.util.labelBack}' buttonIcon='arrow-left' size='' class='form-validation' />
 			</@formGroup>
 		</@tform>
 	</@pageColumn>

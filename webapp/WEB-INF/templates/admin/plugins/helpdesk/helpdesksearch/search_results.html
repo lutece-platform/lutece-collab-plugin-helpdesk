@@ -1,140 +1,76 @@
+<#include '/admin/plugins/helpdesk/macro_helpdesk.html' />
+<#-- Fil d'Ariane des sujets parents d'un résultat -->
 <#macro getParentSubject subject breadcrumb>
 	<#if subject?has_content>
-		<#if breadcrumb == "">
-			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}">' + subject.text + '</a>' + " &nbsp; " />
-		<#else>
-			<#assign breadcrumbCopy = '<a href="jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&subject_id=${subject.id}">' + subject.text + '</a>' + " &gt; " + breadcrumb />
-		</#if>
+		<#assign breadcrumbCopy>
+			<@link href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}&amp;subject_id=${subject.id}' label='${subject.text}' /><#if breadcrumb != ''> &gt; ${breadcrumb}</#if>
+		</#assign>
 		<#if subject.getParent(plugin)?has_content && subject.idParent != 0>
 			<@getParentSubject subject=subject.getParent(plugin) breadcrumb=breadcrumbCopy />
-		<#else>			
+		<#else>
 			${breadcrumbCopy}
 		</#if>
 	</#if>
 </#macro>
-<#macro subjectsListSelect items default_value exclude_value depth>
-	<#if items?has_content>
-	<#list items as subject>
-		<#if exclude_value="${subject.id}">
-		<#else>
-			<option <#if default_value="${subject.id}">selected="selected"</#if> value="${subject.id}">
-			<#if depth &gt; 0><#list 1..depth as i>&nbsp;&nbsp;</#list></#if>${subject.text}</option>
-	        <#assign child_subjects_list = subject.getChilds(plugin) />
-	        <#if child_subjects_list?has_content>
-				<@subjectsListSelect items=child_subjects_list default_value=default_value exclude_value=exclude_value depth=depth+1 />
-	        </#if>
-        </#if>
-	</#list>
-	</#if>
-</#macro>
+<#assign pageTitle><#if faq_name?has_content>${faq_name} - </#if>#i18n{helpdesk.search_results.pageTitle}</#assign>
 <@pageContainer>
-    <@pageColumn>
-		<@row>
-			<@columns xl=3>
-				<@box color='primary' >
-					<#assign searchBoxTitle><#if faq_name?has_content>${faq_name} - </#if>#i18n{helpdesk.search_results.labelSearch}</#assign>
-					<@boxHeader title='${searchBoxTitle}' />
-					<@boxBody>
-						<@tform name='fullTextSearch' action='jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp'>
-						<@input type='hidden' value=faq_id name='faq_id' />                     
-						<@input type='hidden' name='page' value='search' />
-						<@formGroup labelFor='query' labelKey='#i18n{helpdesk.search_results.labelSearch}' rows=2>
-							<@input name='query' value='${query!}' />
-						</@formGroup>
-						<#--
-						<@formGroup labelFor='date_start' labelKey='#i18n{helpdesk.search_results.date_start}' rows=2 >
-							<@inputGroup>
-								<@input type='daterange' dateRangeEndId='date_end' name='date_start' id='date_start' value='${date_start_query!}' />
-								<@inputGroupItem><@icon style='calendar' /></@inputGroupItem>
-							</@inputGroup>
-						</@formGroup>
-						<@formGroup labelFor='date_end' labelKey='#i18n{helpdesk.search_results.date_end}' rows=2>
-							<@inputGroup>
-								<@input name='date_end' id='date_end' value='${date_end_query!}' />
-								<@inputGroupItem><@icon style='calendar' /></@inputGroupItem>
-							</@inputGroup>
-						</@formGroup>
-						-->
-						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subjects.title.questions}' rows=2>
-							<@select id='form_search_subject_id' name='form_search_subject_id' >
-								<@option value='' label='' />
-								<@subjectsListSelect items=helpdesk_subject_list default_value="${filter_subject_id}" exclude_value="" depth=0 />
-							</@select>
-						</@formGroup>
-						<@formGroup labelFor='form_search_subject_id' rows=2>
-							<@checkBox name='form_search_sub_subjects' id='form_search_sub_subjects' labelKey='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' orientation='vertical' value=(filter_search_sub_subject!false)?c />
-						</@formGroup>
-						<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.search_results.labelNbDocsPerPage}' rows=2>
-							<#-- Number of documents per page selector -->
-							<@NbItemsPerPageSelectorCombo nb_items_per_page />
-						</@formGroup>
-						<@formGroup rows=2 >
-							<@button buttonIcon='search' title='#i18n{helpdesk.search_results.buttonSearch}' type='submit' />
-						</@formGroup>
-						</@tform>
-					</@boxBody>
-				</@box> 
-			</@columns>
-			<@columns xl=9>
-				<@box color='primary' >
-					<@boxHeader title='#i18n{helpdesk.question_answer_list.adminTitleRight}' boxTools=true >
-						<@tform action="jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp">
-						<@input type='hidden' value=faq_id name='faq_id' />
-						<#if subject?has_content><@input type='hidden' value=subject.id name='subject_id' /></#if>
-						<@button buttonIcon='plus' title='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' type='submit' />
-						</@tform>
-					</@boxHeader>
-					<@boxBody>
-						<#if error??>
-							<@alert color='danger' title='#i18n{helpdesk.search_results.error}' >
-								<@p class="text-muted font-weight-bold ml-3 ms-3 mb-1">${error.message}</@p>
-							</@alert>
-						<#else>
-							<#if results_list?has_content>
-								<h2>#i18n{helpdesk.question_answer_list.LabelQuestion}</h2>
-								<@table>
-									<@tr>
-										<@th>Sujet</@th>                    
-										<@th>Question</@th>                    
-									</@tr>
-								<@tableHeadBodySeparator />
-								<#list results_list as result>
-									<@tr>
-										<@td><@getParentSubject subject=result.getSubject(plugin) breadcrumb="" /></@td>                   
-										<@td>
-											<@aButton href='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' buttonIcon='edit' size='sm' hideTitle=['all'] title='#i18n{helpdesk.modify_question_answer.adminTitle}' />
-											${result.question}
-										</@td>
-									</@tr>            
-								</#list>
-								</@table>
-								<@p>#i18n{helpdesk.search_results.labelResultsCount} : <strong>${paginator.itemsCount}</strong>            #i18n{helpdesk.search_results.labelResultsRange} : <strong>${paginator.rangeMin} - ${paginator.rangeMax}</strong></@p>
-								<@paginationAdmin paginator=paginator combo=1 />
-								<#if (paginator.itemsCount> 0)>
-									<@tform type='inline' name='export' action='jsp/admin/plugins/helpdesk/DoExportCSV.jsp'>
-										<@button buttonIcon='download' type='submit' title='#i18n{helpdesk.search_results.exportCSV}' />
-									</@tform>
-								</#if>
-							<#else>
-								<@empty title='#i18n{helpdesk.helpdesk.message.search_nok}' subtitle='' />
-							</#if>
-						</#if>
-					</@boxBody> 
-				</@box> 
-			</@columns>
-		</@row>
+	<@pageColumn>
+		<@pageHeader title=pageTitle>
+			<@aButton href='jsp/admin/plugins/helpdesk/QuestionAnswerList.jsp?faq_id=${faq_id}' title='#i18n{helpdesk.question_answer_list.adminTitleRight}' color='secondary' buttonIcon='arrow-left' hideTitle=['xs','sm'] class='me-1' />
+			<@offcanvas id='question-search' title='#i18n{helpdesk.search_results.labelSearch}' btnTitle='#i18n{helpdesk.search_results.labelSearch}' btnIcon='search' btnColor='' btnClass='me-1' hideTitle=['xs','sm'] position='end' size='sm'>
+				<@tform method='get' name='fullTextSearch' action='jsp/admin/plugins/helpdesk/HelpdeskSearch.jsp'>
+					<@input type='hidden' name='faq_id' value='${faq_id}' />
+					<@input type='hidden' name='page' value='search' />
+					<@formGroup labelFor='query' labelKey='#i18n{helpdesk.question_answer_list.labelFullTextSearch}'>
+						<@input type='text' id='query' name='query' value='${query!}' />
+					</@formGroup>
+					<@formGroup labelFor='form_search_subject_id' labelKey='#i18n{helpdesk.subject_list.labelSubject}'>
+						<@select id='form_search_subject_id' name='form_search_subject_id'>
+							<@option value='' label='#i18n{portal.util.labelAll}' />
+							<@subjectsList items=helpdesk_subject_list default_value='${filter_subject_id!}' exclude_value='' depth=0 />
+						</@select>
+					</@formGroup>
+					<@formGroup>
+						<@checkBox orientation='switch' id='form_search_sub_subjects' name='form_search_sub_subjects' labelKey='#i18n{helpdesk.subject_list.labelSearchSubSubjects}' value='true' checked=(filter_search_sub_subject!false) />
+					</@formGroup>
+					<@formGroup labelFor='items_per_page' labelKey='#i18n{helpdesk.search_results.labelNbDocsPerPage}'>
+						<@NbItemsPerPageSelectorCombo nb_items_per_page />
+					</@formGroup>
+					<@formGroup>
+						<@button type='submit' buttonIcon='search' title='#i18n{helpdesk.search_results.buttonSearch}' color='primary' />
+					</@formGroup>
+				</@tform>
+			</@offcanvas>
+			<@offcanvas id='question-create' targetUrl='jsp/admin/plugins/helpdesk/CreateQuestionAnswer.jsp?faq_id=${faq_id}' useIframe=true title='#i18n{helpdesk.create_question_answer.adminTitle}' btnTitle='#i18n{helpdesk.question_answer_list.buttonLabelCreate}' btnIcon='plus' btnColor='primary' hideTitle=['xs','sm'] position='end' size='half' />
+		</@pageHeader>
+		<#if error??>
+			<@alert color='danger' title='#i18n{helpdesk.search_results.error} : ${error.message}' />
+		<#elseif results_list?has_content>
+			<@manageFeature id='search-results-list'>
+				<#list results_list as result>
+				<@manageFeatureItem id='result-${result.idQuestionAnswer}'>
+					<@manageFeatureItemColumn flex=false>
+						<strong>${result.question}</strong>
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn auto=true flex=false valign='top'>
+						<@p class='fw-bold fs-3'>#i18n{helpdesk.subject_list.labelSubject}</@p>
+						<@getParentSubject subject=result.getSubject(plugin) breadcrumb='' />
+					</@manageFeatureItemColumn>
+					<@manageFeatureItemColumn auto=true align='end'>
+						<@offcanvas id='result-modify-${result.idQuestionAnswer}' targetUrl='jsp/admin/plugins/helpdesk/ModifyQuestionAnswer.jsp?faq_id=${faq_id}&question_id=${result.idQuestionAnswer}' useIframe=true title='#i18n{helpdesk.modify_question_answer.adminTitle}' btnTitle='#i18n{portal.util.labelModify}' btnIcon='edit' btnColor='' btnSize='sm' hideTitle=['all'] position='end' size='half' />
+					</@manageFeatureItemColumn>
+				</@manageFeatureItem>
+				</#list>
+			</@manageFeature>
+			<@p class='mt-3'>#i18n{helpdesk.search_results.labelResultsCount} : <strong>${paginator.itemsCount}</strong> - #i18n{helpdesk.search_results.labelResultsRange} : <strong>${paginator.rangeMin} - ${paginator.rangeMax}</strong></@p>
+			<@paginationAdmin paginator=paginator combo=1 />
+			<@tform type='inline' name='export' method='post' action='jsp/admin/plugins/helpdesk/DoExportCSV.jsp'>
+				<@button buttonIcon='download' type='submit' title='#i18n{helpdesk.search_results.exportCSV}' color='secondary' />
+			</@tform>
+		<#else>
+			<@card>
+				<@empty title='#i18n{helpdesk.helpdesk.message.search_nok}' iconName='search-off' />
+			</@card>
+		</#if>
 	</@pageColumn>
 </@pageContainer>
-<#-- Freemarker macros -->
-<#-- Number of items per page selector - Combo Box implementation -->
-<#macro NbItemsPerPageSelectorCombo nb_items_per_page>
-<@select id='items_per_page' name='items_per_page'>
-    <#list [ "10" , "20" , "50" , "100" ] as nb>
-        <#if nb_items_per_page = nb>
-            <@option selected=true value=nb label=nb />
-        <#else>
-            <@option value=nb label=nb />
-        </#if>
-    </#list>
-</@select>
-</#macro>
