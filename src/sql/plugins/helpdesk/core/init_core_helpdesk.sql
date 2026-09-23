@@ -24,8 +24,8 @@ INSERT INTO core_admin_role (role_key,role_description) VALUES ('helpdesk_manage
 --
 -- Dumping data for table core_admin_role_resource
 --
-INSERT INTO core_admin_role_resource (rbac_id,role_key,resource_type,resource_id,permission) VALUES 
- (10,'helpdesk_manager','HELPDESK_FAQ','*','*');
+INSERT INTO core_admin_role_resource (role_key,resource_type,resource_id,permission) VALUES 
+ ('helpdesk_manager','HELPDESK_FAQ','*','*');
 
 
 --
