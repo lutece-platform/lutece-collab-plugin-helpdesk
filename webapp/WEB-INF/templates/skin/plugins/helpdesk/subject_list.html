@@ -97,7 +97,7 @@
     </@cFieldset>
     <#if (search_page!false)>
         <#if helpdesk_question_answer_list?has_content>
-            <@chList id='questionAnswer' class='list-unstyled mt-4'>
+            <@chList id='questionAnswer' class='list-unstyled mt-4' params='data-helpdesk-highlight="${(filter_searched_keywords!)?html}"'>
                 <#list helpdesk_question_answer_list as questionAnswer>
                     <#assign breadcrumbItems = []>
                     <@subjectPathItems subject=questionAnswer.getSubject(plugin) />

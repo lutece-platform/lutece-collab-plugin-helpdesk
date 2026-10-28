@@ -41,6 +41,12 @@
         <css-stylesheet>helpdesk/helpdesk.css</css-stylesheet>
     </css-stylesheets>
 
+    <!-- Specific plugin javascript files -->
+    <javascript-files>
+        <javascript-files-scope>xpage</javascript-files-scope>
+        <javascript-file>../../themes/shared/plugins/helpdesk/js/helpdesk-highlight.js</javascript-file>
+    </javascript-files>
+
     <!-- Administration interface parameters -->
     <admin-features>
         <admin-feature>
