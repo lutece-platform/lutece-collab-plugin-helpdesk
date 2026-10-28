@@ -34,7 +34,7 @@
 						</#if>
 					</@manageFeatureItemColumn>
 					<@manageFeatureItemColumn auto=true align='end'>
-						<@aButton class='dropdown-toggle' id='faq-actions-${faq.id}' dropdownMenu=true href='#' title='#i18n{portal.util.labelActions}' color='' hideTitle=['all'] buttonIcon='dots-vertical'>
+						<@aButton id='faq-actions-${faq.id}' style='' dropdownMenu=true href='#' title='#i18n{portal.util.labelActions}' color='' hideTitle=['all'] buttonIcon='dots' >
 							<#if faqModel.MANAGE_SUBJECTS?has_content>
 								<@link class='dropdown-item' href='jsp/admin/plugins/helpdesk/SubjectsList.jsp?faq_id=${faq.id}' label='#i18n{helpdesk.helpdesk_manage.LabelSubject}' linkIcon='mail-question' />
 							</#if>
