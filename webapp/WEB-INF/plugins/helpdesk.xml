@@ -11,7 +11,7 @@
     <description>helpdesk.plugin.description</description>
     <provider>helpdesk.plugin.provider</provider>
     <provider-url>http://lutece.paris.fr</provider-url>
-    <icon-url>images/admin/skin/plugins/helpdesk/helpdesk.png</icon-url>
+    <icon-url>themes/shared/plugins/helpdesk/images/helpdesk.svg</icon-url>
     <copyright>Copyright 2001-2011 Mairie de Paris</copyright>
     <core-version-dependency>
         <min-core-version>8.0.0</min-core-version>
@@ -38,7 +38,7 @@
     <!-- Specific plugin CSS stylesheet -->
     <css-stylesheets>
         <css-stylesheets-scope>xpage</css-stylesheets-scope>
-        <css-stylesheet>helpdesk/helpdesk.css</css-stylesheet>
+        <css-stylesheet>../../themes/shared/plugins/helpdesk/css/helpdesk.css</css-stylesheet>
     </css-stylesheets>
 
     <!-- Administration interface parameters -->
@@ -49,6 +49,7 @@
             <feature-description>helpdesk.adminFeature.helpdesk_management.description</feature-description>
             <feature-level>1</feature-level>
             <feature-url>jsp/admin/plugins/helpdesk/ManageHelpdesk.jsp</feature-url>
+            <feature-icon-url>ti ti-messages</feature-icon-url>
         </admin-feature>
     </admin-features>
 
